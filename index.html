@@ -1,202 +1,394 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MYIN THAR | ONLINE BUSINESS SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* ===================  အပိုင်း ၁ - Base Styles / Layout =================== */
-        :root { --accent: #FF6B00; --bg: #F5F5F7; --dark: #1D1D1F; --glass: rgba(255,255,255,0.9); }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif; }
-        body { background: var(--bg); color: var(--dark); overflow-x:hidden; }
-        .hidden { display:none !important; }
-
-        header { position:fixed; top:0; width:100%; height:70px; background: var(--glass); backdrop-filter:blur(20px); z-index:1000; display:flex; align-items:center; padding:0 20px; justify-content:space-between; border-bottom:1px solid rgba(0,0,0,0.05);}
-        #storefront { padding: 90px 15px 150px; }
-        .item-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
-        .item-card { background:white; border-radius:20px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.05); position:relative; }
-        .preorder-badge { position:absolute; top:10px; left:10px; background:var(--accent); color:white; padding:4px 10px; border-radius:10px; font-size:0.6rem; font-weight:700; }
-        .item-img { width:100%; height:140px; object-fit:cover; }
-        .qty-btns { display:flex; align-items:center; justify-content:space-between; background:#F2F2F7; border-radius:12px; padding:5px; margin-top:10px; }
-        .qty-btn { border:none; background:white; width:30px; height:30px; border-radius:8px; font-weight:bold; cursor:pointer; }
-
-        #sticky-cart {
-            position:fixed; bottom:25px; left:50%; transform:translateX(-50%); width:92%; max-width:450px;
-            background: var(--dark); color:white; padding:20px 25px; border-radius:25px;
-            display:flex; justify-content:space-between; align-items:center; z-index:2000; box-shadow:0 15px 40px rgba(0,0,0,0.4);
-        }
-
-        .drawer { position:fixed; bottom:0; left:0; right:0; background:white; border-radius:30px 30px 0 0; padding:30px 20px; z-index:3001; transform:translateY(100%); transition:0.5s cubic-bezier(0.4,0,0.2,1); max-height:90vh; overflow-y:auto;}
-        .drawer.active { transform:translateY(0); }
-        .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:3000; display:none; backdrop-filter:blur(5px); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>MYIN THAR | ONLINE BUSINESS SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root { --accent:#FF6B00; --bg:#F5F5F7; --dark:#1D1D1F; --glass:rgba(255,255,255,0.9);}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{background:var(--bg);color:var(--dark);overflow-x:hidden;}
+.hidden{display:none!important;}
+/* Landing */
+#landing-hero{height:100vh;background:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=1000') center/cover;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:white;}
+.cta-group{display:flex;gap:15px;margin-top:30px;}
+.btn-choice{padding:18px 30px;border-radius:50px;border:none;font-weight:700;cursor:pointer;transition:0.3s;font-size:1rem;}
+.btn-today{background:var(--accent);color:white;box-shadow:0 10px 20px rgba(255,107,0,0.3);}
+.btn-pre{background:white;color:var(--dark);}
+/* Store */
+header{position:fixed;top:0;width:100%;height:70px;background:var(--glass);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;padding:0 20px;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.05);}
+#storefront{padding:90px 15px 150px;}
+.item-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;}
+.item-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.05);position:relative;}
+.preorder-badge{position:absolute;top:10px;left:10px;background:var(--accent);color:white;padding:4px 10px;border-radius:10px;font-size:0.6rem;font-weight:700;}
+.item-img{width:100%;height:140px;object-fit:cover;}
+.qty-btns{display:flex;align-items:center;justify-content:space-between;background:#F2F2F7;border-radius:12px;padding:5px;margin-top:10px;}
+.qty-btn{border:none;background:white;width:30px;height:30px;border-radius:8px;font-weight:bold;cursor:pointer;}
+/* Sticky Cart */
+#sticky-cart{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:92%;max-width:450px;background:var(--dark);color:white;padding:20px 25px;border-radius:25px;display:flex;justify-content:space-between;align-items:center;z-index:2000;box-shadow:0 15px 40px rgba(0,0,0,0.4);}
+/* Drawer / Overlay */
+.drawer{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:30px 30px 0 0;padding:30px 20px;z-index:3001;transform:translateY(100%);transition:0.5s cubic-bezier(0.4,0,0.2,1);max-height:90vh;overflow-y:auto;}
+.drawer.active{transform:translateY(0);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;display:none;backdrop-filter:blur(5px);}
+.tracker-card{background:#F2F2F7;padding:20px;border-radius:20px;margin-top:15px;}
+.step{display:flex;align-items:center;gap:15px;margin-bottom:15px;opacity:0.3;}
+.step.active{opacity:1;color:var(--accent);font-weight:700;}
+</style>
 </head>
 <body>
 
-    <!-- ===================  အပိုင်း ၂ - Landing Hero =================== -->
-    <div id="landing-hero">
-        <div style="font-weight:700; font-size:1.2rem; letter-spacing:5px; margin-bottom:10px;">MYIN THAR</div>
-        <h1>အရသာနှင့် ဝန်ဆောင်မှု အကောင်းဆုံး</h1>
-        <div class="cta-group">
-            <button class="btn-choice btn-today" onclick="entryShop('Today')">ယနေ့မှာယူမည်</button>
-            <button class="btn-choice btn-pre" onclick="entryShop('Pre-order')">နောက်နေ့အတွက်မှာမည်</button>
+<!-- Landing Hero -->
+<div id="landing-hero">
+  <div style="font-weight:700;font-size:1.2rem;letter-spacing:5px;margin-bottom:10px;">MYIN THAR</div>
+  <h1>အရသာနှင့် ဝန်ဆောင်မှု အကောင်းဆုံး</h1>
+  <div class="cta-group">
+    <button class="btn-choice btn-today" onclick="entryShop('Today')">ယနေ့မှာယူမည်</button>
+    <button class="btn-choice btn-pre" onclick="entryShop('Pre-order')">နောက်နေ့အတွက်မှာမည်</button>
+  </div>
+  <p onclick="openAdmin()" style="margin-top:50px;opacity:0.3;font-size:0.7rem;">ADMIN ACCESS</p>
+</div>
+
+<!-- Store / Items -->
+<div id="store-main" class="hidden">
+  <header>
+    <div onclick="location.reload()"><i class="fas fa-home"></i></div>
+    <b id="shop-title">STORE</b>
+    <div onclick="openProfile()"><i class="fas fa-user-circle" style="font-size:1.5rem;"></i></div>
+  </header>
+  <div id="storefront">
+    <div id="item-list" class="item-grid"></div>
+  </div>
+
+  <!-- Sticky Cart -->
+  <div id="sticky-cart" class="hidden" onclick="showCheckout()">
+    <div><span id="cart-count">0</span> Items | <span id="cart-total">0</span> Ks</div>
+    <div style="font-weight:700;">CHECKOUT <i class="fas fa-arrow-right" style="margin-left:8px;"></i></div>
+  </div>
+</div>
+
+<!-- Drawer / Overlay -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="main-drawer"><div id="drawer-content"></div></div>
+<div class="drawer" id="profile-drawer"></div>
+
+<script>
+// =================== Supabase Client ===================
+const SB_URL='https://deabtvqzxpkepgcdutzd.supabase.co';
+const SB_KEY='sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
+const _supabase=window.supabase.createClient(SB_URL,SB_KEY);
+
+let cart={}, currentMode='Today', itemsData=[], currentCustomerId=null;
+
+// =================== Entry Shop ===================
+async function entryShop(mode){
+  currentMode=mode;
+  document.getElementById('landing-hero').classList.add('hidden');
+  document.getElementById('store-main').classList.remove('hidden');
+  document.getElementById('shop-title').innerText=mode==='Today'?"ယနေ့မီနူး":"PRE-ORDER မီနူး";
+
+  const { data } = await _supabase.from('menu_items').select('*').order('id');
+  itemsData=data; renderItems(); restoreCart();
+}
+
+// Render items
+function renderItems(){
+  const list=document.getElementById('item-list');
+  list.innerHTML=itemsData.map(item=>`
+    <div class="item-card">
+      ${currentMode==='Pre-order'?'<div class="preorder-badge">PRE-ORDER</div>':''}
+      <img src="${item.photo_url||'https://via.placeholder.com/200x140?text=MyinThar'}" class="item-img">
+      <div style="padding:15px;">
+        <b style="font-size:0.85rem;display:block;height:35px;">${item.name}</b>
+        <div style="color:var(--accent);font-weight:700;margin-top:5px;">${item.price} Ks</div>
+        <div class="qty-btns">
+          <button class="qty-btn" onclick="updateQty('${item.name}',-1)">-</button>
+          <span id="qty-${item.name.replace(/\s/g,'')}" style="font-weight:700;">0</span>
+          <button class="qty-btn" onclick="updateQty('${item.name}',1)">+</button>
         </div>
-        <p onclick="openAdmin()" style="margin-top:50px; opacity:0.3; font-size:0.7rem;">ADMIN ACCESS</p>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =================== Cart Logic ===================
+function updateQty(name,delta){
+  cart[name]=(cart[name]||0)+delta; if(cart[name]<=0) delete cart[name];
+  const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`);
+  if(el) el.innerText=cart[name]||0; saveCart(); updateBar();
+}
+
+function updateBar(){
+  const count=Object.values(cart).reduce((a,b)=>a+b,0);
+  const total=Object.keys(cart).reduce((s,n)=>s+(itemsData.find(i=>i.name===n).price*cart[n]),0);
+  const bar=document.getElementById('sticky-cart');
+  if(count>0){bar.classList.remove('hidden'); document.getElementById('cart-count').innerText=count; document.getElementById('cart-total').innerText=total;}
+  else bar.classList.add('hidden');
+}
+
+function saveCart(){localStorage.setItem('mt_cart',JSON.stringify(cart));}
+function restoreCart(){const saved=localStorage.getItem('mt_cart');if(saved){cart=JSON.parse(saved);Object.keys(cart).forEach(name=>{const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`);if(el) el.innerText=cart[name];}); updateBar();}}
+
+// =================== Checkout Drawer ===================
+function showCheckout(){
+  const drawer=document.getElementById('main-drawer');
+  const content=document.getElementById('drawer-content');
+  document.getElementById('overlay').style.display='block'; drawer.classList.add('active');
+
+  content.innerHTML=`
+    <h3>အော်ဒါအနှစ်ချုပ်</h3>
+    <div style="margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px;">
+      ${Object.keys(cart).map(n=>`<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span>${n} x ${cart[n]}</span>
+        <b>${itemsData.find(i=>i.name===n).price*cart[n]} Ks</b>
+      </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;margin-top:15px;font-weight:700;font-size:1.2rem;color:var(--accent);">
+        <span>စုစုပေါင်း</span>
+        <span>${document.getElementById('cart-total').innerText} Ks</span>
+      </div>
     </div>
 
-    <!-- ===================  အပိုင်း ၃ - Storefront =================== -->
-    <div id="store-main" class="hidden">
-        <header>
-            <div onclick="location.reload()"><i class="fas fa-home"></i></div>
-            <b id="shop-title">STORE</b>
-            <div onclick="openProfile()"><i class="fas fa-user-circle" style="font-size:1.5rem;"></i></div>
-        </header>
-
-        <div id="storefront">
-            <div id="item-list" class="item-grid"></div>
-        </div>
-
-        <div id="sticky-cart" class="hidden" onclick="showCheckout()">
-            <div><span id="cart-count">0</span> Items | <span id="cart-total">0</span> Ks</div>
-            <div style="font-weight:700;">CHECKOUT <i class="fas fa-arrow-right" style="margin-left:8px;"></i></div>
-        </div>
+    <div id="checkout-form">
+      <p style="font-size:0.8rem;color:#666;margin-bottom:15px;">
+        အော်ဒါအတည်ပြုရန် Telegram Bot တွင် Verify လုပ်ပါ
+      </p>
+      <label>အကြို Order Date:</label>
+      <input type="date" id="preorder-date" min="${new Date().toISOString().split('T')[0]}">
+      <label>Time Slot:</label>
+      <select id="time-slot">
+        <option>9:00 AM - 11:00 AM</option>
+        <option>11:00 AM - 1:00 PM</option>
+        <option>1:00 PM - 3:00 PM</option>
+        <option>3:00 PM - 5:00 PM</option>
+      </select>
+      <div style="margin:10px 0;">
+        <label><input type="radio" name="payment" value="Cash" checked> Cash</label>
+        <label><input type="radio" name="payment" value="Deposit"> Deposit</label>
+      </div>
+      <div id="deposit-info" style="display:none;font-size:0.8rem;color:#666;">
+        Deposit ကို Bank Transfer / Rocket သို့ ပေးပြီး Reference Number ဖြင့် Verify လုပ်ပါ
+      </div>
+      <button class="btn-choice btn-today" style="width:100%;margin-top:15px;" onclick="placeOrder()">PLACE ORDER</button>
     </div>
+  `;
+  document.querySelectorAll('input[name="payment"]').forEach(r=>{
+    r.addEventListener('change',e=>{
+      document.getElementById('deposit-info').style.display=e.target.value==='Deposit'?'block':'none';
+    });
+  });
+}
 
-    <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="main-drawer">
-        <div id="drawer-content"></div>
-    </div>
+// =================== Place Order ===================
+async function placeOrder(){
+  if(Object.keys(cart).length===0){alert("Cart is empty!"); return;}
+  const phone=prompt("Enter your phone number:");
+  if(!phone) return alert("Phone required");
+  
+  let { data: customer } = await _supabase.from('customers').select('*').eq('phone_number',phone).single();
+  if(!customer){
+    const name=prompt("Enter your full name:"); 
+    if(!name) return alert("Name required");
+    const { data } = await _supabase.from('customers').insert([{full_name:name, phone_number:phone}]).select().single();
+    customer = data;
+  }
+  currentCustomerId=customer.id;
 
-    <!-- ===================  အပိုင်း ၄ - JavaScript Logic =================== -->
-    <script>
-        const SB_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
-const SB_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
-const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+  const items_json=cart;
+  const total_amount=Object.keys(cart).reduce((s,n)=>s+itemsData.find(i=>i.name===n).price*cart[n],0);
+  const preorder_date=document.getElementById('preorder-date').value||null;
+  const time_slot=document.getElementById('time-slot').value;
+  const payment_method=document.querySelector('input[name="payment"]:checked').value;
 
-        let cart = {};
-        let currentMode = 'Today';
-        let itemsData = [];
-        let currentCustomerId = null;
+  const { data: order } = await _supabase.from('orders').insert([{
+    customer_id:customer.id,
+    voucher_no:`MT${Date.now()}`,
+    items_json, total_amount, preorder_date, time_slot,
+    payment_method, deposit_confirmed: payment_method==='Cash', status:'Pending'
+  }]).select().single();
 
-        /* ===================  အပိုင်း ၄.၁ - Entry & Load Items =================== */
-        async function entryShop(mode) {
-            currentMode = mode;
-            document.getElementById('landing-hero').classList.add('hidden');
-            document.getElementById('store-main').classList.remove('hidden');
-            document.getElementById('shop-title').innerText = mode === 'Today' ? "ယနေ့မီနူး" : "PRE-ORDER မီနူး";
-            
-            const { data } = await _supabase.from('menu_items').select('*').order('id');
-            itemsData = data;
-            renderItems();
-            restoreCart();
-        }
+  cart={}; saveCart(); updateBar(); closeDrawer();
+  alert(`Order #${order.voucher_no} placed successfully!`);
+}
 
-        function renderItems() {
-            const list = document.getElementById('item-list');
-            list.innerHTML = itemsData.map(item => `
-                <div class="item-card">
-                    ${currentMode==='Pre-order'?'<div class="preorder-badge">PRE-ORDER</div>':''}
-                    <img src="${item.photo_url||'https://via.placeholder.com/200x140?text=MyinThar'}" class="item-img">
-                    <div style="padding:15px;">
-                        <b style="font-size:0.85rem; display:block; height:35px;">${item.name}</b>
-                        <div style="color:var(--accent); font-weight:700; margin-top:5px;">${item.price} Ks</div>
-                        <div class="qty-btns">
-                            <button class="qty-btn" onclick="updateQty('${item.name}', -1)">-</button>
-                            <span id="qty-${item.name.replace(/\s/g,'')}" style="font-weight:700;">0</span>
-                            <button class="qty-btn" onclick="updateQty('${item.name}', 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+// =================== Customer Profile ===================
+async function openProfile(){
+  document.getElementById('overlay').style.display='block';
+  const drawer=document.getElementById('profile-drawer'); drawer.classList.add('active');
 
-        /* ===================  အပိုင်း ၄.၂ - Cart Logic =================== */
-        function updateQty(name, delta) {
-            cart[name] = (cart[name]||0)+delta;
-            if(cart[name]<=0) delete cart[name];
-            const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`);
-            if(el) el.innerText=cart[name]||0;
-            saveCart(); updateBar();
-        }
+  const phone=prompt("Enter your phone number:");
+  if(!phone) return closeDrawer();
 
-        function updateBar() {
-            const count=Object.values(cart).reduce((a,b)=>a+b,0);
-            const total=Object.keys(cart).reduce((s,n)=>s+(itemsData.find(i=>i.name===n).price*cart[n]),0);
-            const bar=document.getElementById('sticky-cart');
-            if(count>0){ bar.classList.remove('hidden'); document.getElementById('cart-count').innerText=count; document.getElementById('cart-total').innerText=total; }
-            else bar.classList.add('hidden');
-        }
+  const { data: customer } = await _supabase.from('customers').select('*').eq('phone_number',phone).single();
+  if(!customer) return alert("Customer not found");
 
-        function saveCart(){ localStorage.setItem('mt_cart', JSON.stringify(cart)); }
-        function restoreCart(){
-            const saved=localStorage.getItem('mt_cart');
-            if(saved){ cart=JSON.parse(saved); Object.keys(cart).forEach(name=>{ const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`); if(el) el.innerText=cart[name]; }); updateBar(); }
-        }
+  currentCustomerId=customer.id;
 
-        /* ===================  အပိုင်း ၄.၃ - Checkout Drawer =================== */
-        function showCheckout() {
-            const drawer = document.getElementById('main-drawer');
-            const content = document.getElementById('drawer-content');
-            document.getElementById('overlay').style.display='block';
-            drawer.classList.add('active');
+  const { data: orders } = await _supabase.from('orders').select('*').eq('customer_id',customer.id).order('created_at',{ascending:false});
 
-            content.innerHTML=`
-                <h3>အော်ဒါအနှစ်ချုပ်</h3>
-                <div style="margin:20px 0; border-bottom:1px solid #eee; padding-bottom:15px;">
-                    ${Object.keys(cart).map(n=>`<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>${n} x ${cart[n]}</span><b>${itemsData.find(i=>i.name===n).price*cart[n]} Ks</b></div>`).join('')}
-                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:700; font-size:1.2rem; color:var(--accent);"><span>စုစုပေါင်း</span><span>${document.getElementById('cart-total').innerText} Ks</span></div>
-                </div>
-                <button class="btn-choice btn-today" style="width:100%;" onclick="placeOrder()"><i class="fas fa-check-circle"></i> PLACE ORDER</button>
-            `;
-        }
+  drawer.innerHTML=`
+    <h3>မိတ်ဆွေ Profile</h3>
+    <p>Name: ${customer.full_name}</p>
+    <p>Phone: ${customer.phone_number}</p>
+    <h4>Current Orders</h4><div id="current-orders">${orders.filter(o=>o.status!=='Completed').map(o=>`<div>#${o.voucher_no} | ${o.status} | ${Object.keys(o.items_json).map(k=>k+"x"+o.items_json[k]).join(', ')}</div>`).join('')}</div>
+    <h4>Order History</h4><div id="order-history">${orders.filter(o=>o.status==='Completed').map(o=>`<div>#${o.voucher_no} | Total: ${o.total_amount} Ks</div>`).join('')}</div>
+  `;
+}
 
-        function closeDrawer() { document.getElementById('overlay').style.display='none'; document.getElementById('main-drawer').classList.remove('active'); }
+// =================== Drawer Close ===================
+function closeDrawer(){document.getElementById('overlay').style.display='none';document.getElementById('main-drawer').classList.remove('active');document.getElementById('profile-drawer').classList.remove('active');}
 
-        /* ===================  အပိုင်း ၄.၄ - Place Order Function =================== */
-        async function placeOrder(){
-            if(Object.keys(cart).length===0){ alert("အော်ဒါမှာထားမှုမရှိသေးပါ"); return; }
-            let phone=prompt("အော်ဒါအတွက်ဖုန်းနံပါတ်ထည့်ပါ:");
-            if(!phone) return alert("ဖုန်းနံပါတ်လိုအပ်သည်");
+// =================== Admin Section ===================
+function openAdmin(){
+  const pass=prompt("Admin Password ထည့်ပါ:");
+  if(pass==="2012@Yewin"){alert("Admin Access Granted"); /* Render Admin Dashboard */ }
+}
 
-            let { data: customer } = await _supabase.from('customers').select('*').eq('phone_number', phone).single();
+// =================== Real-time Status Tracker ===================
+_supabase.channel('customer-status')
+.on('postgres_changes',{event:'UPDATE', schema:'public', table:'orders'}, payload=>{
+    if(payload.new.customer_id===currentCustomerId){
+        alert(`Order #${payload.new.voucher_no} status updated: ${payload.new.status}`);
+    }
+}).subscribe();
 
-            if(!customer){
-                const { data:newCustomer, error:createErr } = await _supabase.from('customers').insert([{ full_name:"အမည်မသိ", phone_number:phone }]).select().single();
-                if(createErr) return alert("Customer create error: "+createErr.message);
-                customer=newCustomer;
-            }
-            currentCustomerId=customer.id;
+<script>
+// =================== Supabase Client ===================
+const SB_URL='https://deabtvqzxpkepgcdutzd.supabase.co';
+const SB_KEY='sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
+const _supabase=window.supabase.createClient(SB_URL,SB_KEY);
 
-            const voucherNo="MT"+Date.now();
-            let total=0;
-            Object.keys(cart).forEach(name=>{ const item=itemsData.find(i=>i.name===name); if(item) total+=item.price*cart[name]; });
+let cart={}, currentMode='Today', itemsData=[], currentCustomerId=null;
 
-            const payment=document.querySelector('input[name="payment"]:checked')?.value||"Cash";
+// =================== Customer Real-time Order Status ===================
+_supabase.channel('customer-status')
+.on('postgres_changes',{event:'UPDATE', schema:'public', table:'orders'}, payload=>{
+    if(payload.new.customer_id===currentCustomerId){
+        alert(`Order #${payload.new.voucher_no} status updated: ${payload.new.status}`);
+    }
+})
+.subscribe();
 
-            const { data: orderData, error: orderErr } = await _supabase.from('orders').insert([{
-                customer_id: customer.id,
-                voucher_no: voucherNo,
-                items_json: cart,
-                total_amount: total,
-                payment_method: payment,
-                status:"Pending",
-                mode: currentMode
-            }]).select().single();
+// =================== Admin Dashboard ===================
+function renderAdminDashboard() {
+    const drawer = document.getElementById('main-drawer');
+    const overlay = document.getElementById('overlay');
+    overlay.style.display = 'block';
+    drawer.classList.add('active');
 
-            if(orderErr) return alert("Order save failed: "+orderErr.message);
+    drawer.innerHTML = `
+      <h3>ADMIN DASHBOARD</h3>
+      <button style="margin-bottom:15px;" onclick="closeDrawer()">Close</button>
+      
+      <div style="display:flex;gap:20px;flex-wrap:wrap;">
+        <div style="flex:1; min-width:300px;">
+          <h4>Pending Orders</h4>
+          <div id="admin-orders"></div>
+        </div>
+        <div style="flex:1; min-width:300px;">
+          <h4>Pre-order Calendar</h4>
+          <div id="preorder-calendar"></div>
+        </div>
+        <div style="flex:1; min-width:300px;">
+          <h4>Analytics & Loyalty</h4>
+          <div id="admin-analytics"></div>
+        </div>
+      </div>
+    `;
 
-            cart={}; saveCart(); updateBar(); closeDrawer();
-            alert(`အော်ဒါ အောင်မြင်စွာ သိမ်းပြီးပါပြီ။\nVoucher: ${voucherNo}\nTotal: ${total} Ks`);
-        }
+    loadAdminOrders();
+    loadPreorderCalendar();
+    loadAdminAnalytics();
+}
 
-        /* ===================  အပိုင်း ၄.၅ - Admin Function =================== */
-        function openAdmin(){
-            const pass=prompt("Admin Password ထည့်ပါ:");
-            if(pass==="2012@Yewin"){ alert("Admin Login Success"); }
-        }
-    </script>
+// =================== Admin Orders ===================
+async function loadAdminOrders() {
+    const { data: orders } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
+    const container = document.getElementById('admin-orders');
+    container.innerHTML = orders.map(o => {
+        const items = Object.keys(o.items_json).map(k => `${k} x ${o.items_json[k]}`).join(', ');
+        return `
+            <div style="padding:10px;border-bottom:1px solid #eee;">
+                <b>#${o.voucher_no}</b> | ${o.status} | ${items} | ${o.payment_method} 
+                ${o.payment_method==='Deposit' && !o.deposit_confirmed ? `<button onclick="confirmDeposit(${o.id})">Deposit Confirm</button>` : ''}
+                ${o.status==='Pending' ? `<button onclick="updateOrderStatus(${o.id},'Accepted')">Accept</button>` : ''}
+                ${o.status==='Accepted' ? `<button onclick="updateOrderStatus(${o.id},'Done')">Done</button>` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+async function confirmDeposit(orderId){
+    await _supabase.from('orders').update({deposit_confirmed:true}).eq('id',orderId);
+    alert('Deposit confirmed!');
+    loadAdminOrders();
+}
+
+async function updateOrderStatus(orderId, status){
+    await _supabase.from('orders').update({status}).eq('id',orderId);
+    loadAdminOrders();
+    sendTelegramNotification(`Order #${orderId} updated to ${status}`);
+}
+
+// =================== Pre-order Calendar ===================
+async function loadPreorderCalendar(){
+    const { data: preorders } = await _supabase.from('orders').select('*').not('preorder_date','is',null).order('preorder_date');
+    const container = document.getElementById('preorder-calendar');
+    if(!preorders.length){ container.innerHTML = 'No pre-orders'; return; }
+    
+    container.innerHTML = preorders.map(o => `
+        <div style="padding:5px;border-bottom:1px solid #ccc;">
+            ${o.preorder_date} | ${o.time_slot} | #${o.voucher_no} | ${Object.keys(o.items_json).map(k=>k+"x"+o.items_json[k]).join(', ')}
+        </div>
+    `).join('');
+}
+
+// =================== Admin Analytics ===================
+async function loadAdminAnalytics(){
+    const { data: orders } = await _supabase.from('orders').select('*');
+    const totalRevenue = orders.reduce((s,o)=>s+o.total_amount,0);
+    const totalOrders = orders.length;
+
+    // Most Purchased Item
+    const itemCount = {};
+    orders.forEach(o=>{
+        Object.keys(o.items_json).forEach(k=>{
+            itemCount[k]=(itemCount[k]||0)+o.items_json[k];
+        });
+    });
+    const mostPurchased = Object.entries(itemCount).sort((a,b)=>b[1]-a[1])[0] || ['-',0];
+
+    // Most Loyal Customers
+    const customerCount = {};
+    orders.forEach(o=>{
+        customerCount[o.customer_id] = (customerCount[o.customer_id]||0)+1;
+    });
+    const mostLoyal = Object.entries(customerCount).sort((a,b)=>b[1]-a[1])[0] || ['-',0];
+
+    document.getElementById('admin-analytics').innerHTML = `
+        <p>Total Orders: ${totalOrders}</p>
+        <p>Total Revenue: ${totalRevenue} Ks</p>
+        <p>Most Purchased Item: ${mostPurchased[0]} (${mostPurchased[1]} pcs)</p>
+        <p>Most Loyal Customer ID: ${mostLoyal[0]} (${mostLoyal[1]} orders)</p>
+    `;
+}
+
+// =================== Telegram Bot Placeholder ===================
+async function sendTelegramNotification(message){
+    console.log("Telegram Notification:", message);
+}
+
+// =================== Admin Access Trigger ===================
+function openAdmin(){
+    const pass = prompt("Admin Password ထည့်ပါ:");
+    if(pass==="2012@Yewin"){
+        alert("Admin Access Granted");
+        renderAdminDashboard();
+    } else {
+        alert("Password incorrect");
+    }
+}
+</script>
 </body>
 </html>

@@ -3,576 +3,498 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍗 MYIN THAR PREMIUM POS</title>
+    <title>🍗 MYIN THAR - CRYPTO STYLE POS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ea580c; --admin-bg: #1e293b; --bg: #f1f5f9; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Pyidaungsu', -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; line-height: 1.5; }
+        /* Binance Crypto Theme Colors */
+        :root {
+            --bg-dark: #0b0e11;
+            --bg-card: #1e2329;
+            --primary: #fcd535; /* Binance Yellow */
+            --text-main: #eaecef;
+            --text-dim: #848e9c;
+            --success: #0ecb81;
+            --danger: #f6465d;
+            --border: #333941;
+        }
+
+        body {
+            font-family: 'Inter', 'Pyidaungsu', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding-bottom: 80px;
+        }
+
         .hidden { display: none !important; }
-        
-        header { background: linear-gradient(135deg, var(--accent), #f97316); color: white; padding: 25px 20px; border-radius: 0 0 25px 25px; text-align: center; box-shadow: 0 4px 20px rgba(234,88,12,0.3); }
-        .container { max-width: 500px; margin: auto; padding: 20px 15px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .item-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
-        .item-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-color: var(--accent); }
-        .item-img { width: 100%; height: 120px; object-fit: cover; background: #f1f5f9; }
-        .item-info { padding: 15px; }
-        .item-name { font-weight: bold; font-size: 15px; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .price { color: var(--accent); font-weight: bold; font-size: 18px; }
-        .qty-box { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
-        .btn-qty { width: 38px; height: 38px; border: none; border-radius: 50%; background: #f1f5f9; font-weight: bold; font-size: 18px; cursor: pointer; transition: all 0.2s; }
-        .btn-qty:active { transform: scale(0.95); }
-        .btn-qty.plus { background: var(--accent); color: white; }
 
-        /* Cart Bar */
-        #cart-bar { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 18px 25px; border-radius: 25px 25px 20px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 15px 40px rgba(0,0,0,0.3); cursor: pointer; font-weight: 500; }
-        #cart-bar:hover { transform: translateX(-50%) translateY(-2px); }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
+        /* Header Styles */
+        header {
+            padding: 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(14, 203, 129, 0.15);
+            color: var(--success);
+        }
+
+        /* Container */
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+
+        /* Crypto Card Style */
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--border); }
+
+        /* Menu Grid */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .item-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .item-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .item-info { padding: 12px; }
+        .item-name { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
+        .item-price { color: var(--primary); font-size: 16px; font-weight: bold; }
+
+        /* Quantity Controls */
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            background: var(--bg-dark);
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        .btn-qty {
+            background: #2b3139;
+            color: var(--text-main);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-qty:hover { background: var(--border); }
+
+        /* Bottom Navigation (Crypto App Style) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 600px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            display: flex;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
+
+        /* Floating Cart Bar (Trading Bar Style) */
+        #cart-bar {
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 570px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Sidebar for Admin (Crypto Menu) */
+        #sidebar {
+            position: fixed;
+            left: 0; top: 0; bottom: 0;
+            width: 260px;
+            background: var(--bg-card);
+            z-index: 2000;
+            padding: 25px;
+            transform: translateX(-100%);
+            transition: 0.3s;
+            border-right: 1px solid var(--border);
+        }
+        #sidebar.active { transform: translateX(0); }
+
+        /* Inputs & Buttons */
+        input {
+            width: 100%;
+            padding: 14px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .btn-main {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Tables for Admin */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { color: var(--text-dim); font-size: 12px; text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+
+        .badge-pending { color: var(--primary); background: rgba(252, 213, 53, 0.1); padding: 4px 8px; border-radius: 4px; }
+        
         /* Drawer */
-        .drawer { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: flex; align-items: flex-end; backdrop-filter: blur(5px); }
-        .drawer-content { background: white; width: 100%; border-radius: 25px 25px 0 0; padding: 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
-        input, select { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; background: white; transition: border-color 0.2s; }
-        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
-
-        /* Admin Sidebar */
-        #admin-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: linear-gradient(180deg, var(--admin-bg), #0f172a); color: white; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 3000; padding: 25px 0; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
-        #admin-sidebar.active { transform: translateX(0); }
-        .sidebar-item { display: flex; align-items: center; color: #cbd5e1; padding: 20px 25px; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-size: 16px; transition: all 0.2s; position: relative; overflow: hidden; }
-        .sidebar-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); transform: scaleY(0); transition: transform 0.2s; }
-        .sidebar-item:hover { background: rgba(255,255,255,0.08); color: white; }
-        .sidebar-item:hover::before { transform: scaleY(1); }
-        .sidebar-item.active { background: rgba(234,88,12,0.2); color: white; }
-        .sidebar-item.active::before { transform: scaleY(1); }
-        .sidebar-item i { margin-right: 12px; width: 20px; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid #e2e8f0; left: 50%; transform: translateX(-50%); z-index: 1001; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
-        .nav-item { flex: 1; text-align: center; padding: 16px; color: #64748b; cursor: pointer; transition: all 0.2s; }
-        .nav-item.active { color: var(--accent); background: rgba(234,88,12,0.1); }
-        .nav-item i { display: block; font-size: 22px; margin-bottom: 4px; }
-        .nav-item span { font-size: 12px; font-weight: 500; }
-
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        th { background: linear-gradient(135deg, #f8fafc, #f1f5f9); padding: 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
-        td { padding: 16px; border-bottom: 1px solid #f3f4f6; }
-        .btn-small { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; margin: 0 4px; }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-danger { background: #ef4444; color: white; }
-
-        /* Status */
-        .status-open { color: #10b981; font-weight: bold; }
-        .status-closed { color: #ef4444; font-weight: bold; }
-        .low-stock { color: #ef4444; font-weight: bold; animation: blink 2s infinite; }
-        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
-
-        /* Voucher */
-        #barcode { margin: 30px auto; display: block; max-width: 100%; }
-        .voucher-card { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 40px 25px; border-radius: 25px; text-align: center; box-shadow: 0 20px 40px rgba(16,185,129,0.3); }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
+        .drawer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            border-radius: 20px 20px 0 0;
+            padding: 25px;
+            z-index: 1600;
+            max-height: 85vh;
+            overflow-y: auto;
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Offline Data Storage -->
-    <script>
-        // Offline Menu Data (Local Storage + Hardcoded)
-        const DEFAULT_MENU = [
-            { id: 1, name: 'ကြက်ပေါင်း', price: 4000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f97316/ffffff?text=ကြက်ပေါင်း' },
-            { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/ea580c/ffffff?text=ကြက်ရင်အုံ' },
-            { id: 3, name: 'ဆိတ်သားကင်', price: 1500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/1e293b/ffffff?text=ဆိတ်သားကင်' },
-            { id: 4, name: 'အသားချောင်း', price: 800, stock: 100, photo_url: 'https://via.placeholder.com/300x150/3b82f6/ffffff?text=အသားချောင်း' },
-            { id: 5, name: 'အရေခွံ', price: 500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f59e0b/000000?text=အရေခွံ' },
-            { id: 6, name: 'အတောင်ပျံ', price: 500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/10b981/ffffff?text=အတောင်ပျံ' },
-            { id: 7, name: 'ခေါင်း', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/ef4444/ffffff?text=ခေါင်း' },
-            { id: 8, name: 'လည်ချောင်း', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/8b5cf6/ffffff?text=လည်ချောင်း' },
-            { id: 9, name: 'ခြေထောက်', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f97316/000000?text=ခြေထောက်' },
-            { id: 10, name: 'ငုံးဥ', price: 1000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/fbbf24/000000?text=ငုံးဥ' }
-        ];
 
-        let menuItems = [], cart = [], orders = [], currentOrder = null, shopOpen = true, currentAdminView = 'orders';
-
-        // Local Storage Helpers
-        function saveData(key, data) { localStorage.setItem('myinthar_' + key, JSON.stringify(data)); }
-        function loadData(key, defaultValue = []) { 
-            try { return JSON.parse(localStorage.getItem('myinthar_' + key)) || defaultValue; } 
-            catch { return defaultValue; }
-        }
-
-        // Initialize App (No Supabase needed)
-        function initApp() {
-            menuItems = loadData('menu', DEFAULT_MENU);
-            orders = loadData('orders', []);
-            shopOpen = localStorage.getItem('myinthar_shopOpen') !== 'false';
-            
-            renderMenu();
-            updateShopStatus();
-            console.log('✅ MYIN THAR POS Ready! Offline Mode');
-        }
-
-        // Render Menu
-        function renderMenu() {
-            const grid = document.getElementById('menu-grid');
-            if (!grid) return;
-            
-            grid.innerHTML = menuItems.map(item => {
-                const cartItem = cart.find(c => c.id === item.id) || { qty: 0 };
-                const lowStock = item.stock < 10;
-                return `
-                    <div class="item-card" onclick="changeQuantity(${item.id}, 1)">
-                        <img src="${item.photo_url}" class="item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x150/f1f5f9/64748b?text=📦'">
-                        <div class="item-info">
-                            <div class="item-name">${item.name}</div>
-                            <div class="price">${item.price.toLocaleString()} ကျ</div>
-                            ${lowStock ? '<div class="low-stock">Stock: ' + item.stock + '</div>' : ''}
-                            <div class="qty-box">
-                                <button class="btn-qty" onclick="event.stopPropagation(); changeQuantity(${item.id}, -1)">−</button>
-                                <span style="min-width: 30px; text-align: center; font-weight: bold; font-size: 16px;">${cartItem.qty}</span>
-                                <button class="btn-qty plus" onclick="event.stopPropagation(); changeQuantity(${item.id}, 1)">+</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Change Quantity
-        function changeQuantity(id, delta) {
-            const item = menuItems.find(m => m.id === id);
-            if (!item || (delta > 0 && item.stock <= 0)) {
-                if (delta > 0 && item?.stock <= 0) alert('စတော့ ကုန်ပါပြီ!');
-                return;
-            }
-            
-            const cartItem = cart.find(c => c.id === id);
-            if (cartItem) {
-                cartItem.qty += delta;
-                if (cartItem.qty <= 0) cart = cart.filter(c => c.id !== id);
-            } else if (delta > 0 && shopOpen) {
-                cart.push({ ...item, qty: 1 });
-            }
-            
-            // Update stock locally
-            if (delta > 0 && item.stock > 0) {
-                item.stock = Math.max(0, item.stock - delta);
-                saveData('menu', menuItems);
-            }
-            
-            renderMenu();
-            updateCartDisplay();
-        }
-
-        // Update Cart Display
-        function updateCartDisplay() {
-            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            
-            const cartBar = document.getElementById('cart-bar');
-            if (cartBar) {
-                cartBar.classList.toggle('hidden', totalQty === 0);
-                document.getElementById('cart-qty').textContent = totalQty;
-                document.getElementById('total-amount').textContent = totalPrice.toLocaleString() + ' ကျပ်';
-            }
-            
-            const cartItemsHtml = cart.length ? cart.map(item => `
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
-                    <div>
-                        <div style="font-weight: 600;">${item.name}</div>
-                        <div style="font-size: 13px; color: #64748b;">Stock: ${item.stock}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div>x${item.qty}</div>
-                        <div style="font-weight: bold; color: var(--accent); font-size: 16px;">${(item.price * item.qty).toLocaleString()} ကျ</div>
-                    </div>
-                </div>
-            `).join('') : '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-shopping-basket" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i><div>အော်ဒါ မရှိပါ</div></div>';
-            
-            document.getElementById('cart-items').innerHTML = cartItemsHtml;
-        }
-
-        // Confirm Order
-        function confirmOrder() {
-            const name = document.getElementById('customer-name').value.trim();
-            const phone = document.getElementById('customer-phone').value.trim();
-            const time = document.getElementById('pickup-time').value;
-            
-            if (!name || !phone || !time) {
-                alert('❌ အမည်၊ ဖုန်း၊ ယူရန်အချိန် ဖြည့်ပေးပါ');
-                return;
-            }
-            if (cart.length === 0) {
-                alert('❌ အော်ဒါ မရှိပါ');
-                return;
-            }
-            if (!shopOpen) {
-                alert('❌ ဆိုင် ပိတ်ထားပါသည်');
-                return;
-            }
-
-            const voucherNo = 'YNS-' + Date.now().toString().slice(-6);
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const itemsList = cart.map(item => `${item.name}(${item.qty})`).join(', ');
-            
-            const order = {
-                id: Date.now(),
-                voucher_no: voucherNo,
-                customer_name: name,
-                phone: phone,
-                items: itemsList,
-                total: total,
-                pickup_time: time,
-                created_at: new Date().toLocaleString('my-MM'),
-                status: 'pending'
-            };
-            
-            orders.unshift(order);
-            saveData('orders', orders);
-            localStorage.setItem('customer_name', name);
-            localStorage.setItem('customer_phone', phone);
-            
-            currentOrder = order;
-            showVoucher(order);
-            cart = [];
-            toggleCart(false);
-            renderMenu();
-            
-            // Play success sound
-            try {
-                new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
-            } catch {}
-        }
-
-        // Show Voucher
-        function showVoucher(order) {
-            showView('voucher');
-            document.getElementById('voucher-number').textContent = order.voucher_no;
-            document.getElementById('voucher-details').innerHTML = `
-                <div style="font-size: 16px; margin-bottom: 12px;"><b>👤 ဖောက်သည်:</b> ${order.customer_name}</div>
-                <div style="font-size: 16px; margin-bottom: 12px;"><b>📱 ဖုန်း:</b> ${order.phone}</div>
-                <div style="font-size: 15px; color: #f3f4f6; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin: 12px 0;">${order.items}</div>
-                <div style="font-size: 24px; font-weight: bold; color: #fef3c7; margin: 20px 0;">💰 ${order.total.toLocaleString()} ကျပ်</div>
-                <div style="font-size: 18px; color: #fef3c7;"><b>🕒 ယူရန်အချိန်:</b> ${order.pickup_time}</div>
-            `;
-            JsBarcode("#barcode", order.voucher_no, { height: 80, width: 2.5, displayValue: false, margin: 10 });
-        }
-
-        // Send to Viber (09767287345)
-        function sendToViber() {
-            if (!currentOrder) return alert('Voucher မရှိပါ');
-            
-            const message = `🧾 *MYIN THAR POS ORDER*
-
-Voucher: ${currentOrder.voucher_no}
-Customer: ${currentOrder.customer_name}
-Phone: ${currentOrder.phone}
-Items: ${currentOrder.items}
-Total: ${currentOrder.total.toLocaleString()} ကျပ်
-Pickup: ${currentOrder.pickup_time}`;
-            const viberUrl = `viber://chat?number=%2B959767287345&text=${encodeURIComponent(message)}`;
-            
-            window.open(viberUrl, '_blank');
-        }
-
-        // Navigation
-        function showView(viewName) {
-            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event?.target.closest('.nav-item')?.classList.add('active');
-            
-            if (viewName === 'profile') loadProfile();
-            if (viewName === 'admin') setAdminView(currentAdminView);
-        }
-
-        function toggleCart(show) {
-            document.getElementById('cart-drawer').classList.toggle('hidden', !show);
-            if (show) updateCartDisplay();
-        }
-
-        function toggleSidebar(show) {
-            document.getElementById('admin-sidebar').classList.toggle('active', show);
-        }
-
-        function setAdminView(view) {
-            currentAdminView = view;
-            document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
-            document.getElementById(`admin-${view}`).classList.remove('hidden');
-            
-            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById('admin-title').textContent = {
-                'orders': '📋 အော်ဒါများ',
-                'stock': '📦 Stock/Price',
-                'settings': '⚙️ ဆိုင်ဆက်တင်'
-            }[view];
-            
-            if (view === 'orders') loadAdminOrders();
-            if (view === 'stock') loadAdminStock();
-        }
-
-        // Admin Functions
-        function loadAdminOrders() {
-            const html = orders.map(order => `
-                <div style="background: white; padding: 25px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                        <h4 style="margin: 0; color: var(--accent);">#${order.voucher_no}</h4>
-                        <span style="background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">${order.pickup_time}</span>
-                    </div>
-                    <div style="font-size: 14px; color: #374151; margin-bottom: 16px; line-height: 1.5;">${order.items}</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <div style="font-size: 16px;">${order.customer_name}<br><small style="color: #6b7280;">${order.phone}</small></div>
-                        <div style="font-size: 22px; font-weight: bold; color: var(--accent);">${order.total.toLocaleString()} ကျ</div>
-                    </div>
-                    <div style="display: flex; gap: 12px;">
-                        <a href="tel:${order.phone}" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; text-align: center; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600;">📞 Call</a>
-                        <button onclick="markOrderComplete(${order.id})" style="flex: 1; background: linear-gradient(135deg, var(--accent), #f97316); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600;">✅ ပြီးသည်</button>
-                    </div>
-                </div>
-            `).join('') || '<div style="text-align: center; padding: 60px 20px; color: #6b7280;"><i class="fas fa-inbox" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i><div style="font-size: 16px;">အော်ဒါ မရှိသေးပါ</div></div>';
-            
-            document.getElementById('admin-orders').innerHTML = html;
-        }
-
-        function loadAdminStock() {
-            const html = `
-                <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width: 45%;">ပစ္စည်း</th>
-                                <th style="width: 20%; text-align: right;">စျေး</th>
-                                <th style="width: 20%; text-align: right;">Stock</th>
-                                <th style="width: 15%;">လုပ်ဆောင်</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${menuItems.map(item => `
-                                <tr style="border-bottom: 1px solid #f3f4f6;">
-                                    <td style="font-weight: 500;">${item.name}</td>
-                                    <td style="text-align: right; font-weight: 600; color: var(--accent);">${item.price.toLocaleString()}</td>
-                                    <td style="text-align: right; font-weight: bold; color: ${item.stock < 10 ? '#ef4444' : '#10b981'}">${item.stock}</td>
-                                    <td>
-                                        <button class="btn-small btn-primary" onclick="editStock(${item.id})">Stock</button>
-                                        <button class="btn-small btn-success" onclick="editPrice(${item.id})" style="margin-left: 4px;">Price</button>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            `;
-            document.getElementById('admin-stock').innerHTML = html;
-        }
-
-        function editStock(id) {
-            const item = menuItems.find(i => i.id === id);
-            const newStock = prompt('စတော့ အသစ်:', item.stock);
-            if (newStock !== null && !isNaN(newStock) && newStock >= 0) {
-                item.stock = parseInt(newStock);
-                saveData('menu', menuItems);
-                renderMenu();
-                loadAdminStock();
-                alert('✅ စတော့ သိမ်းပြီး');
-            }
-        }
-
-        function editPrice(id) {
-            const item = menuItems.find(i => i.id === id);
-            const newPrice = prompt('စျေး အသစ် (ကျပ်):', item.price);
-            if (newPrice !== null && !isNaN(newPrice) && newPrice > 0) {
-                item.price = parseInt(newPrice);
-                saveData('menu', menuItems);
-                renderMenu();
-                loadAdminStock();
-                alert('✅ စျေး သိမ်းပြီး');
-            }
-        }
-
-        function toggleShopStatus() {
-            shopOpen = !shopOpen;
-            localStorage.setItem('myinthar_shopOpen', shopOpen);
-            updateShopStatus();
-            alert(shopOpen ? '✅ ဆိုင် ဖွင့်ပြီး' : '🔒 ဆိုင် ပိတ်ပြီး');
-        }
-        function updateShopStatus() {
-            const statusEl = document.getElementById('shop-status');
-            const toggleBtn = document.getElementById('shop-toggle');
-            if (statusEl) {
-                statusEl.innerHTML = shopOpen ? '<span class="status-open">🟢 ဆိုင်ဖွင့်ထားသည်</span>' : '<span class="status-closed">🔴 ဆိုင်ပိတ်ထားသည်</span>';
-            }
-            if (toggleBtn) {
-                toggleBtn.textContent = shopOpen ? '🔒 ဆိုင်ပိတ်ရန်' : '🟢 ဆိုင်ဖွင့်ရန်';
-                toggleBtn.style.background = shopOpen ? 'linear-gradient(135deg, #fee2e2, #fecaca)' : 'linear-gradient(135deg, #dcfce7, #bbf7d0)';
-                toggleBtn.style.color = shopOpen ? '#dc2626' : '#166534';
-            }
-        }
-
-        function loadProfile() {
-            const name = localStorage.getItem('customer_name') || 'Customer';
-            const phone = localStorage.getItem('customer_phone') || '';
-            document.getElementById('profile-name').textContent = name;
-            document.getElementById('profile-phone').textContent = phone ? `📱 ${phone}` : 'ဖုန်းနံပါတ် မရှိသေး';
-            
-            const userOrders = orders.filter(o => o.phone === phone);
-            document.getElementById('order-history').innerHTML = userOrders.slice(0, 10).map(order => `
-                <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 600; color: var(--accent);">#${order.voucher_no}</span>
-                        <span style="font-weight: bold; color: #10b981;">${order.total.toLocaleString()} ကျ</span>
-                    </div>
-                    <div style="font-size: 13px; color: #6b7280; margin-top: 8px;">${order.items}</div>
-                </div>
-            `).join('') || '<div style="text-align: center; padding: 50px 20px; color: #9ca3af;"><i class="fas fa-history" style="font-size: 48px; margin-bottom: 15px;"></i><div>မှာယူမှု မရှိသေးပါ</div></div>';
-        }
-
-        function loginAdmin() {
-            const password = prompt('🔐 Admin Password:', '');
-            if (password === '2012@Yewin') {
-                showView('admin');
-            } else {
-                alert('❌ Password မှားပါတယ်');
-            }
-        }
-
-        function markOrderComplete(id) {
-            const order = orders.find(o => o.id === id);
-            if (order) {
-                order.status = 'completed';
-                saveData('orders', orders);
-                loadAdminOrders();
-            }
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            initApp();
-            document.getElementById('cart-bar')?.addEventListener('click', () => toggleCart(true));
-        });
-    </script>
-
-    <!-- Home View -->
-    <div id="view-home" class="view">
-        <header>
-            <h1 style="margin: 0 0 8px 0; font-size: 28px;">🍗 MYIN THAR</h1>
-            <h2 style="margin: 0; font-size: 16px; opacity: 0.95;">PREMIUM POS</h2>
-            <div id="shop-status" style="margin-top: 12px; font-size: 14px;"></div>
-        </header>
-        <div class="container">
-            <div id="menu-grid" class="grid" style="min-height: 400px;"></div>
-        </div>
+<header>
+    <div class="logo">
+        <i class="fas fa-coins"></i>
+        <span>MYIN THAR</span>
     </div>
+    <div id="shop-status" class="status-badge">Market Open</div>
+</header>
 
-    <!-- Profile View -->
-    <div id="view-profile" class="view hidden">
-        <div class="container">
-            <div style="text-align: center; padding: 40px 30px 30px;">
-                <i class="fas fa-user-circle" style="font-size: 80px; color: #d1d5db; margin-bottom: 20px;"></i>
-                <h3 id="profile-name" style="margin: 0 0 8px 0; font-size: 22px;">Customer</h3>
-                <p id="profile-phone" style="color: #6b7280; font-size: 16px; margin: 0;"></p>
-            </div>
-            <h4 style="margin: 0 0 20px 0; font-size: 18px; color: #374151;">📋 မှာယူမှု သမိုင်း</h4>
-            <div id="order-history"></div>
-        </div>
+<div id="v-home" class="view container">
+    <div style="margin-bottom: 20px;">
+        <h4 style="margin: 0; color: var(--text-dim);">Hot Deals</h4>
+        <div id="menu-list" class="grid" style="margin-top:15px;"></div>
     </div>
+</div>
 
-    <!-- Admin View -->
-    <div id="view-admin" class="view hidden">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
-                <button onclick="toggleSidebar(true)" style="background: none; border: none; font-size: 28px; color: var(--accent); padding: 10px;"><i class="fas fa-bars"></i></button>
-                <h3 id="admin-title" style="margin: 0; font-size: 22px;">📋 အော်ဒါများ</h3>
-                <div style="width: 50px;"></div>
-            </div>
-            
-            <div id="admin-orders" class="admin-section"></div>
-            <div id="admin-stock" class="admin-section hidden"></div>
-            <div id="admin-settings" class="admin-section hidden">
-                <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
-                    <h4 style="margin: 0 0 25px 0; color: #1f2937;">🟢 ဆိုင်အခြေအနေ</h4>
-                    <button id="shop-toggle" onclick="toggleShopStatus()" style="width: 100%; padding: 20px; border-radius: 15px; border: none; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.2s;"></button>
-                    <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 12px;">
-                        <label style="display: block; margin-bottom: 10px; font-weight: 600;">📱 Admin Viber:</label>
-                        <div style="display: flex; gap: 12px;">
-                            <input id="admin-viber" type="tel" value="+959767287345" style="flex: 1; padding: 14px; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 16px;">
-                            <button onclick="updateViberNumber()" style="padding: 14px 24px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: 600; white-space: nowrap;">Save</button>
+<div id="v-profile" class="view container hidden">
+    <h3 style="color: var(--primary);"><i class="fas fa-history"></i> My History</h3>
+    <div id="user-info" class="card" style="border-left: 4px solid var(--primary);"></div>
+    <div id="history-list"></div>
+</div>
+
+<div id="v-admin" class="view container hidden">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Dashboard</h3>
+        <button onclick="toggleSidebar(true)" style="background:none; border:none; color:var(--text-main); font-size:20px;"><i class="fas fa-bars"></i></button>
+    </div>
+    
+    <div id="admin-orders"></div>
+    <div id="admin-inventory" class="hidden"></div>
+</div>
+
+<div id="v-voucher" class="view container hidden" style="text-align: center;">
+    <div class="card" style="border: 2px solid var(--primary);">
+        <h2 style="color: var(--success); margin-bottom: 5px;">TRADE SUCCESS</h2>
+        <svg id="barcode"></svg>
+        <div id="vd" style="text-align: left; margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 15px; font-family: monospace;"></div>
+        <button onclick="sendViber()" class="btn-main" style="background:#7360f2; color:white; margin-top:20px;">
+            <i class="fab fa-viber"></i> SEND VIA VIBER
+        </button>
+    </div>
+</div>
+
+<div id="sidebar">
+    <h3 style="color:var(--primary);">Control Panel</h3>
+    <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
+    <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="nav-item" onclick="setAdminTab('orders')" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-list"></i> Orders</div>
+        <div class="nav-item" onclick="setAdminTab('inventory')" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-box"></i> Stock Edit</div>
+        <div class="nav-item" onclick="toggleShop()" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-power-off"></i> Shop Open/Close</div>
+    </div>
+    <button onclick="toggleSidebar(false)" style="margin-top: 50px; background:none; border:1px solid var(--border); color:var(--text-dim); padding:10px; width:100%; border-radius:8px;">Back</button>
+</div>
+
+<div id="cart-bar" class="hidden" onclick="toggleDrawer(true)">
+    <span><i class="fas fa-shopping-cart"></i> <span id="cart-qty">0</span> Assets Selected</span>
+    <span>Review ></span>
+</div>
+
+<div id="overlay" class="overlay" onclick="toggleDrawer(false)"></div>
+<div id="drawer" class="drawer">
+    <h3 style="margin-top:0;"><i class="fas fa-wallet" style="color:var(--primary);"></i> Checkout</h3>
+    <div id="cart-summary" style="margin-bottom:20px;"></div>
+    
+    <input type="text" id="c-name" placeholder="Enter Your Name">
+    <input type="number" id="c-phone" placeholder="Phone Number">
+    <input type="time" id="c-time" value="12:00">
+    
+    <div style="display:flex; justify-content:space-between; margin: 20px 0; font-size:20px; font-weight:bold;">
+        <span>Grand Total:</span>
+        <span id="c-total" style="color:var(--primary);">0 K</span>
+    </div>
+    
+    <button onclick="confirmOrder()" class="btn-main">CONFIRM ORDER</button>
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-layer-group"></i>Market</div>
+    <div class="nav-item" onclick="showPage('profile')"><i class="fas fa-chart-pie"></i>Portfolio</div>
+    <div class="nav-item" onclick="handleAdmin()"><i class="fas fa-shield-alt"></i>Account</div>
+</nav>
+
+<script>
+    const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
+    const SB_KEY = "sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc";
+    const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+
+    let menu = [], cart = [], activeOrder = null, isShopOpen = true;
+
+    async function init() {
+        const { data: m } = await _supabase.from('menu_items').select('*').order('name');
+        const { data: s } = await _supabase.from('shop_settings').select('*').eq('id', 1).single();
+        menu = m; isShopOpen = s.is_open;
+        renderMenu(); updateShopUI();
+        
+        _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, () => {
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+            if(!document.getElementById('v-admin').classList.contains('hidden')) loadAdmin();
+        }).subscribe();
+    }
+
+    function renderMenu() {
+        document.getElementById('menu-list').innerHTML = menu.map(i => {
+            const inCart = cart.find(c => c.id === i.id) || {qty:0};
+            return `
+                <div class="item-card">
+                    <img src="${i.photo_url}" class="item-img">
+                    <div class="item-info">
+                        <div class="item-name">${i.name}</div>
+                        <div class="item-price">${i.price} K</div>
+                        <div class="qty-box">
+                            <button class="btn-qty" onclick="changeQty(${i.id}, -1)">-</button>
+                            <span style="font-weight:bold;">${inCart.qty}</span>
+                            <button class="btn-qty" onclick="changeQty(${i.id}, 1)" style="color:var(--primary);">+</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            `;
+        }).join('');
+    }
 
-    <!-- Cart Drawer -->
-    <div id="cart-drawer" class="drawer hidden">
-        <div class="drawer-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h3 style="margin: 0; font-size: 24px;">🛒 သင့်အော်ဒါ</h3>
-                <button onclick="toggleCart(false)" style="background: none; border: none; font-size: 28px; color: #6b7280; padding: 5px;">×</button>
-            </div>
-            <div id="cart-items"></div>
-            <hr style="margin: 25px 0; border: none; height: 1px; background: linear-gradient(to right, transparent, #e5e7eb, transparent);">
-            <input type="text" id="customer-name" placeholder="👤 သင့်အမည် ရေးပါ">
-            <input type="tel" id="customer-phone" placeholder="📱 ဖုန်းနံပါတ်">
-            <input type="time" id="pickup-time">
-            <div style="display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin: 25px 0; color: var(--accent);">
-                <span>💰 စုစုပေါင်း:</span>
-                <span id="total-amount">0 ကျပ်</span>
-            </div>
-            <button onclick="confirmOrder()" style="width: 100%; background: linear-gradient(135deg, var(--accent), #f97316); color: white; border: none; padding: 22px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 8px 25px rgba(234,88,12,0.4); transition: all 0.2s;">✅ အော်ဒါ သေချာလိုက်ပါ</button>
-        </div>
-    </div>
-
-    <!-- Voucher View -->
-    <div id="view-voucher" class="view hidden">
-        <div class="container">
-            <div class="voucher-card">
-                <h2 style="font-size: 32px; margin: 0 0 15px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">✅ အောင်မြင်ပါပြီ!</h2>
-                <svg id="barcode"></svg>
-                <h3 id="voucher-number" style="font-size: 28px; margin: 20px 0 15px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">YNS-000000</h3>
-                <div id="voucher-details" style="background: rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; backdrop-filter: blur(10px);"></div>
-                <button onclick="sendToViber()" style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; border: none; padding: 20px; border-radius: 16px; font-size: 18px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(139,92,246,0.4);">
-                    <i class="fab fa-viber" style="margin-right: 10px;"></i>Viber သို့ အော်ဒါ ပို့ရန်
-                </button>
-                <button onclick="showView('home')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; border: 2px solid rgba(255,255,255,0.5); padding: 18px; border-radius: 14px; font-size: 16px; font-weight: 600; backdrop-filter: blur(10px);">🏠 ပင်မစာမျက်နှာ</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Sidebar -->
-    <div id="admin-sidebar">
-        <div style="padding: 30px 25px 20px; border-bottom: 3px solid rgba(234,88,12,0.3); margin-bottom: 20px;">
-            <h3 style="margin: 0; font-size: 22px; font-weight: 700;">🍗 Admin Panel</h3>
-        </div>
-        <div class="sidebar-item active" onclick="setAdminView('orders')"><i class="fas fa-shopping-bag"></i>📋 အော်ဒါများ</div>
-        <div class="sidebar-item" onclick="setAdminView('stock')"><i class="fas fa-boxes"></i>📦 Stock/Price</div>
-        <div class="sidebar-item" onclick="setAdminView('settings')"><i class="fas fa-cog"></i>⚙️ ဆိုင်ဆက်တင်</div>
-        <div class="sidebar-item" onclick="toggleSidebar(false)" style="color: #94a3b8; border-top: 1px solid #475569;"><i class="fas fa-times"></i>❌ ပိတ်ရန်</div>
-    </div>
-
-    <!-- Cart Bar -->
-    <div id="cart-bar" class="hidden">
-        <div><i class="fas fa-shopping-basket" style="margin-right: 8px;"></i><span id="cart-qty">0</span> ခု ရွေးထားသည်</div>
-        <div>Checkout ➜</div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showView('home')"><i class="fas fa-utensils"></i><span>Menu</span></div>
-        <div class="nav-item" onclick="showView('profile')"><i class="fas fa-history"></i><span>သမိုင်း</span></div>
-        <div class="nav-item" onclick="loginAdmin()"><i class="fas fa-user-shield"></i><span>Admin</span></div>
-    </nav>
-
-    <script>
-        function updateViberNumber() {
-            const phone = document.getElementById('admin-viber').value.trim();
-            if (phone && phone.startsWith('+959') || phone.startsWith('09')) {
-                alert('✅ Viber နံပါတ် သိမ်းပြီး');
-            } else {
-                alert('❌ +959 နံပါတ် ထည့်ပါ');
-            }
+    function changeQty(id, delta) {
+        const item = menu.find(m => m.id === id);
+        const cartItem = cart.find(c => c.id === id);
+        if(cartItem) {
+            cartItem.qty += delta;
+            if(cartItem.qty <= 0) cart = cart.filter(c => c.id !== id);
+        } else if(delta > 0) {
+            cart.push({...item, qty: 1});
         }
-    </script>
+        renderMenu(); updateCartBar();
+    }
+
+    function updateCartBar() {
+        const q = cart.reduce((a, b) => a + b.qty, 0);
+        document.getElementById('cart-bar').classList.toggle('hidden', q === 0);
+        document.getElementById('cart-qty').innerText = q;
+        document.getElementById('c-total').innerText = cart.reduce((a, b) => a + (b.price * b.qty), 0) + " K";
+        document.getElementById('cart-summary').innerHTML = cart.map(c => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                <span>${c.name} x ${c.qty}</span>
+                <b>${c.price * c.qty} K</b>
+            </div>
+        `).join('');
+    }
+
+    async function confirmOrder() {
+        const name = document.getElementById('c-name').value;
+        const phone = document.getElementById('c-phone').value;
+        const time = document.getElementById('c-time').value;
+        if(!name || !phone) return alert("Please fill all details!");
+        
+        const vn = "YNS-" + Date.now().toString().slice(-6);
+        const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        const items = cart.map(c => `${c.name}(${c.qty})`).join(', ');
+
+        const { data, error } = await _supabase.from('orders').insert([{
+            voucher_no: vn, customer_name: name, phone: phone, items: items, total: total, pickup_time: time
+        }]).select();
+
+        if(!error) {
+            localStorage.setItem('u_name', name); localStorage.setItem('u_phone', phone);
+            activeOrder = data[0];
+            showVoucher(data[0]);
+            cart = []; updateCartBar(); renderMenu(); toggleDrawer(false);
+        }
+    }
+
+    function showVoucher(o) {
+        showPage('voucher');
+        JsBarcode("#barcode", o.voucher_no, {lineColor: "#fcd535", background: "transparent", width: 2, height: 50, displayValue: false});
+        document.getElementById('vd').innerHTML = `
+            ORDER_ID: ${o.voucher_no}<br>
+            STATUS: CONFIRMED<br>
+            ASSETS: ${o.items}<br>
+            VALUE: ${o.total} K<br>
+            PICKUP: ${o.pickup_time}
+        `;
+    }
+
+    function sendViber() {
+        const msg = `🧾 *MYIN THAR ORDER*\nID: ${activeOrder.voucher_no}\nUser: ${activeOrder.customer_name}\nAssets: ${activeOrder.items}\nValue: ${activeOrder.total} K\nTime: ${activeOrder.pickup_time}`;
+        window.location.href = `viber://chat?number=%2B959793139886&draft=${encodeURIComponent(msg)}`;
+    }
+
+    async function loadAdmin() {
+        const { data: ords } = await _supabase.from('orders').select('*').order('id', {ascending: false});
+        document.getElementById('admin-orders').innerHTML = ords.map(o => `
+            <div class="card">
+                <div style="display:flex; justify-content:space-between;">
+                    <b style="color:var(--primary);">#${o.voucher_no}</b>
+                    <span class="badge-pending">${o.pickup_time}</span>
+                </div>
+                <div style="margin: 10px 0; font-size: 13px;">${o.items}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <small>${o.customer_name}</small>
+                    <a href="tel:${o.phone}" style="color:var(--success);"><i class="fas fa-phone"></i> Call</a>
+                </div>
+            </div>
+        `).join('');
+        
+        const { data: items } = await _supabase.from('menu_items').select('*').order('name');
+        document.getElementById('admin-inventory').innerHTML = `
+            <table>
+                <thead><tr><th>Asset</th><th>Price</th><th>Stock</th></tr></thead>
+                <tbody>
+                    ${items.map(i => `
+                        <tr>
+                            <td>${i.name}</td>
+                            <td onclick="editItem(${i.id},'price',${i.price})"><u>${i.price}</u></td>
+                            <td onclick="editItem(${i.id},'stock',${i.stock})"><b style="color:var(--primary)">${i.stock}</b></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    async function editItem(id, field, cur) {
+        const val = prompt(`New ${field}?`, cur);
+        if(val) {
+            await _supabase.from('menu_items').update({[field]: parseInt(val)}).eq('id', id);
+            loadAdmin();
+        }
+    }
+
+    function showPage(p) {
+        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+        document.getElementById('v-' + p).classList.remove('hidden');
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        if(p === 'profile') loadHistory();
+    }
+
+    async function loadHistory() {
+        const ph = localStorage.getItem('u_phone');
+        document.getElementById('user-info').innerText = (localStorage.getItem('u_name') || "No Data") + " (" + (ph || "-") + ")";
+        if(ph) {
+            const { data } = await _supabase.from('orders').select('*').eq('phone', ph).order('id', {ascending: false});
+            document.getElementById('history-list').innerHTML = data.map(o => `
+                <div class="card"><b>#${o.voucher_no}</b><br><small>${o.items}</small><br><b>${o.total} K</b></div>
+            `).join('');
+        }
+    }
+
+    function handleAdmin() { if(prompt("Pass?") === "2012@Yewin") showPage('admin'); }
+    function setAdminTab(t) {
+        document.getElementById('admin-orders').classList.toggle('hidden', t !== 'orders');
+        document.getElementById('admin-inventory').classList.toggle('hidden', t !== 'inventory');
+        toggleSidebar(false);
+    }
+    function toggleSidebar(s) { document.getElementById('sidebar').classList.toggle('active', s); }
+    function toggleDrawer(s) { 
+        document.getElementById('drawer').style.display = s ? 'block' : 'none'; 
+        document.getElementById('overlay').style.display = s ? 'block' : 'none'; 
+    }
+    async function toggleShop() {
+        isShopOpen = !isShopOpen;
+        await _supabase.from('shop_settings').update({is_open: isShopOpen}).eq('id', 1);
+        updateShopUI();
+    }
+    function updateShopUI() {
+        document.getElementById('shop-status').innerText = isShopOpen ? "Market Open" : "Market Closed";
+        document.getElementById('shop-status').style.color = isShopOpen ? "var(--success)" : "var(--danger)";
+    }
+
+    window.onload = init;
+</script>
 </body>
 </html>
+

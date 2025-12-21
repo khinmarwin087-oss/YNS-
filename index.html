@@ -1,310 +1,256 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>MYIN THAR | PREMIUM POS SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        :root {
-            --apple-white: #F5F5F7;
-            --apple-dark: #1D1D1F;
-            --premium-orange: #FF6B00;
-            --glass: rgba(255, 255, 255, 0.85);
-            --shadow: 0 12px 40px rgba(0,0,0,0.1);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>MYIN THAR | ONLINE BUSINESS SYSTEM</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--apple-white); color: var(--apple-dark); overflow-x: hidden; }
+<style>
+:root { --accent:#FF6B00; --bg:#F5F5F7; --dark:#1D1D1F; --glass:rgba(255,255,255,0.9);}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Montserrat',sans-serif;}
+body{background:var(--bg);color:var(--dark);overflow-x:hidden;}
+.hidden{display:none!important;}
 
-        .hidden { display: none !important; }
+/* ၁. Landing / Entry Section */
+#landing-hero{height:100vh;background:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),url('https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=1000') center/cover;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:white;}
+.cta-group{display:flex;gap:15px;margin-top:30px;}
+.btn-choice{padding:18px 30px;border-radius:50px;border:none;font-weight:700;cursor:pointer;transition:0.3s;font-size:1rem;}
+.btn-today{background:var(--accent);color:white;box-shadow:0 10px 20px rgba(255,107,0,0.3);}
+.btn-pre{background:white;color:var(--dark);}
 
-        /* UI Components */
-        .btn-premium { background: var(--apple-dark); color: white; border: none; padding: 16px 30px; border-radius: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; width: 100%; }
-        .card { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+/* ၂. Store / Items Section */
+header{position:fixed;top:0;width:100%;height:70px;background:var(--glass);backdrop-filter:blur(20px);z-index:1000;display:flex;align-items:center;padding:0 20px;justify-content:space-between;border-bottom:1px solid rgba(0,0,0,0.05);}
+#storefront{padding:90px 15px 150px;}
+.item-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px;}
+.item-card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.05);position:relative;}
+.preorder-badge{position:absolute;top:10px;left:10px;background:var(--accent);color:white;padding:4px 10px;border-radius:10px;font-size:0.6rem;font-weight:700;}
+.item-img{width:100%;height:140px;object-fit:cover;}
+.qty-btns{display:flex;align-items:center;justify-content:space-between;background:#F2F2F7;border-radius:12px;padding:5px;margin-top:10px;}
+.qty-btn{border:none;background:white;width:30px;height:30px;border-radius:8px;font-weight:bold;cursor:pointer;}
 
-        /* 1. Header & Hero */
-        #hero-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=2070') center/cover; text-align: center; color: white; }
-        
-        header { position: fixed; top: 0; width: 100%; height: 70px; background: var(--glass); backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 20px; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); justify-content: space-between; }
+/* ၃. Sticky Cart Bar */
+#sticky-cart{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);width:92%;max-width:450px;background:var(--dark);color:white;padding:20px 25px;border-radius:25px;display:flex;justify-content:space-between;align-items:center;z-index:2000;box-shadow:0 15px 40px rgba(0,0,0,0.4);}
 
-        /* 2. Menu Grid */
-        #menu-page { padding: 90px 15px 150px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .item-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.03); }
-        .item-img { width: 100%; height: 140px; object-fit: cover; }
-        .item-info { padding: 15px; }
-        
-        /* 3. Sticky Cart Bar (Option B Logic) */
-        .sticky-cart { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: var(--apple-dark); color: white; padding: 18px 25px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.4); z-index: 2000; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .sticky-cart:active { transform: translateX(-50%) scale(0.95); }
+/* ၄. Drawer / Overlay */
+.drawer{position:fixed;bottom:0;left:0;right:0;background:white;border-radius:30px 30px 0 0;padding:30px 20px;z-index:3001;transform:translateY(100%);transition:0.5s cubic-bezier(0.4,0,0.2,1);max-height:90vh;overflow-y:auto;}
+.drawer.active{transform:translateY(0);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:3000;display:none;backdrop-filter:blur(5px);}
 
-        /* 4. Checkout Drawer */
-        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); z-index: 3000; display: none; }
-        .drawer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-radius: 30px 30px 0 0; padding: 30px 25px; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3001; max-height: 85vh; overflow-y: auto; }
-        .drawer.active { transform: translateY(0); }
-
-        /* 5. Admin Panel POS Style */
-        #admin-page { padding: 90px 15px 50px; }
-        .status-pill { padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; }
-        .pending { background: #FFF4ED; color: #FF6B00; }
-        .confirmed { background: #ECFDF5; color: #10B981; }
-
-        /* Quantity controls */
-        .qty-ctrl { display: flex; align-items: center; background: #F2F2F7; border-radius: 12px; padding: 4px; margin-top: 10px; width: fit-content; }
-        .qty-btn { border: none; background: white; width: 32px; height: 32px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .qty-val { margin: 0 15px; font-weight: 700; }
-
-        /* Form Inputs */
-        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #E5E5EA; margin-bottom: 15px; font-family: inherit; font-size: 1rem; }
-    </style>
+/* ၅. Status Tracker UI */
+.tracker-card{background:#F2F2F7;padding:20px;border-radius:20px;margin-top:15px;}
+.step{display:flex;align-items:center;gap:15px;margin-bottom:15px;opacity:0.3;}
+.step.active{opacity:1;color:var(--accent);font-weight:700;}
+</style>
 </head>
 <body>
 
-    <header class="hidden" id="main-header">
-        <div onclick="goHome()" style="cursor:pointer;"><i class="fas fa-chevron-left"></i></div>
-        <b style="letter-spacing: 1px; font-size: 0.9rem;">MYIN THAR ROASTED</b>
-        <div id="shop-status" class="status-pill confirmed">OPEN</div>
-    </header>
+<!-- =================== ၁. Landing / Entry Section =================== -->
+<div id="landing-hero">
+  <div style="font-weight:700;font-size:1.2rem;letter-spacing:5px;margin-bottom:10px;">MYIN THAR</div>
+  <h1>အရသာနှင့် ဝန်ဆောင်မှု အကောင်းဆုံး</h1>
+  <div class="cta-group">
+    <button class="btn-choice btn-today" onclick="entryShop('Today')">ယနေ့မှာယူမည်</button>
+    <button class="btn-choice btn-pre" onclick="entryShop('Pre-order')">နောက်နေ့အတွက်မှာမည်</button>
+  </div>
+  <p onclick="openAdmin()" style="margin-top:50px;opacity:0.3;font-size:0.7rem;">ADMIN ACCESS</p>
+</div>
 
-    <div id="hero-page">
-        <div>
-            <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">MYIN THAR</h1>
-            <p style="opacity: 0.8; margin-bottom: 30px;">Premium Taste, Professional Service</p>
-            <button class="btn-premium" style="background: white; color: black; width: auto; padding: 18px 50px; border-radius: 50px;" onclick="startOrdering()">မှာယူရန် နှိပ်ပါ</button>
-            <p onclick="loginAdmin()" style="margin-top: 40px; font-size: 0.7rem; opacity: 0.5; cursor: pointer;">ADMIN ACCESS</p>
+<!-- =================== ၂. Store / Items Section =================== -->
+<div id="store-main" class="hidden">
+  <header>
+    <div onclick="location.reload()"><i class="fas fa-home"></i></div>
+    <b id="shop-title">STORE</b>
+    <div onclick="openProfile()"><i class="fas fa-user-circle" style="font-size:1.5rem;"></i></div>
+  </header>
+  <div id="storefront">
+    <div id="item-list" class="item-grid"></div>
+  </div>
+
+  <!-- Sticky Cart -->
+  <div id="sticky-cart" class="hidden" onclick="showCheckout()">
+    <div><span id="cart-count">0</span> Items | <span id="cart-total">0</span> Ks</div>
+    <div style="font-weight:700;">CHECKOUT <i class="fas fa-arrow-right" style="margin-left:8px;"></i></div>
+  </div>
+</div>
+
+<!-- =================== ၃. Drawer / Overlay =================== -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="main-drawer"><div id="drawer-content"></div></div>
+<div class="drawer" id="profile-drawer"></div>
+
+<script>
+// =================== Supabase Client ===================
+const SB_URL='https://deabtvqzxpkepgcdutzd.supabase.co';
+const SB_KEY='sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
+const _supabase=window.supabase.createClient(SB_URL,SB_KEY);
+
+let cart={};
+let currentMode='Today';
+let itemsData=[];
+let currentCustomerId=null;
+
+// =================== ၄. Entry & Load Items ===================
+async function entryShop(mode){
+  currentMode=mode;
+  document.getElementById('landing-hero').classList.add('hidden');
+  document.getElementById('store-main').classList.remove('hidden');
+  document.getElementById('shop-title').innerText = mode==='Today'?"ယနေ့မီနူး":"PRE-ORDER မီနူး";
+
+  const { data } = await _supabase.from('menu_items').select('*').order('id');
+  itemsData=data;
+  renderItems();
+  restoreCart();
+}
+
+function renderItems(){
+  const list=document.getElementById('item-list');
+  list.innerHTML=itemsData.map(item=>`
+    <div class="item-card">
+      ${currentMode==='Pre-order'?'<div class="preorder-badge">PRE-ORDER</div>':''}
+      <img src="${item.photo_url||'https://via.placeholder.com/200x140?text=MyinThar'}" class="item-img">
+      <div style="padding:15px;">
+        <b style="font-size:0.85rem;display:block;height:35px;">${item.name}</b>
+        <div style="color:var(--accent);font-weight:700;margin-top:5px;">${item.price} Ks</div>
+        <div class="qty-btns">
+          <button class="qty-btn" onclick="updateQty('${item.name}',-1)">-</button>
+          <span id="qty-${item.name.replace(/\s/g,'')}" style="font-weight:700;">0</span>
+          <button class="qty-btn" onclick="updateQty('${item.name}',1)">+</button>
         </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =================== ၅. Cart Logic ===================
+function updateQty(name,delta){
+  cart[name]=(cart[name]||0)+delta;
+  if(cart[name]<=0) delete cart[name];
+  const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`);
+  if(el) el.innerText=cart[name]||0;
+  saveCart();
+  updateBar();
+}
+
+function updateBar(){
+  const count=Object.values(cart).reduce((a,b)=>a+b,0);
+  const total=Object.keys(cart).reduce((s,n)=>s+(itemsData.find(i=>i.name===n).price*cart[n]),0);
+  const bar=document.getElementById('sticky-cart');
+  if(count>0){
+    bar.classList.remove('hidden');
+    document.getElementById('cart-count').innerText=count;
+    document.getElementById('cart-total').innerText=total;
+  }else bar.classList.add('hidden');
+}
+
+function saveCart(){localStorage.setItem('mt_cart',JSON.stringify(cart));}
+function restoreCart(){const saved=localStorage.getItem('mt_cart');if(saved){cart=JSON.parse(saved);Object.keys(cart).forEach(name=>{const el=document.getElementById(`qty-${name.replace(/\s/g,'')}`);if(el) el.innerText=cart[name];}); updateBar();}}
+
+// =================== ၆. Checkout Drawer / Telegram Highlight ===================
+function showCheckout(){
+  const drawer=document.getElementById('main-drawer');
+  const content=document.getElementById('drawer-content');
+  document.getElementById('overlay').style.display='block';
+  drawer.classList.add('active');
+
+  content.innerHTML=`
+    <h3>အော်ဒါအနှစ်ချုပ်</h3>
+    <div style="margin:20px 0;border-bottom:1px solid #eee;padding-bottom:15px;">
+      ${Object.keys(cart).map(n=>`<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span>${n} x ${cart[n]}</span>
+        <b>${itemsData.find(i=>i.name===n).price*cart[n]} Ks</b>
+      </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;margin-top:15px;font-weight:700;font-size:1.2rem;color:var(--accent);">
+        <span>စုစုပေါင်း</span>
+        <span>${document.getElementById('cart-total').innerText} Ks</span>
+      </div>
     </div>
 
-    <div id="menu-page" class="hidden">
-        <div class="menu-grid" id="menu-container">
-            </div>
+    <div id="checkout-form">
+      <p style="font-size:0.8rem;color:#666;margin-bottom:15px;">
+        အော်ဒါအတည်ပြုရန် Telegram Bot တွင် Verify လုပ်ပါ
+      </p>
+      <label>အကြို Order Date:</label>
+      <input type="date" id="preorder-date" min="${new Date().toISOString().split('T')[0]}">
+      <label>Time Slot:</label>
+      <select id="time-slot">
+        <option>9:00 AM - 11:00 AM</option>
+        <option>11:00 AM - 1:00 PM</option>
+        <option>1:00 PM - 3:00 PM</option>
+        <option>3:00 PM - 5:00 PM</option>
+      </select>
+      <div style="margin:10px 0;">
+        <label><input type="radio" name="payment" value="Cash" checked> Cash</label>
+        <label><input type="radio" name="payment" value="Deposit"> Deposit</label>
+      </div>
+      <div id="deposit-info" style="display:none;font-size:0.8rem;color:#666;">
+        Deposit ကို Bank Transfer / Rocket သို့ ပေးပြီး Reference Number ဖြင့် Verify လုပ်ပါ
+      </div>
+      <button class="btn-choice btn-today" style="width:100%;margin-top:15px;" onclick="placeOrder()">PLACE ORDER</button>
     </div>
+  `;
 
-    <div class="sticky-cart hidden" id="sticky-bar" onclick="openDrawer()">
-        <div>
-            <span id="total-qty">0</span> ပစ္စည်း | <span id="total-price">0</span> Ks
-        </div>
-        <div style="font-weight: 700;">CHECKOUT <i class="fas fa-arrow-right" style="margin-left:8px;"></i></div>
-    </div>
+  document.querySelectorAll('input[name="payment"]').forEach(r=>{
+    r.addEventListener('change',e=>{
+      document.getElementById('deposit-info').style.display=e.target.value==='Deposit'?'block':'none';
+    });
+  });
+}
 
-    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
-    <div class="drawer" id="drawer">
-        <h2 style="margin-bottom: 20px; font-weight: 700;">သင့်အော်ဒါ</h2>
-        <div id="cart-details" style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px;"></div>
-        
-        <div id="verify-section">
-            <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">အော်ဒါအတည်ပြုရန် Telegram ဖြင့် အရင်စစ်ဆေးပေးပါ</p>
-            <button class="btn-premium" style="background: #0088cc;" onclick="verifyWithBot()">
-                <i class="fab fa-telegram-plane" style="margin-right: 10px;"></i> VERIFY TELEGRAM
-            </button>
-        </div>
+// =================== ၇. Customer Profile ===================
+async function openProfile(){
+  document.getElementById('overlay').style.display='block';
+  const drawer=document.getElementById('profile-drawer');
+  drawer.classList.add('active');
 
-        <div id="final-form" class="hidden">
-            <input type="text" id="cust-name" placeholder="သင့်အမည်">
-            <select id="order-type">
-                <option value="today">ယနေ့မှာယူမည် (Today)</option>
-                <option value="preorder">ကြိုတင်မှာယူမည် (Pre-order)</option>
-            </select>
-            <input type="time" id="pickup-time" placeholder="လာယူမည့်အချိန်">
-            <button class="btn-premium" onclick="placeOrder()">PLACE ORDER NOW</button>
-        </div>
-    </div>
+  const phone=prompt("Enter your phone number for profile:");
+  const { data: customer } = await _supabase.from('customers').select('*').eq('phone_number',phone).single();
 
-    <div id="admin-page" class="hidden">
-        <h2 style="margin-bottom: 20px;">Live Orders</h2>
-        <div id="admin-orders-list"></div>
-    </div>
+  if(customer){
+    currentCustomerId=customer.id;
+    drawer.innerHTML=`
+      <h3>မိတ်ဆွေ Profile</h3>
+      <p>Name: ${customer.full_name}</p>
+      <p>Phone: ${customer.phone_number}</p>
+      <h4>Current Orders</h4><div id="current-orders"></div>
+      <h4>Order History</h4><div id="order-history"></div>
+    `;
 
-    <audio id="noti-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+    const { data: orders } = await _supabase.from('orders').select('*').eq('customer_id',customer.id).order('created_at',{ascending:false});
+    document.getElementById('current-orders').innerHTML=orders.filter(o=>o.status!=='Completed').map(o=>`<div>#${o.voucher_no} | ${o.status} | ${Object.keys(o.items_json).map(k=>k+"x"+o.items_json[k]).join(', ')}</div>`).join('');
+    document.getElementById('order-history').innerHTML=orders.filter(o=>o.status==='Completed').map(o=>`<div>#${o.voucher_no} | Total: ${o.total_amount} Ks</div>`).join('');
+  }
+}
 
-    <script>
-        // --- 1. CONFIGURATION ---
-        const TG_BOT_TOKEN = '8215695761:AAF1qDjAJn7gjiHyzf8t7W6c8e51cim98sU';
-        const TG_CHAT_ID = '8116152317';
-        const DB_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
-        const DB_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc'; // Replace with real key if needed
-        const _supabase = window.supabase.createClient(DB_URL, DB_KEY);
+// =================== ၈. Drawer Close ===================
+function closeDrawer(){document.getElementById('overlay').style.display='none';document.getElementById('main-drawer').classList.remove('active');document.getElementById('profile-drawer').classList.remove('active');}
 
-        const items = [
-            { name: "ကြက်ပေါင်", price: 4000 }, { name: "ကြက်ရင်အုံ", price: 4000 },
-            { name: "ဆိတ်သားကင်", price: 1500 }, { name: "အသား ချောင်း(ကြက်)", price: 800 },
-            { name: "အရေခွံ", price: 500 }, { name: "အတောင်ပျံ", price: 500 },
-            { name: "အတောင်ပျံ (CP)", price: 1000 }, { name: "အူ", price: 500 },
-            { name: "ခေါင်း", price: 300 }, { name: "လည် ချောင်း", price: 300 },
-            { name: "အသည်းမြစ်", price: 500 }, { name: "ခြေထောက်", price: 300 },
-            { name: "ခြေထောက်(CP)", price: 700 }, { name: "လက်မောင်းလုံး", price: 1000 },
-            { name: "အဆီပူး", price: 800 }, { name: "အသားတု", price: 400 },
-            { name: "ရုံးပတေသီး", price: 300 }, { name: "အပ်မှို", price: 1000 },
-            { name: "ငုံးဥ", price: 1000 }
-        ];
+// =================== ၉. Admin Section ===================
+function openAdmin(){
+  const pass=prompt("Admin Password ထည့်ပါ:");
+  if(pass==="2012@Yewin"){
+    document.getElementById('landing-hero').classList.add('hidden'); 
+    document.getElementById('store-main').classList.add('hidden'); 
+    renderAdminUI(); // Custom Admin Panel function
+  }
+}
 
-        let cart = {};
-        let isVerified = false;
+// =================== ၁၀. Telegram Real-time Notification Highlight ===================
+_supabase.channel('customer-status')
+  .on('postgres_changes',{
+      event:'UPDATE',
+      schema:'public',
+      table:'orders'
+  }, payload=>{
+      if(payload.new.customer_id===currentCustomerId){
+          alert(`Order #${payload.new.voucher_no} status updated: ${payload.new.status}`);
+          // ✅ Optional: call Telegram Bot API here to send notification
+          // fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendMessage?chat_id=<CHAT_ID>&text=Order+Update')
+      }
+  }).subscribe();
 
-        // --- 2. CUSTOMER FLOW ---
-        function startOrdering() {
-            document.getElementById('hero-page').classList.add('hidden');
-            document.getElementById('menu-page').classList.remove('hidden');
-            document.getElementById('main-header').classList.remove('hidden');
-            renderMenu();
-            restoreCart(); // Part 2 logic: Restore from local storage
-        }
-
-        function renderMenu() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = items.map((item, idx) => `
-                <div class="item-card">
-                    <img src="https://via.placeholder.com/200x140?text=${item.name}" class="item-img">
-                    <div class="item-info">
-                        <b style="font-size:0.85rem;">${item.name}</b>
-                        <div style="color:var(--premium-orange); font-weight:700; margin-top:5px;">${item.price} Ks</div>
-                        <div class="qty-ctrl">
-                            <button class="qty-btn" onclick="changeQty('${item.name}', -1)">-</button>
-                            <span class="qty-val" id="qty-${idx}">0</span>
-                            <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function changeQty(name, delta) {
-            cart[name] = (cart[name] || 0) + delta;
-            if (cart[name] <= 0) delete cart[name];
-            
-            // Sync UI
-            const idx = items.findIndex(i => i.name === name);
-            if(idx !== -1) document.getElementById(`qty-${idx}`).innerText = cart[name] || 0;
-            
-            saveCart();
-            updateStickyBar();
-        }
-
-        function updateStickyBar() {
-            const totalQty = Object.values(cart).reduce((a,b) => a+b, 0);
-            const totalPrice = Object.keys(cart).reduce((s, n) => s + (items.find(i=>i.name===n).price * cart[n]), 0);
-            
-            const bar = document.getElementById('sticky-bar');
-            if(totalQty > 0) {
-                bar.classList.remove('hidden');
-                document.getElementById('total-qty').innerText = totalQty;
-                document.getElementById('total-price').innerText = totalPrice;
-            } else {
-                bar.classList.add('hidden');
-            }
-        }
-
-        function saveCart() { localStorage.setItem('myinthar_cart', JSON.stringify(cart)); }
-        function restoreCart() {
-            const saved = localStorage.getItem('myinthar_cart');
-            if(saved) {
-                cart = JSON.parse(saved);
-                Object.keys(cart).forEach(name => {
-                    const idx = items.findIndex(i => i.name === name);
-                    if(idx !== -1) document.getElementById(`qty-${idx}`).innerText = cart[name];
-                });
-                updateStickyBar();
-            }
-        }
-
-        // --- 3. CHECKOUT & VERIFY (OPTION B) ---
-        function openDrawer() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('drawer').classList.add('active');
-            
-            const details = document.getElementById('cart-details');
-            details.innerHTML = Object.keys(cart).map(name => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                    <span>${name} x ${cart[name]}</span>
-                    <b>${items.find(i=>i.name===name).price * cart[name]} Ks</b>
-                </div>
-            `).join('');
-        }
-
-        function closeDrawer() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('drawer').classList.remove('active');
-        }
-
-        function verifyWithBot() {
-            window.open('https://t.me/myinthar_order_bot', '_blank');
-            // Fake verification for demo, real one would check via Supabase
-            setTimeout(() => {
-                isVerified = true;
-                document.getElementById('verify-section').classList.add('hidden');
-                document.getElementById('final-form').classList.remove('hidden');
-            }, 2000);
-        }
-
-        async function placeOrder() {
-            const name = document.getElementById('cust-name').value;
-            const time = document.getElementById('pickup-time').value;
-            const type = document.getElementById('order-type').value;
-            if(!name || !time) return alert("အမည်နှင့် အချိန်ဖြည့်ပေးပါ");
-
-            const vn = "MT-" + Date.now().toString().slice(-5);
-            const total = document.getElementById('total-price').innerText;
-            const itemStr = Object.keys(cart).map(n => `${n}(${cart[n]})`).join(", ");
-
-            // Save to Supabase
-            const { error } = await _supabase.from('orders').insert([{
-                voucher_no: vn, customer_name: name, items: itemStr, total: total, pickup_time: time, order_type: type, status: 'pending'
-            }]);
-
-            if(!error) {
-                // Notify Bot
-                const msg = `🚀 *အော်ဒါအသစ် (${type})*\nVoucher: ${vn}\nCustomer: ${name}\nItems: ${itemStr}\nTotal: ${total} Ks\nTime: ${time}`;
-                fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
-                
-                alert("အော်ဒါတင်ပြီးပါပြီ။ ဆိုင်မှ အတည်ပြုသည်အထိ စောင့်ပေးပါ။");
-                localStorage.removeItem('myinthar_cart');
-                location.reload();
-            }
-        }
-
-        // --- 4. ADMIN POS LOGIC ---
-        function loginAdmin() {
-            if(prompt("Admin Password:") === "2012@Yewin") {
-                document.getElementById('hero-page').classList.add('hidden');
-                document.getElementById('main-header').classList.remove('hidden');
-                document.getElementById('admin-page').classList.remove('hidden');
-                loadAdminOrders();
-                
-                // Real-time listener for Redmi Noti fix
-                _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, payload => {
-                    document.getElementById('noti-sound').play();
-                    loadAdminOrders();
-                }).subscribe();
-            }
-        }
-
-        async function loadAdminOrders() {
-            const { data } = await _supabase.from('orders').select('*').order('id', {ascending: false});
-            const list = document.getElementById('admin-orders-list');
-            list.innerHTML = data.map(o => `
-                <div class="card" style="border-left: 6px solid ${o.status==='pending'?'#FF6B00':'#10B981'}">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                        <b>#${o.voucher_no}</b>
-                        <span class="status-pill ${o.status==='pending'?'pending':'confirmed'}">${o.status.toUpperCase()}</span>
-                    </div>
-                    <div style="font-size:0.9rem; margin-bottom:10px;">${o.items}</div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <small>${o.customer_name} | ${o.pickup_time}</small>
-                        ${o.status === 'pending' ? `<button class="btn-premium" style="width:auto; padding:8px 15px; font-size:0.8rem;" onclick="updateStatus(${o.id}, 'done')">Done</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function updateStatus(id, status) {
-            await _supabase.from('orders').update({status: status}).eq('id', id);
-            loadAdminOrders();
-        }
-    </script>
+</script>
 </body>
 </html>
-

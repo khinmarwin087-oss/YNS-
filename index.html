@@ -4,215 +4,133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍗 MYIN THAR PREMIUM POS</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --accent: #ea580c; --admin-bg: #1e293b; --bg: #f1f5f9; }
         * { box-sizing: border-box; }
-        body { font-family: 'Pyidaungsu', -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        body { font-family: 'Pyidaungsu', -apple-system, sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; line-height: 1.5; }
         .hidden { display: none !important; }
         
-        header { background: linear-gradient(135deg, var(--accent), #f97316); color: white; padding: 25px 20px; border-radius: 0 0 25px 25px; text-align: center; }
+        header { background: linear-gradient(135deg, var(--accent), #f97316); color: white; padding: 25px 20px; border-radius: 0 0 25px 25px; text-align: center; box-shadow: 0 4px 20px rgba(234,88,12,0.3); }
         .container { max-width: 500px; margin: auto; padding: 20px 15px; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .item-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
-        .item-card:hover { transform: translateY(-2px); }
-        .item-img { width: 100%; height: 120px; object-fit: cover; }
-        .item-info { padding: 12px; }
-        .price { color: var(--accent); font-weight: bold; font-size: 16px; }
-        .qty-box { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
-        .btn-qty { width: 35px; height: 35px; border: none; border-radius: 50%; background: #f1f5f9; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .btn-qty:hover { background: var(--accent); color: white; }
+        .item-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+        .item-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); border-color: var(--accent); }
+        .item-img { width: 100%; height: 120px; object-fit: cover; background: #f1f5f9; }
+        .item-info { padding: 15px; }
+        .item-name { font-weight: bold; font-size: 15px; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .price { color: var(--accent); font-weight: bold; font-size: 18px; }
+        .qty-box { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+        .btn-qty { width: 38px; height: 38px; border: none; border-radius: 50%; background: #f1f5f9; font-weight: bold; font-size: 18px; cursor: pointer; transition: all 0.2s; }
+        .btn-qty:active { transform: scale(0.95); }
+        .btn-qty.plus { background: var(--accent); color: white; }
 
         /* Cart Bar */
-        #cart-bar { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: #1e293b; color: white; padding: 15px 20px; border-radius: 25px 25px 15px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.3); cursor: pointer; }
-        
+        #cart-bar { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 18px 25px; border-radius: 25px 25px 20px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; box-shadow: 0 15px 40px rgba(0,0,0,0.3); cursor: pointer; font-weight: 500; }
+        #cart-bar:hover { transform: translateX(-50%) translateY(-2px); }
+
         /* Drawer */
-        .drawer { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: flex-end; }
-        .drawer-content { background: white; width: 100%; border-radius: 25px 25px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; }
-        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; }
-        input:focus { outline: none; border-color: var(--accent); }
+        .drawer { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 2000; display: flex; align-items: flex-end; backdrop-filter: blur(5px); }
+        .drawer-content { background: white; width: 100%; border-radius: 25px 25px 0 0; padding: 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); }
+        input, select { width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 16px; background: white; transition: border-color 0.2s; }
+        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
 
         /* Admin Sidebar */
-        #admin-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: var(--admin-bg); color: white; transform: translateX(-100%); transition: 0.3s; z-index: 3000; padding: 20px 0; }
+        #admin-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 280px; background: linear-gradient(180deg, var(--admin-bg), #0f172a); color: white; transform: translateX(-100%); transition: transform 0.3s ease; z-index: 3000; padding: 25px 0; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
         #admin-sidebar.active { transform: translateX(0); }
-        .sidebar-item { display: block; color: white; padding: 18px 25px; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-size: 16px; }
-        .sidebar-item:hover { background: rgba(255,255,255,0.1); }
-        .sidebar-item.active { background: var(--accent); }
+        .sidebar-item { display: flex; align-items: center; color: #cbd5e1; padding: 20px 25px; text-decoration: none; border-bottom: 1px solid #334155; cursor: pointer; font-size: 16px; transition: all 0.2s; position: relative; overflow: hidden; }
+        .sidebar-item::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); transform: scaleY(0); transition: transform 0.2s; }
+        .sidebar-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .sidebar-item:hover::before { transform: scaleY(1); }
+        .sidebar-item.active { background: rgba(234,88,12,0.2); color: white; }
+        .sidebar-item.active::before { transform: scaleY(1); }
+        .sidebar-item i { margin-right: 12px; width: 20px; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid #e2e8f0; left: 50%; transform: translateX(-50%); z-index: 1001; }
-        .nav-item { flex: 1; text-align: center; padding: 15px; color: #64748b; cursor: pointer; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
-        .nav-item i { display: block; font-size: 20px; margin-bottom: 5px; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid #e2e8f0; left: 50%; transform: translateX(-50%); z-index: 1001; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); }
+        .nav-item { flex: 1; text-align: center; padding: 16px; color: #64748b; cursor: pointer; transition: all 0.2s; }
+        .nav-item.active { color: var(--accent); background: rgba(234,88,12,0.1); }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 4px; }
+        .nav-item span { font-size: 12px; font-weight: 500; }
 
         /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
-        th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 600; }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
-        .btn-small { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        th { background: linear-gradient(135deg, #f8fafc, #f1f5f9); padding: 16px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 16px; border-bottom: 1px solid #f3f4f6; }
+        .btn-small { padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; margin: 0 4px; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
 
-        .status-open { color: #10b981; }
-        .status-closed { color: #ef4444; }
-        .low-stock { color: #ef4444; font-weight: bold; }
+        /* Status */
+        .status-open { color: #10b981; font-weight: bold; }
+        .status-closed { color: #ef4444; font-weight: bold; }
+        .low-stock { color: #ef4444; font-weight: bold; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
+
+        /* Voucher */
+        #barcode { margin: 30px auto; display: block; max-width: 100%; }
+        .voucher-card { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 40px 25px; border-radius: 25px; text-align: center; box-shadow: 0 20px 40px rgba(16,185,129,0.3); }
     </style>
 </head>
 <body>
-    <audio id="notify-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
-
-    <!-- Admin Sidebar -->
-    <div id="admin-sidebar">
-        <div style="padding: 20px 25px; border-bottom: 2px solid var(--accent);">
-            <h3 style="margin: 0; font-size: 20px;">🍗 Admin Panel</h3>
-        </div>
-        <div class="sidebar-item active" onclick="setAdminView('orders')"><i class="fas fa-shopping-bag"></i> အော်ဒါများ</div>
-        <div class="sidebar-item" onclick="setAdminView('stock')"><i class="fas fa-boxes"></i> Stock/Price</div>
-        <div class="sidebar-item" onclick="setAdminView('settings')"><i class="fas fa-cog"></i> ဆိုင်ဆက်တင်</div>
-        <div class="sidebar-item" onclick="toggleSidebar(false)" style="color: #94a3b8;">❌ ပိတ်ရန်</div>
-    </div>
-
-    <!-- Home View -->
-    <div id="view-home" class="view">
-        <header>
-            <h1 style="margin: 0 0 5px 0; font-size: 24px;">MYIN THAR POS</h1>
-            <div id="shop-status" style="font-size: 14px; opacity: 0.9;">Loading...</div>
-        </header>
-        <div class="container">
-            <div id="menu-grid" class="grid"></div>
-        </div>
-    </div>
-
-    <!-- Profile View -->
-    <div id="view-profile" class="view hidden">
-        <div class="container">
-            <div style="text-align: center; padding: 30px 20px;">
-                <i class="fas fa-user-circle" style="font-size: 60px; color: #cbd5e1;"></i>
-                <h3 id="profile-name">Customer</h3>
-                <p id="profile-phone" style="color: #64748b; font-size: 16px;"></p>
-            </div>
-            <h4 style="margin: 0 0 15px 0;">📋 မှာယူမှု သမိုင်း</h4>
-            <div id="order-history"></div>
-        </div>
-    </div>
-
-    <!-- Admin View -->
-    <div id="view-admin" class="view hidden">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <button onclick="toggleSidebar(true)" style="background: none; border: none; font-size: 24px; color: var(--accent);"><i class="fas fa-bars"></i></button>
-                <h3 id="admin-title">အော်ဒါများ</h3>
-                <div></div>
-            </div>
-            
-            <div id="admin-orders" class="admin-section"></div>
-            <div id="admin-stock" class="admin-section hidden"></div>
-            <div id="admin-settings" class="admin-section hidden">
-                <div style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                    <h4>🟢 ဆိုင်အခြေအနေ</h4>
-                    <button id="shop-toggle" onclick="toggleShopStatus()" style="width: 100%; padding: 15px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; margin-top: 10px;"></button>
-                    <div style="margin-top: 20px;">
-                        <label>Admin Viber: </label>
-                        <input id="admin-viber" type="tel" value="+959767287345" style="width: 200px; padding: 8px; border-radius: 6px; border: 1px solid #ddd;">
-                        <button onclick="updateViberNumber()" style="margin-left: 10px; padding: 8px 15px; background: var(--accent); color: white; border: none; border-radius: 6px;">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cart Drawer -->
-    <div id="cart-drawer" class="drawer hidden">
-        <div class="drawer-content">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0;">🛒 သင့်အော်ဒါ</h3>
-                <button onclick="toggleCart(false)" style="background: none; border: none; font-size: 24px;">×</button>
-            </div>
-            <div id="cart-items"></div>
-            <hr style="margin: 20px 0;">
-            <input type="text" id="customer-name" placeholder="သင့်အမည်">
-            <input type="tel" id="customer-phone" placeholder="ဖုန်းနံပါတ်">
-            <input type="time" id="pickup-time">
-            <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: bold; margin: 20px 0;">
-                <span>စုစုပေါင်း:</span>
-                <span id="total-amount" style="color: var(--accent);">0 ကျပ်</span>
-            </div>
-            <button onclick="confirmOrder()" style="width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 18px; font-weight: bold;">အော်ဒါ သေချာလိုက်ပါ</button>
-        </div>
-    </div>
-
-    <!-- Voucher View -->
-    <div id="view-voucher" class="view hidden">
-        <div class="container" style="text-align: center; padding-top: 40px;">
-            <h2 style="color: var(--accent); font-size: 28px; margin-bottom: 10px;">✅ အော်ဒါ အောင်မြင်ပါပြီ!</h2>
-            <svg id="barcode" style="margin: 20px 0;"></svg>
-            <h3 id="voucher-number" style="color: var(--accent); margin: 10px 0;"></h3>
-            <div id="voucher-details" style="background: #f8fafc; padding: 20px; border-radius: 12px; text-align: left; margin: 20px 0;"></div>
-            <button onclick="sendToViber()" style="width: 100%; background: #7360f2; color: white; border: none; padding: 18px; border-radius: 15px; font-size: 16px; font-weight: bold; margin-bottom: 15px;">
-                <i class="fab fa-viber"></i> Viber သို့ ပို့ရန်
-            </button>
-            <button onclick="showView('home')" style="width: 100%; background: #f1f5f9; border: 2px solid #e2e8f0; padding: 15px; border-radius: 12px; font-size: 16px;">🏠 ပင်မစာမျက်နှာ</button>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="showView('home')"><i class="fas fa-utensils"></i><br>Menu</div>
-        <div class="nav-item" onclick="showView('profile')"><i class="fas fa-history"></i><br>သမိုင်း</div>
-        <div class="nav-item" onclick="loginAdmin()"><i class="fas fa-user-shield"></i><br>Admin</div>
-    </nav>
-
+    <!-- Offline Data Storage -->
     <script>
-        // Supabase Config
-        const SUPABASE_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // Offline Menu Data (Local Storage + Hardcoded)
+        const DEFAULT_MENU = [
+            { id: 1, name: 'ကြက်ပေါင်း', price: 4000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f97316/ffffff?text=ကြက်ပေါင်း' },
+            { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/ea580c/ffffff?text=ကြက်ရင်အုံ' },
+            { id: 3, name: 'ဆိတ်သားကင်', price: 1500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/1e293b/ffffff?text=ဆိတ်သားကင်' },
+            { id: 4, name: 'အသားချောင်း', price: 800, stock: 100, photo_url: 'https://via.placeholder.com/300x150/3b82f6/ffffff?text=အသားချောင်း' },
+            { id: 5, name: 'အရေခွံ', price: 500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f59e0b/000000?text=အရေခွံ' },
+            { id: 6, name: 'အတောင်ပျံ', price: 500, stock: 100, photo_url: 'https://via.placeholder.com/300x150/10b981/ffffff?text=အတောင်ပျံ' },
+            { id: 7, name: 'ခေါင်း', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/ef4444/ffffff?text=ခေါင်း' },
+            { id: 8, name: 'လည်ချောင်း', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/8b5cf6/ffffff?text=လည်ချောင်း' },
+            { id: 9, name: 'ခြေထောက်', price: 300, stock: 100, photo_url: 'https://via.placeholder.com/300x150/f97316/000000?text=ခြေထောက်' },
+            { id: 10, name: 'ငုံးဥ', price: 1000, stock: 100, photo_url: 'https://via.placeholder.com/300x150/fbbf24/000000?text=ငုံးဥ' }
+        ];
 
-        let menuItems = [], cart = [], currentOrder = null, shopOpen = true, currentAdminView = 'orders';
+        let menuItems = [], cart = [], orders = [], currentOrder = null, shopOpen = true, currentAdminView = 'orders';
 
-        // Initialize App
-        async function initApp() {
-            try {
-                const { data: menu } = await supabase.from('menu_items').select('*').order('name');
-                const { data: shop } = await supabase.from('shop_settings').select('*').eq('id', 1).single();
-                
-                menuItems = menu || [];
-                shopOpen = shop?.is_open || true;
-                renderMenu();
-                updateShopStatus();
-                
-                // Real-time orders
-                supabase.channel('orders')
-                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, () => {
-                        const audio = document.getElementById('notify-sound');
-                        audio.play().catch(() => {});
-                        if (!document.getElementById('view-admin').classList.contains('hidden')) {
-                            loadAdminOrders();
-                        }
-                    })
-                    .subscribe();
-            } catch (error) {
-                console.error('Init error:', error);
-                alert('ဆာဗာ ချိတ်ဆက်မှု ပြဿနာ။ နောက်မှ ထပ်ကြည့်ပါ။');
-            }
+        // Local Storage Helpers
+        function saveData(key, data) { localStorage.setItem('myinthar_' + key, JSON.stringify(data)); }
+        function loadData(key, defaultValue = []) { 
+            try { return JSON.parse(localStorage.getItem('myinthar_' + key)) || defaultValue; } 
+            catch { return defaultValue; }
+        }
+
+        // Initialize App (No Supabase needed)
+        function initApp() {
+            menuItems = loadData('menu', DEFAULT_MENU);
+            orders = loadData('orders', []);
+            shopOpen = localStorage.getItem('myinthar_shopOpen') !== 'false';
+            
+            renderMenu();
+            updateShopStatus();
+            console.log('✅ MYIN THAR POS Ready! Offline Mode');
         }
 
         // Render Menu
         function renderMenu() {
             const grid = document.getElementById('menu-grid');
+            if (!grid) return;
+            
             grid.innerHTML = menuItems.map(item => {
                 const cartItem = cart.find(c => c.id === item.id) || { qty: 0 };
+                const lowStock = item.stock < 10;
                 return `
-                    <div class="item-card">
-                        <img src="${item.photo_url}" class="item-img" alt="${item.name}">
+                    <div class="item-card" onclick="changeQuantity(${item.id}, 1)">
+                        <img src="${item.photo_url}" class="item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x150/f1f5f9/64748b?text=📦'">
                         <div class="item-info">
-                            <b>${item.name}</b>
+                            <div class="item-name">${item.name}</div>
                             <div class="price">${item.price.toLocaleString()} ကျ</div>
+                            ${lowStock ? '<div class="low-stock">Stock: ' + item.stock + '</div>' : ''}
                             <div class="qty-box">
-                                <button class="btn-qty" onclick="changeQuantity(${item.id}, -1)">−</button>
-                                <span style="min-width: 25px; text-align: center; font-weight: bold;">${cartItem.qty}</span>
-                                <button class="btn-qty plus" onclick="changeQuantity(${item.id}, 1)">+</button>
+                                <button class="btn-qty" onclick="event.stopPropagation(); changeQuantity(${item.id}, -1)">−</button>
+                                <span style="min-width: 30px; text-align: center; font-weight: bold; font-size: 16px;">${cartItem.qty}</span>
+                                <button class="btn-qty plus" onclick="event.stopPropagation(); changeQuantity(${item.id}, 1)">+</button>
                             </div>
                         </div>
                     </div>
@@ -223,17 +141,25 @@
         // Change Quantity
         function changeQuantity(id, delta) {
             const item = menuItems.find(m => m.id === id);
-            if (!item) return;
+            if (!item || (delta > 0 && item.stock <= 0)) {
+                if (delta > 0 && item?.stock <= 0) alert('စတော့ ကုန်ပါပြီ!');
+                return;
+            }
             
             const cartItem = cart.find(c => c.id === id);
             if (cartItem) {
                 cartItem.qty += delta;
-                if (cartItem.qty <= 0) {
-                    cart = cart.filter(c => c.id !== id);
-                }
+                if (cartItem.qty <= 0) cart = cart.filter(c => c.id !== id);
             } else if (delta > 0 && shopOpen) {
                 cart.push({ ...item, qty: 1 });
             }
+            
+            // Update stock locally
+            if (delta > 0 && item.stock > 0) {
+                item.stock = Math.max(0, item.stock - delta);
+                saveData('menu', menuItems);
+            }
+            
             renderMenu();
             updateCartDisplay();
         }
@@ -243,74 +169,79 @@
             const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             
-            document.getElementById('cart-bar').classList.toggle('hidden', totalQty === 0);
-            document.getElementById('cart-qty').textContent = totalQty;
-            document.getElementById('total-amount').textContent = totalPrice.toLocaleString() + ' ကျ';
+            const cartBar = document.getElementById('cart-bar');
+            if (cartBar) {
+                cartBar.classList.toggle('hidden', totalQty === 0);
+                document.getElementById('cart-qty').textContent = totalQty;
+                document.getElementById('total-amount').textContent = totalPrice.toLocaleString() + ' ကျပ်';
+            }
             
-            const cartItemsHtml = cart.map(item => `
-                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
-                    <span>${item.name} × ${item.qty}</span>
-                    <b>${(item.price * item.qty).toLocaleString()} ကျ</b>
+            const cartItemsHtml = cart.length ? cart.map(item => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+                    <div>
+                        <div style="font-weight: 600;">${item.name}</div>
+                        <div style="font-size: 13px; color: #64748b;">Stock: ${item.stock}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div>x${item.qty}</div>
+                        <div style="font-weight: bold; color: var(--accent); font-size: 16px;">${(item.price * item.qty).toLocaleString()} ကျ</div>
+                    </div>
                 </div>
-            `).join('');
-            document.getElementById('cart-items').innerHTML = cartItemsHtml || '<div style="text-align: center; color: #64748b;">အော်ဒါ မရှိပါ</div>';
+            `).join('') : '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-shopping-basket" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i><div>အော်ဒါ မရှိပါ</div></div>';
+            
+            document.getElementById('cart-items').innerHTML = cartItemsHtml;
         }
 
         // Confirm Order
-        async function confirmOrder() {
+        function confirmOrder() {
             const name = document.getElementById('customer-name').value.trim();
             const phone = document.getElementById('customer-phone').value.trim();
             const time = document.getElementById('pickup-time').value;
             
             if (!name || !phone || !time) {
-                alert('အမည်၊ ဖုန်း၊ ယူရန်အချိန် ဖြည့်ပေးပါ');
+                alert('❌ အမည်၊ ဖုန်း၊ ယူရန်အချိန် ဖြည့်ပေးပါ');
                 return;
             }
             if (cart.length === 0) {
-                alert('အော်ဒါ မရှိပါ');
+                alert('❌ အော်ဒါ မရှိပါ');
                 return;
             }
             if (!shopOpen) {
-                alert('ဆိုင် ပိတ်ထားပါသည်');
+                alert('❌ ဆိုင် ပိတ်ထားပါသည်');
                 return;
             }
 
             const voucherNo = 'YNS-' + Date.now().toString().slice(-6);
             const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             const itemsList = cart.map(item => `${item.name}(${item.qty})`).join(', ');
-
+            
+            const order = {
+                id: Date.now(),
+                voucher_no: voucherNo,
+                customer_name: name,
+                phone: phone,
+                items: itemsList,
+                total: total,
+                pickup_time: time,
+                created_at: new Date().toLocaleString('my-MM'),
+                status: 'pending'
+            };
+            
+            orders.unshift(order);
+            saveData('orders', orders);
+            localStorage.setItem('customer_name', name);
+            localStorage.setItem('customer_phone', phone);
+            
+            currentOrder = order;
+            showVoucher(order);
+            cart = [];
+            toggleCart(false);
+            renderMenu();
+            
+            // Play success sound
             try {
-                const { data, error } = await supabase
-                    .from('orders')
-                    .insert([{
-                        voucher_no: voucherNo,
-                        customer_name: name,
-                        phone: phone,
-                        items: itemsList,
-                        total: total,
-                        pickup_time: time
-                    }])
-                    .select();
-
-                if (error) throw error;
-
-                // Update stock
-                for (let item of cart) {
-                    await supabase.rpc('decrement_stock', {
-                        row_id: item.id,
-                        qty: item.qty
-                    });
-                }
-
-                currentOrder = data[0];
-                showVoucher(currentOrder);
-                cart = [];
-                toggleCart(false);
-                renderMenu();
-            } catch (error) {
-                console.error('Order error:', error);
-                alert('အော်ဒါ မထည့်နိုင်ပါ: ' + error.message);
-            }
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+            } catch {}
         }
 
         // Show Voucher
@@ -318,22 +249,19 @@
             showView('voucher');
             document.getElementById('voucher-number').textContent = order.voucher_no;
             document.getElementById('voucher-details').innerHTML = `
-                <div><b>ဖောက်သည်:</b> ${order.customer_name}</div>
-                <div><b>ဖုန်း:</b> ${order.phone}</div>
-                <div><b>ပစ္စည်း:</b> ${order.items}</div>
-                <div style="font-size: 18px; color: var(--accent); font-weight: bold;">
-                    စုစုပေါင်း: ${order.total.toLocaleString()} ကျပ်
-                </div>
-                <div style="color: #ef4444;"><b>ယူရန်အချိန်:</b> ${order.pickup_time}</div>
+                <div style="font-size: 16px; margin-bottom: 12px;"><b>👤 ဖောက်သည်:</b> ${order.customer_name}</div>
+                <div style="font-size: 16px; margin-bottom: 12px;"><b>📱 ဖုန်း:</b> ${order.phone}</div>
+                <div style="font-size: 15px; color: #f3f4f6; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin: 12px 0;">${order.items}</div>
+                <div style="font-size: 24px; font-weight: bold; color: #fef3c7; margin: 20px 0;">💰 ${order.total.toLocaleString()} ကျပ်</div>
+                <div style="font-size: 18px; color: #fef3c7;"><b>🕒 ယူရန်အချိန်:</b> ${order.pickup_time}</div>
             `;
-            JsBarcode("#barcode", order.voucher_no, { height: 60, width: 2, displayValue: false });
+            JsBarcode("#barcode", order.voucher_no, { height: 80, width: 2.5, displayValue: false, margin: 10 });
         }
 
-        // Send to Viber
+        // Send to Viber (09767287345)
         function sendToViber() {
-            if (!currentOrder) return;
+            if (!currentOrder) return alert('Voucher မရှိပါ');
             
-            const adminPhone = '+959767287345';
             const message = `🧾 *MYIN THAR POS ORDER*
 
 Voucher: ${currentOrder.voucher_no}
@@ -342,29 +270,309 @@ Phone: ${currentOrder.phone}
 Items: ${currentOrder.items}
 Total: ${currentOrder.total.toLocaleString()} ကျပ်
 Pickup: ${currentOrder.pickup_time}`;
+            const viberUrl = `viber://chat?number=%2B959767287345&text=${encodeURIComponent(message)}`;
             
-            const viberUrl = `viber://chat?number=${encodeURIComponent(adminPhone)}&text=${encodeURIComponent(message)}`;
             window.open(viberUrl, '_blank');
         }
 
+        // Navigation
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event?.target.closest('.nav-item')?.classList.add('active');
+            
+            if (viewName === 'profile') loadProfile();
+            if (viewName === 'admin') setAdminView(currentAdminView);
+        }
+
+        function toggleCart(show) {
+            document.getElementById('cart-drawer').classList.toggle('hidden', !show);
+            if (show) updateCartDisplay();
+        }
+
+        function toggleSidebar(show) {
+            document.getElementById('admin-sidebar').classList.toggle('active', show);
+        }
+
+        function setAdminView(view) {
+            currentAdminView = view;
+            document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`admin-${view}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('admin-title').textContent = {
+                'orders': '📋 အော်ဒါများ',
+                'stock': '📦 Stock/Price',
+                'settings': '⚙️ ဆိုင်ဆက်တင်'
+            }[view];
+            
+            if (view === 'orders') loadAdminOrders();
+            if (view === 'stock') loadAdminStock();
+        }
+
         // Admin Functions
-        async function loadAdminOrders() {
-            const { data } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-            const html = data.map(order => `
-                <div style="background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h4 style="margin: 0;">#${order.voucher_no}</h4>
-                        <span style="color: var(--accent); font-weight: bold;">${order.pickup_time}</span>
+        function loadAdminOrders() {
+            const html = orders.map(order => `
+                <div style="background: white; padding: 25px; border-radius: 16px; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                        <h4 style="margin: 0; color: var(--accent);">#${order.voucher_no}</h4>
+                        <span style="background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">${order.pickup_time}</span>
                     </div>
-                    <div style="font-size: 14px; color: #64748b; margin: 10px 0;">${order.items}</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-                        <span>${order.customer_name} (${order.phone})</span>
-                        <span style="font-size: 18px; color: var(--accent); font-weight: bold;">${order.total.toLocaleString()} ကျ</span>
+                    <div style="font-size: 14px; color: #374151; margin-bottom: 16px; line-height: 1.5;">${order.items}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div style="font-size: 16px;">${order.customer_name}<br><small style="color: #6b7280;">${order.phone}</small></div>
+                        <div style="font-size: 22px; font-weight: bold; color: var(--accent);">${order.total.toLocaleString()} ကျ</div>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <a href="tel:${order.phone}" style="flex: 1; background: #10b981; color: white; text-align: center; padding: 12px; border-radius: 10px; text-decoration: none;">📞 Call</a>
-                        <button onclick="markOrderComplete(${order.id})" style="flex: 1; background: var(--accent); color: white; border: none; padding: 12px; border-radius: 10px;">✅ ပြီးသည်</button>
+                    <div style="display: flex; gap: 12px;">
+                        <a href="tel:${order.phone}" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; text-align: center; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600;">📞 Call</a>
+                        <button onclick="markOrderComplete(${order.id})" style="flex: 1; background: linear-gradient(135deg, var(--accent), #f97316); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 600;">✅ ပြီးသည်</button>
                     </div>
                 </div>
-            `).join('');
-            document.getElementById('admin-orders').innerHTML 
+            `).join('') || '<div style="text-align: center; padding: 60px 20px; color: #6b7280;"><i class="fas fa-inbox" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i><div style="font-size: 16px;">အော်ဒါ မရှိသေးပါ</div></div>';
+            
+            document.getElementById('admin-orders').innerHTML = html;
+        }
+
+        function loadAdminStock() {
+            const html = `
+                <div style="background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">ပစ္စည်း</th>
+                                <th style="width: 20%; text-align: right;">စျေး</th>
+                                <th style="width: 20%; text-align: right;">Stock</th>
+                                <th style="width: 15%;">လုပ်ဆောင်</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${menuItems.map(item => `
+                                <tr style="border-bottom: 1px solid #f3f4f6;">
+                                    <td style="font-weight: 500;">${item.name}</td>
+                                    <td style="text-align: right; font-weight: 600; color: var(--accent);">${item.price.toLocaleString()}</td>
+                                    <td style="text-align: right; font-weight: bold; color: ${item.stock < 10 ? '#ef4444' : '#10b981'}">${item.stock}</td>
+                                    <td>
+                                        <button class="btn-small btn-primary" onclick="editStock(${item.id})">Stock</button>
+                                        <button class="btn-small btn-success" onclick="editPrice(${item.id})" style="margin-left: 4px;">Price</button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('admin-stock').innerHTML = html;
+        }
+
+        function editStock(id) {
+            const item = menuItems.find(i => i.id === id);
+            const newStock = prompt('စတော့ အသစ်:', item.stock);
+            if (newStock !== null && !isNaN(newStock) && newStock >= 0) {
+                item.stock = parseInt(newStock);
+                saveData('menu', menuItems);
+                renderMenu();
+                loadAdminStock();
+                alert('✅ စတော့ သိမ်းပြီး');
+            }
+        }
+
+        function editPrice(id) {
+            const item = menuItems.find(i => i.id === id);
+            const newPrice = prompt('စျေး အသစ် (ကျပ်):', item.price);
+            if (newPrice !== null && !isNaN(newPrice) && newPrice > 0) {
+                item.price = parseInt(newPrice);
+                saveData('menu', menuItems);
+                renderMenu();
+                loadAdminStock();
+                alert('✅ စျေး သိမ်းပြီး');
+            }
+        }
+
+        function toggleShopStatus() {
+            shopOpen = !shopOpen;
+            localStorage.setItem('myinthar_shopOpen', shopOpen);
+            updateShopStatus();
+            alert(shopOpen ? '✅ ဆိုင် ဖွင့်ပြီး' : '🔒 ဆိုင် ပိတ်ပြီး');
+        }
+        function updateShopStatus() {
+            const statusEl = document.getElementById('shop-status');
+            const toggleBtn = document.getElementById('shop-toggle');
+            if (statusEl) {
+                statusEl.innerHTML = shopOpen ? '<span class="status-open">🟢 ဆိုင်ဖွင့်ထားသည်</span>' : '<span class="status-closed">🔴 ဆိုင်ပိတ်ထားသည်</span>';
+            }
+            if (toggleBtn) {
+                toggleBtn.textContent = shopOpen ? '🔒 ဆိုင်ပိတ်ရန်' : '🟢 ဆိုင်ဖွင့်ရန်';
+                toggleBtn.style.background = shopOpen ? 'linear-gradient(135deg, #fee2e2, #fecaca)' : 'linear-gradient(135deg, #dcfce7, #bbf7d0)';
+                toggleBtn.style.color = shopOpen ? '#dc2626' : '#166534';
+            }
+        }
+
+        function loadProfile() {
+            const name = localStorage.getItem('customer_name') || 'Customer';
+            const phone = localStorage.getItem('customer_phone') || '';
+            document.getElementById('profile-name').textContent = name;
+            document.getElementById('profile-phone').textContent = phone ? `📱 ${phone}` : 'ဖုန်းနံပါတ် မရှိသေး';
+            
+            const userOrders = orders.filter(o => o.phone === phone);
+            document.getElementById('order-history').innerHTML = userOrders.slice(0, 10).map(order => `
+                <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: var(--accent);">#${order.voucher_no}</span>
+                        <span style="font-weight: bold; color: #10b981;">${order.total.toLocaleString()} ကျ</span>
+                    </div>
+                    <div style="font-size: 13px; color: #6b7280; margin-top: 8px;">${order.items}</div>
+                </div>
+            `).join('') || '<div style="text-align: center; padding: 50px 20px; color: #9ca3af;"><i class="fas fa-history" style="font-size: 48px; margin-bottom: 15px;"></i><div>မှာယူမှု မရှိသေးပါ</div></div>';
+        }
+
+        function loginAdmin() {
+            const password = prompt('🔐 Admin Password:', '');
+            if (password === '2012@Yewin') {
+                showView('admin');
+            } else {
+                alert('❌ Password မှားပါတယ်');
+            }
+        }
+
+        function markOrderComplete(id) {
+            const order = orders.find(o => o.id === id);
+            if (order) {
+                order.status = 'completed';
+                saveData('orders', orders);
+                loadAdminOrders();
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initApp();
+            document.getElementById('cart-bar')?.addEventListener('click', () => toggleCart(true));
+        });
+    </script>
+
+    <!-- Home View -->
+    <div id="view-home" class="view">
+        <header>
+            <h1 style="margin: 0 0 8px 0; font-size: 28px;">🍗 MYIN THAR</h1>
+            <h2 style="margin: 0; font-size: 16px; opacity: 0.95;">PREMIUM POS</h2>
+            <div id="shop-status" style="margin-top: 12px; font-size: 14px;"></div>
+        </header>
+        <div class="container">
+            <div id="menu-grid" class="grid" style="min-height: 400px;"></div>
+        </div>
+    </div>
+
+    <!-- Profile View -->
+    <div id="view-profile" class="view hidden">
+        <div class="container">
+            <div style="text-align: center; padding: 40px 30px 30px;">
+                <i class="fas fa-user-circle" style="font-size: 80px; color: #d1d5db; margin-bottom: 20px;"></i>
+                <h3 id="profile-name" style="margin: 0 0 8px 0; font-size: 22px;">Customer</h3>
+                <p id="profile-phone" style="color: #6b7280; font-size: 16px; margin: 0;"></p>
+            </div>
+            <h4 style="margin: 0 0 20px 0; font-size: 18px; color: #374151;">📋 မှာယူမှု သမိုင်း</h4>
+            <div id="order-history"></div>
+        </div>
+    </div>
+
+    <!-- Admin View -->
+    <div id="view-admin" class="view hidden">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #f3f4f6;">
+                <button onclick="toggleSidebar(true)" style="background: none; border: none; font-size: 28px; color: var(--accent); padding: 10px;"><i class="fas fa-bars"></i></button>
+                <h3 id="admin-title" style="margin: 0; font-size: 22px;">📋 အော်ဒါများ</h3>
+                <div style="width: 50px;"></div>
+            </div>
+            
+            <div id="admin-orders" class="admin-section"></div>
+            <div id="admin-stock" class="admin-section hidden"></div>
+            <div id="admin-settings" class="admin-section hidden">
+                <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
+                    <h4 style="margin: 0 0 25px 0; color: #1f2937;">🟢 ဆိုင်အခြေအနေ</h4>
+                    <button id="shop-toggle" onclick="toggleShopStatus()" style="width: 100%; padding: 20px; border-radius: 15px; border: none; font-size: 18px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.2s;"></button>
+                    <div style="margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 12px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600;">📱 Admin Viber:</label>
+                        <div style="display: flex; gap: 12px;">
+                            <input id="admin-viber" type="tel" value="+959767287345" style="flex: 1; padding: 14px; border-radius: 10px; border: 2px solid #e5e7eb; font-size: 16px;">
+                            <button onclick="updateViberNumber()" style="padding: 14px 24px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: 600; white-space: nowrap;">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div id="cart-drawer" class="drawer hidden">
+        <div class="drawer-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h3 style="margin: 0; font-size: 24px;">🛒 သင့်အော်ဒါ</h3>
+                <button onclick="toggleCart(false)" style="background: none; border: none; font-size: 28px; color: #6b7280; padding: 5px;">×</button>
+            </div>
+            <div id="cart-items"></div>
+            <hr style="margin: 25px 0; border: none; height: 1px; background: linear-gradient(to right, transparent, #e5e7eb, transparent);">
+            <input type="text" id="customer-name" placeholder="👤 သင့်အမည် ရေးပါ">
+            <input type="tel" id="customer-phone" placeholder="📱 ဖုန်းနံပါတ်">
+            <input type="time" id="pickup-time">
+            <div style="display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin: 25px 0; color: var(--accent);">
+                <span>💰 စုစုပေါင်း:</span>
+                <span id="total-amount">0 ကျပ်</span>
+            </div>
+            <button onclick="confirmOrder()" style="width: 100%; background: linear-gradient(135deg, var(--accent), #f97316); color: white; border: none; padding: 22px; border-radius: 18px; font-size: 20px; font-weight: bold; box-shadow: 0 8px 25px rgba(234,88,12,0.4); transition: all 0.2s;">✅ အော်ဒါ သေချာလိုက်ပါ</button>
+        </div>
+    </div>
+
+    <!-- Voucher View -->
+    <div id="view-voucher" class="view hidden">
+        <div class="container">
+            <div class="voucher-card">
+                <h2 style="font-size: 32px; margin: 0 0 15px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">✅ အောင်မြင်ပါပြီ!</h2>
+                <svg id="barcode"></svg>
+                <h3 id="voucher-number" style="font-size: 28px; margin: 20px 0 15px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">YNS-000000</h3>
+                <div id="voucher-details" style="background: rgba(255,255,255,0.2); padding: 25px; border-radius: 16px; backdrop-filter: blur(10px);"></div>
+                <button onclick="sendToViber()" style="width: 100%; background: linear-gradient(135deg, #8b5cf6, #a78bfa); color: white; border: none; padding: 20px; border-radius: 16px; font-size: 18px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(139,92,246,0.4);">
+                    <i class="fab fa-viber" style="margin-right: 10px;"></i>Viber သို့ အော်ဒါ ပို့ရန်
+                </button>
+                <button onclick="showView('home')" style="width: 100%; background: rgba(255,255,255,0.3); color: white; border: 2px solid rgba(255,255,255,0.5); padding: 18px; border-radius: 14px; font-size: 16px; font-weight: 600; backdrop-filter: blur(10px);">🏠 ပင်မစာမျက်နှာ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Sidebar -->
+    <div id="admin-sidebar">
+        <div style="padding: 30px 25px 20px; border-bottom: 3px solid rgba(234,88,12,0.3); margin-bottom: 20px;">
+            <h3 style="margin: 0; font-size: 22px; font-weight: 700;">🍗 Admin Panel</h3>
+        </div>
+        <div class="sidebar-item active" onclick="setAdminView('orders')"><i class="fas fa-shopping-bag"></i>📋 အော်ဒါများ</div>
+        <div class="sidebar-item" onclick="setAdminView('stock')"><i class="fas fa-boxes"></i>📦 Stock/Price</div>
+        <div class="sidebar-item" onclick="setAdminView('settings')"><i class="fas fa-cog"></i>⚙️ ဆိုင်ဆက်တင်</div>
+        <div class="sidebar-item" onclick="toggleSidebar(false)" style="color: #94a3b8; border-top: 1px solid #475569;"><i class="fas fa-times"></i>❌ ပိတ်ရန်</div>
+    </div>
+
+    <!-- Cart Bar -->
+    <div id="cart-bar" class="hidden">
+        <div><i class="fas fa-shopping-basket" style="margin-right: 8px;"></i><span id="cart-qty">0</span> ခု ရွေးထားသည်</div>
+        <div>Checkout ➜</div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="showView('home')"><i class="fas fa-utensils"></i><span>Menu</span></div>
+        <div class="nav-item" onclick="showView('profile')"><i class="fas fa-history"></i><span>သမိုင်း</span></div>
+        <div class="nav-item" onclick="loginAdmin()"><i class="fas fa-user-shield"></i><span>Admin</span></div>
+    </nav>
+
+    <script>
+        function updateViberNumber() {
+            const phone = document.getElementById('admin-viber').value.trim();
+            if (phone && phone.startsWith('+959') || phone.startsWith('09')) {
+                alert('✅ Viber နံပါတ် သိမ်းပြီး');
+            } else {
+                alert('❌ +959 နံပါတ် ထည့်ပါ');
+            }
+        }
+    </script>
+</body>
+</html>

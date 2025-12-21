@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍗 မြင်သာကြက်ကင် - Premium POS</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary: #fbbf24; 
+            --secondary: #ea580c; 
+            --bg: #f8fafc; 
+            --dark: #1e293b; 
+            --white: #ffffff;
+        }
+
+        body { 
+            font-family: 'Pyidaungsu', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding-bottom: 110px; 
+            color: var(--dark);
+        }
+
+        /* Header & Navigation */
+        .header { 
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color: white; 
+            padding: 35px 20px; 
+            text-align: center; 
+            border-bottom-left-radius: 30px; 
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs { 
+            display: flex; 
+            justify-content: space-around; 
+            background: var(--white); 
+            margin: -25px 20px 20px; 
+            padding: 12px; 
+            border-radius: 18px; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-tabs button { 
+            border: none; 
+            background: none; 
+            padding: 10px 15px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            color: #64748b; 
+            font-family: 'Pyidaungsu';
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+
+        .nav-tabs button.active { 
+            color: var(--secondary); 
+            background: rgba(234, 88, 12, 0.1);
+        }
+
+        /* Forms & Inputs */
+        .container { max-width: 500px; margin: auto; }
+        .form-group { padding: 0 20px; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 12px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 12px; 
+            box-sizing: border-box; 
+            font-family: 'Pyidaungsu';
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--secondary); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+
+        /* Menu Section */
+        .menu-grid { padding: 0 20px; }
+        .menu-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            background: var(--white); 
+            border-radius: 15px; 
+            margin-bottom: 10px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .item-info b { font-size: 16px; display: block; }
+        .item-info span { color: var(--secondary); font-weight: bold; }
+
+        .qty-controls { display: flex; align-items: center; gap: 15px; }
+        .btn-qty { 
+            background: #f1f5f9; 
+            border: none; 
+            width: 35px; 
+            height: 35px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 18px;
+        }
+
+        /* Order Cards */
+        .order-card { 
+            background: var(--white); 
+            margin: 15px 20px; 
+            padding: 20px; 
+            border-radius: 15px; 
+            border-left: 5px solid var(--secondary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .status-badge { 
+            float: right; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: bold;
+        }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-confirmed { background: #dcfce7; color: #166534; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+        /* Bottom Cart Bar */
+        .footer-cart { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 100%; 
+            max-width: 500px; 
+            background: var(--white); 
+            padding: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            z-index: 100;
+        }
+
+        .btn-main { 
+            background: var(--secondary); 
+            color: white; 
+            border: none; 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            cursor: pointer;
+            font-family: 'Pyidaungsu';
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1 style="margin:0; font-size: 26px;">🍗 မြင်သာကြက်ကင်</h1>
+        <p style="margin:5px 0 0; opacity: 0.9;">ရသာထူးကဲ ပရီမီယံကြက်ကင်</p>
+    </div>
+
+    <div class="nav-tabs">
+        <button id="tab-order" class="active" onclick="showTab('order')">🛒 မှာယူရန်</button>
+        <button id="tab-status" onclick="showTab('status')">📋 အခြေအနေ</button>
+        <button id="tab-admin" onclick="showTab('admin')">🔑 Admin</button>
+    </div>
+
+    <div id="content-order" class="content">
+        <div class="form-group">
+            <input type="text" id="cust-name" placeholder="👤 ဝယ်ယူသူအမည်">
+            <input type="tel" id="cust-phone" placeholder="📞 ဖုန်းနံပါတ်">
+            <input type="text" id="pickup-time" placeholder="🕒 လာယူမည့်အချိန်">
+            <input type="text" id="search-item" placeholder="🔍 မီနူးရှာရန်..." oninput="renderMenu()">
+        </div>
+        <div class="menu-grid" id="menu-list"></div>
+    </div>
+
+    <div id="content-status" class="content hidden">
+        <div class="form-group">
+            <input type="tel" id="track-phone" placeholder="သင့်ဖုန်းနံပါတ်ရိုက်၍ ရှာပါ" oninput="fetchMyOrders()">
+        </div>
+        <div id="my-orders-list"></div>
+    </div>
+
+    <div id="content-admin" class="content hidden">
+        <div id="admin-login-box" class="form-group">
+            <input type="password" id="admin-pw" placeholder="Admin Password">
+            <button class="btn-main" style="width:100%" onclick="adminLogin()">ဝင်မည်</button>
+        </div>
+        <div id="admin-panel" class="hidden">
+            <div style="padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3>📥 အော်ဒါအသစ်များ</h3>
+                <button onclick="fetchAdminOrders()" style="background:none; border:1px solid #ddd; border-radius:8px; padding:5px 10px;">🔄</button>
+            </div>
+            <div id="all-orders-list"></div>
+        </div>
+    </div>
+
+    <div id="cart-bar" class="footer-cart">
+        <div>
+            <small style="color: #64748b;">စုစုပေါင်း</small>
+            <div style="font-size: 20px; font-weight: bold; color: var(--secondary);"><span id="total-price">0</span> K</div>
+        </div>
+        <button class="btn-main" onclick="submitOrder()">🚀 အော်ဒါတင်မည်</button>
+    </div>
+</div>
+
+<audio id="orderSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
+<script>
+    // --- SUPABASE & TELEGRAM CONFIG ---
+    const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
+    const SB_KEY = "sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc";
+    const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+
+    const TG_TOKEN = "8215695761:AAF1qDjAJn7gjiHyzf8t7W6c8e51cim98sU";
+    const TG_CHAT_ID = "8116152317";
+
+    const menu = {
+        'ကြက်ပေါင်': 4000, 'ကြက်ရင်အုံ': 4000, 'ဆိတ်သားကင်': 1500, 'အသားချောင်း(ကြက်)': 800,
+        'အရေခွံ': 500, 'အတောင်ပျံ': 500, 'အတောင်ပျံ(CP)': 1000, 'အူ': 500,
+        'ခေါင်း': 300, 'လည်ချောင်း': 300, 'အသည်းမြစ်': 500, 'ခြေထောက်': 300,
+        'ခြေထောက်(CP)': 700, 'လက်မောင်းလုံး': 1000, 'အဆီပူး': 800, 'အသားတု': 400,
+        'ရုံးပတေသီး': 300, 'အပ်မှို': 1000, 'ငုံးဥ': 1000
+    };
+    
+    let cart = {};
+
+    function showTab(tab) {
+        document.querySelectorAll('.content').forEach(c => c.classList.add('hidden'));
+        document.querySelectorAll('.nav-tabs button').forEach(b => b.classList.remove('active'));
+        document.getElementById('content-' + tab).classList.remove('hidden');
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('cart-bar').classList.toggle('hidden', tab !== 'order');
+    }
+
+    function renderMenu() {
+        const list = document.getElementById('menu-list');
+        const search = document.getElementById('search-item').value;
+        list.innerHTML = "";
+        
+        for (let item in menu) {
+            if (item.includes(search)) {
+                list.innerHTML += `
+                    <div class="menu-item">
+                        <div class="item-info">
+                            <b>${item}</b>
+                            <span>${menu[item].toLocaleString()} K</span>
+                        </div>
+                        <div class="qty-controls">
+                            <button class="btn-qty" onclick="updateQty('${item}', -1)">−</button>
+                            <span id="qty-${item}" style="font-weight:bold;">${cart[item] || 0}</span>
+                            <button class="btn-qty" onclick="updateQty('${item}', 1)">+</button>
+                        </div>
+                    </div>`;
+            }
+        }
+    }
+
+    function updateQty(item, change) {
+        cart[item] = (cart[item] || 0) + change;
+        if (cart[item] <= 0) delete cart[item];
+        
+        const qtySpan = document.getElementById(`qty-${item}`);
+        if(qtySpan) qtySpan.innerText = cart[item] || 0;
+        
+        let total = 0;
+        for (let k in cart) total += cart[k] * menu[k];
+        document.getElementById('total-price').innerText = total.toLocaleString();
+    }
+
+    async function submitOrder() {
+        const name = document.getElementById('cust-name').value;
+        const phone = document.getElementById('cust-phone').value;
+        const time = document.getElementById('pickup-time').value;
+        const total = document.getElementById('total-price').innerText;
+
+        if (!name || !phone || total == "0") return alert("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်ပေးပါ။");
+
+        let itemsArr = [];
+        let tgText = "";
+        for (let k in cart) {
+            itemsArr.push(`${k}(${cart[k]})`);
+            tgText += `🔸 ${k}: ${cart[k]} ခု\n`;
+        }
+
+        const { data, error } = await _supabase.from('orders').insert([{
+            customer_name: name, phone: phone, items: itemsArr.join(", "), total: total, status: 'pending', pickup_time: time
+        }]).select();
+
+        if (error) {
+            alert("Order တင်၍မရပါ။ SQL Run ရန် လိုအပ်နေနိုင်ပါသည်။");
+        } else {
+            const tgMsg = `🧾 အော်ဒါအသစ်ရရှိပါပြီ\n🆔 ID: MT-${1000 + data[0].id}\n👤 အမည်: ${name}\n📞 ဖုန်း: ${phone}\n🕒 လာယူချိန်: ${time}\n---\n${tgText}💰 စုစုပေါင်း: ${total} K`;
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(tgMsg)}`);
+            alert("✅ အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။");
+            location.reload();
+        }
+    }
+
+    async function fetchMyOrders() {
+        const phone = document.getElementById('track-phone').value;
+        if (phone.length < 7) return;
+        const { data } = await _supabase.from('orders').select('*').eq('phone', phone).order('created_at', { ascending: false });
+        
+        document.getElementById('my-orders-list').innerHTML = data.map(o => `
+            <div class="order-card">
+                <span class="status-badge status-${o.status}">${o.status}</span>
+                <b>🆔 ID: MT-${1000 + o.id}</b><br>
+                <small>${new Date(o.created_at).toLocaleString()}</small>
+                <p style="font-size:14px; margin:10px 0; color:#475569;">${o.items}</p>
+                <div style="font-weight:bold; color:var(--secondary);">ကျသင့်ငွေ: ${o.total} K</div>
+            </div>
+        `).join('');
+    }
+
+    function adminLogin() {
+        if (document.getElementById('admin-pw').value === "2012@Yewin") {
+            document.getElementById('admin-login-box').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            fetchAdminOrders();
+            setupRealtime();
+        } else {
+            alert("Password မှားယွင်းနေပါသည်။");
+        }
+    }
+
+    function setupRealtime() {
+        _supabase.channel('custom-all-channel')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'orders' }, payload => {
+            document.getElementById('orderSound').play();
+            fetchAdminOrders();
+        })
+        .subscribe();
+    }
+
+    async function fetchAdminOrders() {
+        const { data } = await _supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(50);
+        document.getElementById('all-orders-list').innerHTML = data.map(o => `
+            <div class="order-card" style="border-left-color: ${o.status === 'confirmed' ? '#22c55e' : '#f59e0b'}">
+                <span class="status-badge status-${o.status}">${o.status}</span>
+                <b>MT-${1000 + o.id} - ${o.customer_name}</b><br>
+                <small>📞 ${o.phone} | 🕒 ${o.pickup_time || '-'}</small>
+                <p style="font-size:14px; background:#f1f5f9; padding:8px; border-radius:8px; margin:10px 0;">${o.items}</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <b>💰 ${o.total} K</b>
+                    <div>
+                        ${o.status === 'pending' ? `<button onclick="updateStatus(${o.id}, 'confirmed')" style="background:#22c55e; color:white; border:none; padding:6px 12px; border-radius:8px; cursor:pointer;">Confirm</button>` : ''}
+                        <button onclick="deleteOrder(${o.id})" style="color:red; background:none; border:none; cursor:pointer; margin-left:10px;">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    async function updateStatus(id, newStatus) {
+        await _supabase.from('orders').update({ status: newStatus }).eq('id', id);
+        fetchAdminOrders();
+    }
+
+    async function deleteOrder(id) {
+        if(confirm("ဤအော်ဒါကို ဖျက်ရန် သေချာပါသလား?")) {
+            await _supabase.from('orders').delete().eq('id', id);
+            fetchAdminOrders();
+        }
+    }
+
+    window.onload = renderMenu;
+</script>
+</body>
+</html>

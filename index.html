@@ -2,395 +2,308 @@
 <html lang="my">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYIN THAR PREMIUM POS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MYIN THAR | PREMIUM POS SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         :root {
-            --primary: #f97316; /* Premium Orange */
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
+            --apple-white: #F5F5F7;
+            --apple-dark: #1D1D1F;
+            --premium-orange: #FF6B00;
+            --glass: rgba(255, 255, 255, 0.85);
+            --shadow: 0 12px 40px rgba(0,0,0,0.1);
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--apple-white); color: var(--apple-dark); overflow-x: hidden; }
 
-        /* Utils */
         .hidden { display: none !important; }
-        .btn-p { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-        .btn-p:hover { opacity: 0.9; transform: translateY(-2px); }
-        .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* Landing Page */
-        #landing-page {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 20px;
-            background: radial-gradient(circle at top, #fff 0%, #f8fafc 100%);
-        }
-        .hero-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        /* UI Components */
+        .btn-premium { background: var(--apple-dark); color: white; border: none; padding: 16px 30px; border-radius: 15px; font-weight: 600; cursor: pointer; transition: 0.3s; width: 100%; }
+        .card { background: white; border-radius: 24px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
 
-        /* Header */
-        header {
-            background: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid #f1f5f9;
-        }
+        /* 1. Header & Hero */
+        #hero-page { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=2070') center/cover; text-align: center; color: white; }
+        
+        header { position: fixed; top: 0; width: 100%; height: 70px; background: var(--glass); backdrop-filter: blur(20px); display: flex; align-items: center; padding: 0 20px; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); justify-content: space-between; }
 
-        /* Menu Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .item-card { background: white; border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; transition: 0.3s; }
-        .item-img { width: 100%; height: 130px; object-fit: cover; }
-        .item-info { padding: 12px; }
-        .item-price { color: var(--primary); font-weight: 700; font-size: 1.1rem; }
+        /* 2. Menu Grid */
+        #menu-page { padding: 90px 15px 150px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .item-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.03); }
+        .item-img { width: 100%; height: 140px; object-fit: cover; }
+        .item-info { padding: 15px; }
+        
+        /* 3. Sticky Cart Bar (Option B Logic) */
+        .sticky-cart { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 450px; background: var(--apple-dark); color: white; padding: 18px 25px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 50px rgba(0,0,0,0.4); z-index: 2000; cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .sticky-cart:active { transform: translateX(-50%) scale(0.95); }
 
-        /* Cart Bar */
-        #cart-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
-            background: var(--text-dark);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        /* Navigation Drawer */
-        .drawer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 24px 24px 0 0;
-            padding: 25px;
-            transform: translateY(100%);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2000;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
+        /* 4. Checkout Drawer */
+        .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); z-index: 3000; display: none; }
+        .drawer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-radius: 30px 30px 0 0; padding: 30px 25px; transform: translateY(100%); transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: 3001; max-height: 85vh; overflow-y: auto; }
         .drawer.active { transform: translateY(0); }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; }
 
-        /* Admin Table */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { text-align: left; color: var(--text-light); font-size: 0.8rem; padding: 10px; border-bottom: 1px solid #f1f5f9; }
-        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        /* 5. Admin Panel POS Style */
+        #admin-page { padding: 90px 15px 50px; }
+        .status-pill { padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; }
+        .pending { background: #FFF4ED; color: #FF6B00; }
+        .confirmed { background: #ECFDF5; color: #10B981; }
 
-        /* Status Badges */
-        .status { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
-        .status-pending { background: #fff7ed; color: #c2410c; }
-        .status-done { background: #ecfdf5; color: #059669; }
+        /* Quantity controls */
+        .qty-ctrl { display: flex; align-items: center; background: #F2F2F7; border-radius: 12px; padding: 4px; margin-top: 10px; width: fit-content; }
+        .qty-btn { border: none; background: white; width: 32px; height: 32px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .qty-val { margin: 0 15px; font-weight: 700; }
 
+        /* Form Inputs */
+        input, select { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #E5E5EA; margin-bottom: 15px; font-family: inherit; font-size: 1rem; }
     </style>
 </head>
 <body>
 
-    <div id="landing-page">
-        <img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=500" class="hero-img" alt="Chicken">
-        <h1 style="margin: 20px 0 10px;">MYIN THAR</h1>
-        <p style="color: var(--text-light); margin-bottom: 30px;">Premium Roasted Chicken & POS System</p>
-        <button class="btn-p" style="width: 200px;" onclick="startOrder()">ORDER NOW</button>
-        <p style="margin-top: 20px; font-size: 0.8rem; color: var(--text-light);" onclick="openAdmin()">Admin Login</p>
-    </div>
+    <header class="hidden" id="main-header">
+        <div onclick="goHome()" style="cursor:pointer;"><i class="fas fa-chevron-left"></i></div>
+        <b style="letter-spacing: 1px; font-size: 0.9rem;">MYIN THAR ROASTED</b>
+        <div id="shop-status" class="status-pill confirmed">OPEN</div>
+    </header>
 
-    <div id="shop-view" class="hidden">
-        <header>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <button onclick="goBack('landing')" style="background:none; border:none; font-size:1.2rem;"><i class="fas fa-arrow-left"></i></button>
-                <b style="font-size:1.2rem;">Menu</b>
-            </div>
-            <div id="shop-status-tag" class="status status-done">OPEN</div>
-        </header>
-
-        <div class="grid" id="menu-container">
-            </div>
-
-        <div id="cart-bar" class="hidden" onclick="toggleDrawer(true)">
-            <span><i class="fas fa-shopping-bag"></i> <span id="cart-count">0</span> Items</span>
-            <span style="font-weight:bold;">Review Order <i class="fas fa-chevron-up" style="margin-left:10px;"></i></span>
+    <div id="hero-page">
+        <div>
+            <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 10px;">MYIN THAR</h1>
+            <p style="opacity: 0.8; margin-bottom: 30px;">Premium Taste, Professional Service</p>
+            <button class="btn-premium" style="background: white; color: black; width: auto; padding: 18px 50px; border-radius: 50px;" onclick="startOrdering()">မှာယူရန် နှိပ်ပါ</button>
+            <p onclick="loginAdmin()" style="margin-top: 40px; font-size: 0.7rem; opacity: 0.5; cursor: pointer;">ADMIN ACCESS</p>
         </div>
     </div>
 
-    <div id="admin-view" class="hidden">
-        <header>
-            <b style="font-size:1.2rem;">Admin Dashboard</b>
-            <button onclick="location.reload()" class="btn-p" style="padding: 5px 15px;">Logout</button>
-        </header>
-        <div class="padding" style="padding:15px;">
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button class="btn-p" onclick="showAdminTab('orders')">Orders</button>
-                <button class="btn-p" onclick="showAdminTab('items')" style="background:#64748b;">Manage Items</button>
+    <div id="menu-page" class="hidden">
+        <div class="menu-grid" id="menu-container">
             </div>
-
-            <div id="admin-orders-sec">
-                <h3>Live Orders</h3>
-                <div id="admin-orders-list"></div>
-            </div>
-
-            <div id="admin-items-sec" class="hidden">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3>Stock Management</h3>
-                    <button class="btn-p" onclick="addNewItem()" style="padding:5px 10px; font-size:0.8rem;">+ Add New</button>
-                </div>
-                <table id="inventory-table">
-                    <thead>
-                        <tr><th>Item</th><th>Price</th><th>Stock</th><th>Action</th></tr>
-                    </thead>
-                    <tbody id="inventory-body"></tbody>
-                </table>
-            </div>
-        </div>
     </div>
 
-    <div class="overlay" id="overlay" onclick="toggleDrawer(false)"></div>
+    <div class="sticky-cart hidden" id="sticky-bar" onclick="openDrawer()">
+        <div>
+            <span id="total-qty">0</span> ပစ္စည်း | <span id="total-price">0</span> Ks
+        </div>
+        <div style="font-weight: 700;">CHECKOUT <i class="fas fa-arrow-right" style="margin-left:8px;"></i></div>
+    </div>
 
+    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
     <div class="drawer" id="drawer">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0;">Checkout</h2>
-            <button onclick="toggleDrawer(false)" style="background:none; border:none; font-size:1.5rem;">&times;</button>
-        </div>
-        <div id="drawer-items" style="margin-bottom:20px;"></div>
+        <h2 style="margin-bottom: 20px; font-weight: 700;">သင့်အော်ဒါ</h2>
+        <div id="cart-details" style="margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 20px;"></div>
         
-        <div id="verification-sec">
-            <p style="color:var(--text-light); font-size:0.9rem;">To prevent fake orders, please verify with Telegram</p>
-            <button class="btn-p" style="width:100%; background:#229ED9;" onclick="verifyTelegram()">
-                <i class="fab fa-telegram-plane"></i> VERIFY VIA TELEGRAM
+        <div id="verify-section">
+            <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px;">အော်ဒါအတည်ပြုရန် Telegram ဖြင့် အရင်စစ်ဆေးပေးပါ</p>
+            <button class="btn-premium" style="background: #0088cc;" onclick="verifyWithBot()">
+                <i class="fab fa-telegram-plane" style="margin-right: 10px;"></i> VERIFY TELEGRAM
             </button>
         </div>
 
-        <div id="order-form" class="hidden">
-            <input type="text" id="cust-name" placeholder="သင့်အမည်" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:10px;">
-            <input type="text" id="cust-phone" readonly style="width:100%; padding:12px; margin-bottom:10px; background:#f1f5f9; border:none; border-radius:10px;">
-            <label style="font-size:0.8rem; color:var(--text-light);">ဆိုင်လာယူမည့်အချိန်</label>
-            <input type="time" id="pickup-time" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #e2e8f0; border-radius:10px;">
-            
-            <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:bold; margin-bottom:20px;">
-                <span>Total:</span>
-                <span id="drawer-total">0 K</span>
-            </div>
-            <button class="btn-p" style="width:100%;" onclick="submitOrder()">CONFIRM & PLACE ORDER</button>
+        <div id="final-form" class="hidden">
+            <input type="text" id="cust-name" placeholder="သင့်အမည်">
+            <select id="order-type">
+                <option value="today">ယနေ့မှာယူမည် (Today)</option>
+                <option value="preorder">ကြိုတင်မှာယူမည် (Pre-order)</option>
+            </select>
+            <input type="time" id="pickup-time" placeholder="လာယူမည့်အချိန်">
+            <button class="btn-premium" onclick="placeOrder()">PLACE ORDER NOW</button>
         </div>
+    </div>
+
+    <div id="admin-page" class="hidden">
+        <h2 style="margin-bottom: 20px;">Live Orders</h2>
+        <div id="admin-orders-list"></div>
     </div>
 
     <audio id="noti-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
 
     <script>
-        // Configuration
+        // --- 1. CONFIGURATION ---
         const TG_BOT_TOKEN = '8215695761:AAF1qDjAJn7gjiHyzf8t7W6c8e51cim98sU';
         const TG_CHAT_ID = '8116152317';
-        const SB_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
-        const SB_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
-        const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+        const DB_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
+        const DB_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc'; // Replace with real key if needed
+        const _supabase = window.supabase.createClient(DB_URL, DB_KEY);
 
-        let menu = [], cart = [], isVerified = false;
+        const items = [
+            { name: "ကြက်ပေါင်", price: 4000 }, { name: "ကြက်ရင်အုံ", price: 4000 },
+            { name: "ဆိတ်သားကင်", price: 1500 }, { name: "အသား ချောင်း(ကြက်)", price: 800 },
+            { name: "အရေခွံ", price: 500 }, { name: "အတောင်ပျံ", price: 500 },
+            { name: "အတောင်ပျံ (CP)", price: 1000 }, { name: "အူ", price: 500 },
+            { name: "ခေါင်း", price: 300 }, { name: "လည် ချောင်း", price: 300 },
+            { name: "အသည်းမြစ်", price: 500 }, { name: "ခြေထောက်", price: 300 },
+            { name: "ခြေထောက်(CP)", price: 700 }, { name: "လက်မောင်းလုံး", price: 1000 },
+            { name: "အဆီပူး", price: 800 }, { name: "အသားတု", price: 400 },
+            { name: "ရုံးပတေသီး", price: 300 }, { name: "အပ်မှို", price: 1000 },
+            { name: "ငုံးဥ", price: 1000 }
+        ];
 
-        async function init() {
-            const { data } = await _supabase.from('menu_items').select('*').order('name');
-            menu = data || [];
+        let cart = {};
+        let isVerified = false;
+
+        // --- 2. CUSTOMER FLOW ---
+        function startOrdering() {
+            document.getElementById('hero-page').classList.add('hidden');
+            document.getElementById('menu-page').classList.remove('hidden');
+            document.getElementById('main-header').classList.remove('hidden');
             renderMenu();
-
-            // Real-time listener for Admin
-            _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, payload => {
-                document.getElementById('noti-sound').play();
-                loadAdminOrders();
-            }).subscribe();
+            restoreCart(); // Part 2 logic: Restore from local storage
         }
 
         function renderMenu() {
             const container = document.getElementById('menu-container');
-            container.innerHTML = menu.map(item => `
+            container.innerHTML = items.map((item, idx) => `
                 <div class="item-card">
-                    <img src="${item.photo_url}" class="item-img" onerror="this.src='https://via.placeholder.com/150'">
+                    <img src="https://via.placeholder.com/200x140?text=${item.name}" class="item-img">
                     <div class="item-info">
-                        <div style="font-weight:600; margin-bottom:5px;">${item.name}</div>
-                        <div class="item-price">${item.price} K</div>
-                        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-                            <button onclick="updateCart(${item.id}, -1)" style="width:30px; height:30px; border-radius:8px; border:1px solid #ddd; background:white;">-</button>
-                            <span id="qty-${item.id}" style="font-weight:bold;">${getQty(item.id)}</span>
-                            <button onclick="updateCart(${item.id}, 1)" style="width:30px; height:30px; border-radius:8px; background:var(--primary); color:white; border:none;">+</button>
+                        <b style="font-size:0.85rem;">${item.name}</b>
+                        <div style="color:var(--premium-orange); font-weight:700; margin-top:5px;">${item.price} Ks</div>
+                        <div class="qty-ctrl">
+                            <button class="qty-btn" onclick="changeQty('${item.name}', -1)">-</button>
+                            <span class="qty-val" id="qty-${idx}">0</span>
+                            <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
                         </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function updateCart(id, delta) {
-            const item = menu.find(m => m.id === id);
-            const exists = cart.find(c => c.id === id);
-            if(exists) {
-                exists.qty += delta;
-                if(exists.qty <= 0) cart = cart.filter(c => c.id !== id);
-            } else if(delta > 0) {
-                cart.push({...item, qty: 1});
-            }
-            document.getElementById(`qty-${id}`).innerText = getQty(id);
-            updateCartBar();
-        }
-
-        function getQty(id) {
-            const item = cart.find(c => c.id === id);
-            return item ? item.qty : 0;
-        }
-
-        function updateCartBar() {
-            const count = cart.reduce((a, b) => a + b.qty, 0);
-            const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            document.getElementById('cart-bar').classList.toggle('hidden', count === 0);
-            document.getElementById('cart-count').innerText = count;
-            document.getElementById('drawer-total').innerText = total + " K";
+        function changeQty(name, delta) {
+            cart[name] = (cart[name] || 0) + delta;
+            if (cart[name] <= 0) delete cart[name];
             
-            document.getElementById('drawer-items').innerHTML = cart.map(c => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">
-                    <div><b>${c.name}</b><br><small>${c.price} x ${c.qty}</small></div>
-                    <b>${c.price * c.qty} K</b>
+            // Sync UI
+            const idx = items.findIndex(i => i.name === name);
+            if(idx !== -1) document.getElementById(`qty-${idx}`).innerText = cart[name] || 0;
+            
+            saveCart();
+            updateStickyBar();
+        }
+
+        function updateStickyBar() {
+            const totalQty = Object.values(cart).reduce((a,b) => a+b, 0);
+            const totalPrice = Object.keys(cart).reduce((s, n) => s + (items.find(i=>i.name===n).price * cart[n]), 0);
+            
+            const bar = document.getElementById('sticky-bar');
+            if(totalQty > 0) {
+                bar.classList.remove('hidden');
+                document.getElementById('total-qty').innerText = totalQty;
+                document.getElementById('total-price').innerText = totalPrice;
+            } else {
+                bar.classList.add('hidden');
+            }
+        }
+
+        function saveCart() { localStorage.setItem('myinthar_cart', JSON.stringify(cart)); }
+        function restoreCart() {
+            const saved = localStorage.getItem('myinthar_cart');
+            if(saved) {
+                cart = JSON.parse(saved);
+                Object.keys(cart).forEach(name => {
+                    const idx = items.findIndex(i => i.name === name);
+                    if(idx !== -1) document.getElementById(`qty-${idx}`).innerText = cart[name];
+                });
+                updateStickyBar();
+            }
+        }
+
+        // --- 3. CHECKOUT & VERIFY (OPTION B) ---
+        function openDrawer() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('drawer').classList.add('active');
+            
+            const details = document.getElementById('cart-details');
+            details.innerHTML = Object.keys(cart).map(name => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <span>${name} x ${cart[name]}</span>
+                    <b>${items.find(i=>i.name===name).price * cart[name]} Ks</b>
                 </div>
             `).join('');
         }
 
-        function verifyTelegram() {
-            // အစ်ကို့ Bot link ဆီကို ပို့ပေးမယ်
-            window.open(`https://t.me/myinthar_order_bot`, '_blank');
-            // Professional Website တွေမှာ Bot ကနေ Token ပြန်ပေးတဲ့စနစ်သုံးပေမယ့် အခုက Demo ဖြစ်လို့ Verify ဖြစ်သွားပြီလို့ သတ်မှတ်ပေးမယ်
+        function closeDrawer() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('drawer').classList.remove('active');
+        }
+
+        function verifyWithBot() {
+            window.open('https://t.me/myinthar_order_bot', '_blank');
+            // Fake verification for demo, real one would check via Supabase
             setTimeout(() => {
                 isVerified = true;
-                document.getElementById('cust-phone').value = "Verified via Telegram";
-                document.getElementById('verification-sec').classList.add('hidden');
-                document.getElementById('order-form').classList.remove('hidden');
+                document.getElementById('verify-section').classList.add('hidden');
+                document.getElementById('final-form').classList.remove('hidden');
             }, 2000);
         }
 
-        async function submitOrder() {
+        async function placeOrder() {
             const name = document.getElementById('cust-name').value;
             const time = document.getElementById('pickup-time').value;
-            if(!name || !time) return alert("အချက်အလက်ပြည့်စုံစွာ ဖြည့်ပေးပါ");
+            const type = document.getElementById('order-type').value;
+            if(!name || !time) return alert("အမည်နှင့် အချိန်ဖြည့်ပေးပါ");
 
-            const vn = "YNS-" + Date.now().toString().slice(-6);
-            const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-            const itemTxt = cart.map(c => `${c.name} (${c.qty})`).join(', ');
+            const vn = "MT-" + Date.now().toString().slice(-5);
+            const total = document.getElementById('total-price').innerText;
+            const itemStr = Object.keys(cart).map(n => `${n}(${cart[n]})`).join(", ");
 
-            const { data, error } = await _supabase.from('orders').insert([{
-                voucher_no: vn, customer_name: name, phone: "TG-Verified", items: itemTxt, total: total, pickup_time: time, status: 'pending'
-            }]).select();
+            // Save to Supabase
+            const { error } = await _supabase.from('orders').insert([{
+                voucher_no: vn, customer_name: name, items: itemStr, total: total, pickup_time: time, order_type: type, status: 'pending'
+            }]);
 
             if(!error) {
-                sendTGNoti(vn, name, itemTxt, total, time);
-                alert("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။ ဆိုင်မှ အတည်ပြုပေးပါလိမ့်မည်။");
+                // Notify Bot
+                const msg = `🚀 *အော်ဒါအသစ် (${type})*\nVoucher: ${vn}\nCustomer: ${name}\nItems: ${itemStr}\nTotal: ${total} Ks\nTime: ${time}`;
+                fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+                
+                alert("အော်ဒါတင်ပြီးပါပြီ။ ဆိုင်မှ အတည်ပြုသည်အထိ စောင့်ပေးပါ။");
+                localStorage.removeItem('myinthar_cart');
                 location.reload();
             }
         }
 
-        async function sendTGNoti(vn, name, items, total, time) {
-            const msg = `🔔 *အော်ဒါအသစ် ရောက်ရှိလာပါသည်*\n\n🆔 Voucher: ${vn}\n👤 Customer: ${name}\n🍗 Items: ${items}\n💰 Total: ${total} K\n⏰ Pickup: ${time}`;
-            await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'Markdown' })
-            });
-        }
-
-        // Navigation Logic
-        function startOrder() {
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('shop-view').classList.remove('hidden');
-        }
-
-        function goBack(to) {
-            document.getElementById('shop-view').classList.add('hidden');
-            document.getElementById('landing-page').classList.remove('hidden');
-        }
-
-        function toggleDrawer(show) {
-            document.getElementById('drawer').classList.toggle('active', show);
-            document.getElementById('overlay').style.display = show ? 'block' : 'none';
-        }
-
-        // Admin Logic
-        function openAdmin() {
-            const pass = prompt("Enter Admin Password:");
-            if(pass === "2012@Yewin") {
-                document.getElementById('landing-page').classList.add('hidden');
-                document.getElementById('admin-view').classList.remove('hidden');
+        // --- 4. ADMIN POS LOGIC ---
+        function loginAdmin() {
+            if(prompt("Admin Password:") === "2012@Yewin") {
+                document.getElementById('hero-page').classList.add('hidden');
+                document.getElementById('main-header').classList.remove('hidden');
+                document.getElementById('admin-page').classList.remove('hidden');
                 loadAdminOrders();
+                
+                // Real-time listener for Redmi Noti fix
+                _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, payload => {
+                    document.getElementById('noti-sound').play();
+                    loadAdminOrders();
+                }).subscribe();
             }
         }
 
         async function loadAdminOrders() {
-            const { data } = await _supabase.from('orders').select('*').order('id', {ascending:false});
-            document.getElementById('admin-orders-list').innerHTML = data.map(o => `
-                <div class="card" style="margin-bottom:15px; border-left: 5px solid ${o.status==='pending'?'#f97316':'#10b981'}">
-                    <div style="display:flex; justify-content:space-between;">
+            const { data } = await _supabase.from('orders').select('*').order('id', {ascending: false});
+            const list = document.getElementById('admin-orders-list');
+            list.innerHTML = data.map(o => `
+                <div class="card" style="border-left: 6px solid ${o.status==='pending'?'#FF6B00':'#10B981'}">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
                         <b>#${o.voucher_no}</b>
-                        <span class="status ${o.status==='pending'?'status-pending':'status-done'}">${o.status.toUpperCase()}</span>
+                        <span class="status-pill ${o.status==='pending'?'pending':'confirmed'}">${o.status.toUpperCase()}</span>
                     </div>
-                    <p style="margin:10px 0; font-size:0.9rem;">${o.items}</p>
+                    <div style="font-size:0.9rem; margin-bottom:10px;">${o.items}</div>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <small>${o.customer_name} | ${o.pickup_time}</small>
-                        <button onclick="updateStatus(${o.id}, 'done')" class="btn-p" style="padding:5px 10px; font-size:0.7rem;">Mark Done</button>
+                        ${o.status === 'pending' ? `<button class="btn-premium" style="width:auto; padding:8px 15px; font-size:0.8rem;" onclick="updateStatus(${o.id}, 'done')">Done</button>` : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        function showAdminTab(tab) {
-            document.getElementById('admin-orders-sec').classList.toggle('hidden', tab !== 'orders');
-            document.getElementById('admin-items-sec').classList.toggle('hidden', tab !== 'items');
-            if(tab === 'items') loadInventory();
+        async function updateStatus(id, status) {
+            await _supabase.from('orders').update({status: status}).eq('id', id);
+            loadAdminOrders();
         }
-
-        async function loadInventory() {
-            const { data } = await _supabase.from('menu_items').select('*').order('name');
-            document.getElementById('inventory-body').innerHTML = data.map(i => `
-                <tr>
-                    <td>${i.name}</td>
-                    <td>${i.price}</td>
-                    <td>${i.stock}</td>
-                    <td><button onclick="editStock(${i.id}, ${i.stock})">Edit</button></td>
-                </tr>
-            `).join('');
-        }
-
-        async function editStock(id, cur) {
-            const val = prompt("Enter New Stock Quantity:", cur);
-            if(val) {
-                await _supabase.from('menu_items').update({stock: parseInt(val)}).eq('id', id);
-                loadInventory();
-            }
-        }
-
-        window.onload = init;
     </script>
 </body>
 </html>

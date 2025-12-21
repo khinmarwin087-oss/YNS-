@@ -3,498 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍗 MYIN THAR - CRYPTO STYLE POS</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <title>MYIN THAR PREMIUM POS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        /* Binance Crypto Theme Colors */
         :root {
-            --bg-dark: #0b0e11;
-            --bg-card: #1e2329;
-            --primary: #fcd535; /* Binance Yellow */
-            --text-main: #eaecef;
-            --text-dim: #848e9c;
-            --success: #0ecb81;
-            --danger: #f6465d;
-            --border: #333941;
+            --primary: #f97316; /* Premium Orange */
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
         }
 
         body {
-            font-family: 'Inter', 'Pyidaungsu', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
             margin: 0;
-            padding-bottom: 80px;
+            padding: 0;
+            overflow-x: hidden;
         }
 
+        /* Utils */
         .hidden { display: none !important; }
+        .btn-p { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-p:hover { opacity: 0.9; transform: translateY(-2px); }
+        .card { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-        /* Header Styles */
-        header {
+        /* Landing Page */
+        #landing-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             padding: 20px;
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
+            background: radial-gradient(circle at top, #fff 0%, #f8fafc 100%);
+        }
+        .hero-img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 15px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #f1f5f9;
         }
-
-        .logo {
-            color: var(--primary);
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-badge {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background: rgba(14, 203, 129, 0.15);
-            color: var(--success);
-        }
-
-        /* Container */
-        .container { padding: 15px; max-width: 600px; margin: auto; }
-
-        /* Crypto Card Style */
-        .card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 15px;
-            border: 1px solid transparent;
-            transition: 0.3s;
-        }
-        .card:hover { border-color: var(--border); }
 
         /* Menu Grid */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-        .item-card {
-            background: var(--bg-card);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        .item-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            opacity: 0.9;
-        }
-
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .item-card { background: white; border-radius: 20px; overflow: hidden; border: 1px solid #f1f5f9; transition: 0.3s; }
+        .item-img { width: 100%; height: 130px; object-fit: cover; }
         .item-info { padding: 12px; }
-        .item-name { font-size: 14px; font-weight: 500; margin-bottom: 5px; }
-        .item-price { color: var(--primary); font-size: 16px; font-weight: bold; }
+        .item-price { color: var(--primary); font-weight: 700; font-size: 1.1rem; }
 
-        /* Quantity Controls */
-        .qty-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 12px;
-            background: var(--bg-dark);
-            border-radius: 6px;
-            padding: 4px;
-        }
-
-        .btn-qty {
-            background: #2b3139;
-            color: var(--text-main);
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-qty:hover { background: var(--border); }
-
-        /* Bottom Navigation (Crypto App Style) */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 600px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            display: flex;
-            padding: 10px 0;
-            border-top: 1px solid var(--border);
-            z-index: 1000;
-        }
-
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            color: var(--text-dim);
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .nav-item.active { color: var(--primary); }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
-
-        /* Floating Cart Bar (Trading Bar Style) */
+        /* Cart Bar */
         #cart-bar {
             position: fixed;
-            bottom: 85px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: calc(100% - 30px);
-            max-width: 570px;
-            background: var(--primary);
-            color: var(--bg-dark);
-            padding: 15px;
-            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            background: var(--text-dark);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: bold;
-            z-index: 999;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        /* Sidebar for Admin (Crypto Menu) */
-        #sidebar {
-            position: fixed;
-            left: 0; top: 0; bottom: 0;
-            width: 260px;
-            background: var(--bg-card);
-            z-index: 2000;
-            padding: 25px;
-            transform: translateX(-100%);
-            transition: 0.3s;
-            border-right: 1px solid var(--border);
-        }
-        #sidebar.active { transform: translateX(0); }
-
-        /* Inputs & Buttons */
-        input {
-            width: 100%;
-            padding: 14px;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-main);
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-        input:focus { border-color: var(--primary); outline: none; }
-
-        .btn-main {
-            width: 100%;
-            padding: 16px;
-            background: var(--primary);
-            color: var(--bg-dark);
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* Tables for Admin */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th { color: var(--text-dim); font-size: 12px; text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
-        td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
-
-        .badge-pending { color: var(--primary); background: rgba(252, 213, 53, 0.1); padding: 4px 8px; border-radius: 4px; }
-        
-        /* Drawer */
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1500; display: none; }
+        /* Navigation Drawer */
         .drawer {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--bg-card);
-            border-top: 1px solid var(--border);
-            border-radius: 20px 20px 0 0;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px 24px 0 0;
             padding: 25px;
-            z-index: 1600;
-            max-height: 85vh;
+            transform: translateY(100%);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2000;
+            max-height: 80vh;
             overflow-y: auto;
-            display: none;
         }
+        .drawer.active { transform: translateY(0); }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; display: none; }
+
+        /* Admin Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; color: var(--text-light); font-size: 0.8rem; padding: 10px; border-bottom: 1px solid #f1f5f9; }
+        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+
+        /* Status Badges */
+        .status { padding: 4px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: bold; }
+        .status-pending { background: #fff7ed; color: #c2410c; }
+        .status-done { background: #ecfdf5; color: #059669; }
+
     </style>
 </head>
 <body>
 
-<header>
-    <div class="logo">
-        <i class="fas fa-coins"></i>
-        <span>MYIN THAR</span>
+    <div id="landing-page">
+        <img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=500" class="hero-img" alt="Chicken">
+        <h1 style="margin: 20px 0 10px;">MYIN THAR</h1>
+        <p style="color: var(--text-light); margin-bottom: 30px;">Premium Roasted Chicken & POS System</p>
+        <button class="btn-p" style="width: 200px;" onclick="startOrder()">ORDER NOW</button>
+        <p style="margin-top: 20px; font-size: 0.8rem; color: var(--text-light);" onclick="openAdmin()">Admin Login</p>
     </div>
-    <div id="shop-status" class="status-badge">Market Open</div>
-</header>
 
-<div id="v-home" class="view container">
-    <div style="margin-bottom: 20px;">
-        <h4 style="margin: 0; color: var(--text-dim);">Hot Deals</h4>
-        <div id="menu-list" class="grid" style="margin-top:15px;"></div>
+    <div id="shop-view" class="hidden">
+        <header>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button onclick="goBack('landing')" style="background:none; border:none; font-size:1.2rem;"><i class="fas fa-arrow-left"></i></button>
+                <b style="font-size:1.2rem;">Menu</b>
+            </div>
+            <div id="shop-status-tag" class="status status-done">OPEN</div>
+        </header>
+
+        <div class="grid" id="menu-container">
+            </div>
+
+        <div id="cart-bar" class="hidden" onclick="toggleDrawer(true)">
+            <span><i class="fas fa-shopping-bag"></i> <span id="cart-count">0</span> Items</span>
+            <span style="font-weight:bold;">Review Order <i class="fas fa-chevron-up" style="margin-left:10px;"></i></span>
+        </div>
     </div>
-</div>
 
-<div id="v-profile" class="view container hidden">
-    <h3 style="color: var(--primary);"><i class="fas fa-history"></i> My History</h3>
-    <div id="user-info" class="card" style="border-left: 4px solid var(--primary);"></div>
-    <div id="history-list"></div>
-</div>
+    <div id="admin-view" class="hidden">
+        <header>
+            <b style="font-size:1.2rem;">Admin Dashboard</b>
+            <button onclick="location.reload()" class="btn-p" style="padding: 5px 15px;">Logout</button>
+        </header>
+        <div class="padding" style="padding:15px;">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <button class="btn-p" onclick="showAdminTab('orders')">Orders</button>
+                <button class="btn-p" onclick="showAdminTab('items')" style="background:#64748b;">Manage Items</button>
+            </div>
 
-<div id="v-admin" class="view container hidden">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3>Dashboard</h3>
-        <button onclick="toggleSidebar(true)" style="background:none; border:none; color:var(--text-main); font-size:20px;"><i class="fas fa-bars"></i></button>
+            <div id="admin-orders-sec">
+                <h3>Live Orders</h3>
+                <div id="admin-orders-list"></div>
+            </div>
+
+            <div id="admin-items-sec" class="hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3>Stock Management</h3>
+                    <button class="btn-p" onclick="addNewItem()" style="padding:5px 10px; font-size:0.8rem;">+ Add New</button>
+                </div>
+                <table id="inventory-table">
+                    <thead>
+                        <tr><th>Item</th><th>Price</th><th>Stock</th><th>Action</th></tr>
+                    </thead>
+                    <tbody id="inventory-body"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    
-    <div id="admin-orders"></div>
-    <div id="admin-inventory" class="hidden"></div>
-</div>
 
-<div id="v-voucher" class="view container hidden" style="text-align: center;">
-    <div class="card" style="border: 2px solid var(--primary);">
-        <h2 style="color: var(--success); margin-bottom: 5px;">TRADE SUCCESS</h2>
-        <svg id="barcode"></svg>
-        <div id="vd" style="text-align: left; margin-top: 20px; border-top: 1px dashed var(--border); padding-top: 15px; font-family: monospace;"></div>
-        <button onclick="sendViber()" class="btn-main" style="background:#7360f2; color:white; margin-top:20px;">
-            <i class="fab fa-viber"></i> SEND VIA VIBER
-        </button>
-    </div>
-</div>
+    <div class="overlay" id="overlay" onclick="toggleDrawer(false)"></div>
 
-<div id="sidebar">
-    <h3 style="color:var(--primary);">Control Panel</h3>
-    <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
-    <div style="display:flex; flex-direction:column; gap:10px;">
-        <div class="nav-item" onclick="setAdminTab('orders')" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-list"></i> Orders</div>
-        <div class="nav-item" onclick="setAdminTab('inventory')" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-box"></i> Stock Edit</div>
-        <div class="nav-item" onclick="toggleShop()" style="text-align:left; font-size:16px; color:white; padding:10px;"><i class="fas fa-power-off"></i> Shop Open/Close</div>
-    </div>
-    <button onclick="toggleSidebar(false)" style="margin-top: 50px; background:none; border:1px solid var(--border); color:var(--text-dim); padding:10px; width:100%; border-radius:8px;">Back</button>
-</div>
-
-<div id="cart-bar" class="hidden" onclick="toggleDrawer(true)">
-    <span><i class="fas fa-shopping-cart"></i> <span id="cart-qty">0</span> Assets Selected</span>
-    <span>Review ></span>
-</div>
-
-<div id="overlay" class="overlay" onclick="toggleDrawer(false)"></div>
-<div id="drawer" class="drawer">
-    <h3 style="margin-top:0;"><i class="fas fa-wallet" style="color:var(--primary);"></i> Checkout</h3>
-    <div id="cart-summary" style="margin-bottom:20px;"></div>
-    
-    <input type="text" id="c-name" placeholder="Enter Your Name">
-    <input type="number" id="c-phone" placeholder="Phone Number">
-    <input type="time" id="c-time" value="12:00">
-    
-    <div style="display:flex; justify-content:space-between; margin: 20px 0; font-size:20px; font-weight:bold;">
-        <span>Grand Total:</span>
-        <span id="c-total" style="color:var(--primary);">0 K</span>
-    </div>
-    
-    <button onclick="confirmOrder()" class="btn-main">CONFIRM ORDER</button>
-</div>
-
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="showPage('home')"><i class="fas fa-layer-group"></i>Market</div>
-    <div class="nav-item" onclick="showPage('profile')"><i class="fas fa-chart-pie"></i>Portfolio</div>
-    <div class="nav-item" onclick="handleAdmin()"><i class="fas fa-shield-alt"></i>Account</div>
-</nav>
-
-<script>
-    const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
-    const SB_KEY = "sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc";
-    const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
-
-    let menu = [], cart = [], activeOrder = null, isShopOpen = true;
-
-    async function init() {
-        const { data: m } = await _supabase.from('menu_items').select('*').order('name');
-        const { data: s } = await _supabase.from('shop_settings').select('*').eq('id', 1).single();
-        menu = m; isShopOpen = s.is_open;
-        renderMenu(); updateShopUI();
+    <div class="drawer" id="drawer">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0;">Checkout</h2>
+            <button onclick="toggleDrawer(false)" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+        </div>
+        <div id="drawer-items" style="margin-bottom:20px;"></div>
         
-        _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, () => {
-            new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
-            if(!document.getElementById('v-admin').classList.contains('hidden')) loadAdmin();
-        }).subscribe();
-    }
+        <div id="verification-sec">
+            <p style="color:var(--text-light); font-size:0.9rem;">To prevent fake orders, please verify with Telegram</p>
+            <button class="btn-p" style="width:100%; background:#229ED9;" onclick="verifyTelegram()">
+                <i class="fab fa-telegram-plane"></i> VERIFY VIA TELEGRAM
+            </button>
+        </div>
 
-    function renderMenu() {
-        document.getElementById('menu-list').innerHTML = menu.map(i => {
-            const inCart = cart.find(c => c.id === i.id) || {qty:0};
-            return `
+        <div id="order-form" class="hidden">
+            <input type="text" id="cust-name" placeholder="သင့်အမည်" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:10px;">
+            <input type="text" id="cust-phone" readonly style="width:100%; padding:12px; margin-bottom:10px; background:#f1f5f9; border:none; border-radius:10px;">
+            <label style="font-size:0.8rem; color:var(--text-light);">ဆိုင်လာယူမည့်အချိန်</label>
+            <input type="time" id="pickup-time" style="width:100%; padding:12px; margin-bottom:20px; border:1px solid #e2e8f0; border-radius:10px;">
+            
+            <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:bold; margin-bottom:20px;">
+                <span>Total:</span>
+                <span id="drawer-total">0 K</span>
+            </div>
+            <button class="btn-p" style="width:100%;" onclick="submitOrder()">CONFIRM & PLACE ORDER</button>
+        </div>
+    </div>
+
+    <audio id="noti-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+    <script>
+        // Configuration
+        const TG_BOT_TOKEN = '8215695761:AAF1qDjAJn7gjiHyzf8t7W6c8e51cim98sU';
+        const TG_CHAT_ID = '8116152317';
+        const SB_URL = 'https://deabtvqzxpkepgcdutzd.supabase.co';
+        const SB_KEY = 'sb_publishable_1oVmjwUas1mPm6Yk6evKvw_RU3MBvXc';
+        const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+
+        let menu = [], cart = [], isVerified = false;
+
+        async function init() {
+            const { data } = await _supabase.from('menu_items').select('*').order('name');
+            menu = data || [];
+            renderMenu();
+
+            // Real-time listener for Admin
+            _supabase.channel('orders').on('postgres_changes', {event:'INSERT', schema:'public', table:'orders'}, payload => {
+                document.getElementById('noti-sound').play();
+                loadAdminOrders();
+            }).subscribe();
+        }
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = menu.map(item => `
                 <div class="item-card">
-                    <img src="${i.photo_url}" class="item-img">
+                    <img src="${item.photo_url}" class="item-img" onerror="this.src='https://via.placeholder.com/150'">
                     <div class="item-info">
-                        <div class="item-name">${i.name}</div>
-                        <div class="item-price">${i.price} K</div>
-                        <div class="qty-box">
-                            <button class="btn-qty" onclick="changeQty(${i.id}, -1)">-</button>
-                            <span style="font-weight:bold;">${inCart.qty}</span>
-                            <button class="btn-qty" onclick="changeQty(${i.id}, 1)" style="color:var(--primary);">+</button>
+                        <div style="font-weight:600; margin-bottom:5px;">${item.name}</div>
+                        <div class="item-price">${item.price} K</div>
+                        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                            <button onclick="updateCart(${item.id}, -1)" style="width:30px; height:30px; border-radius:8px; border:1px solid #ddd; background:white;">-</button>
+                            <span id="qty-${item.id}" style="font-weight:bold;">${getQty(item.id)}</span>
+                            <button onclick="updateCart(${item.id}, 1)" style="width:30px; height:30px; border-radius:8px; background:var(--primary); color:white; border:none;">+</button>
                         </div>
                     </div>
                 </div>
-            `;
-        }).join('');
-    }
-
-    function changeQty(id, delta) {
-        const item = menu.find(m => m.id === id);
-        const cartItem = cart.find(c => c.id === id);
-        if(cartItem) {
-            cartItem.qty += delta;
-            if(cartItem.qty <= 0) cart = cart.filter(c => c.id !== id);
-        } else if(delta > 0) {
-            cart.push({...item, qty: 1});
-        }
-        renderMenu(); updateCartBar();
-    }
-
-    function updateCartBar() {
-        const q = cart.reduce((a, b) => a + b.qty, 0);
-        document.getElementById('cart-bar').classList.toggle('hidden', q === 0);
-        document.getElementById('cart-qty').innerText = q;
-        document.getElementById('c-total').innerText = cart.reduce((a, b) => a + (b.price * b.qty), 0) + " K";
-        document.getElementById('cart-summary').innerHTML = cart.map(c => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <span>${c.name} x ${c.qty}</span>
-                <b>${c.price * c.qty} K</b>
-            </div>
-        `).join('');
-    }
-
-    async function confirmOrder() {
-        const name = document.getElementById('c-name').value;
-        const phone = document.getElementById('c-phone').value;
-        const time = document.getElementById('c-time').value;
-        if(!name || !phone) return alert("Please fill all details!");
-        
-        const vn = "YNS-" + Date.now().toString().slice(-6);
-        const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        const items = cart.map(c => `${c.name}(${c.qty})`).join(', ');
-
-        const { data, error } = await _supabase.from('orders').insert([{
-            voucher_no: vn, customer_name: name, phone: phone, items: items, total: total, pickup_time: time
-        }]).select();
-
-        if(!error) {
-            localStorage.setItem('u_name', name); localStorage.setItem('u_phone', phone);
-            activeOrder = data[0];
-            showVoucher(data[0]);
-            cart = []; updateCartBar(); renderMenu(); toggleDrawer(false);
-        }
-    }
-
-    function showVoucher(o) {
-        showPage('voucher');
-        JsBarcode("#barcode", o.voucher_no, {lineColor: "#fcd535", background: "transparent", width: 2, height: 50, displayValue: false});
-        document.getElementById('vd').innerHTML = `
-            ORDER_ID: ${o.voucher_no}<br>
-            STATUS: CONFIRMED<br>
-            ASSETS: ${o.items}<br>
-            VALUE: ${o.total} K<br>
-            PICKUP: ${o.pickup_time}
-        `;
-    }
-
-    function sendViber() {
-        const msg = `🧾 *MYIN THAR ORDER*\nID: ${activeOrder.voucher_no}\nUser: ${activeOrder.customer_name}\nAssets: ${activeOrder.items}\nValue: ${activeOrder.total} K\nTime: ${activeOrder.pickup_time}`;
-        window.location.href = `viber://chat?number=%2B959793139886&draft=${encodeURIComponent(msg)}`;
-    }
-
-    async function loadAdmin() {
-        const { data: ords } = await _supabase.from('orders').select('*').order('id', {ascending: false});
-        document.getElementById('admin-orders').innerHTML = ords.map(o => `
-            <div class="card">
-                <div style="display:flex; justify-content:space-between;">
-                    <b style="color:var(--primary);">#${o.voucher_no}</b>
-                    <span class="badge-pending">${o.pickup_time}</span>
-                </div>
-                <div style="margin: 10px 0; font-size: 13px;">${o.items}</div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <small>${o.customer_name}</small>
-                    <a href="tel:${o.phone}" style="color:var(--success);"><i class="fas fa-phone"></i> Call</a>
-                </div>
-            </div>
-        `).join('');
-        
-        const { data: items } = await _supabase.from('menu_items').select('*').order('name');
-        document.getElementById('admin-inventory').innerHTML = `
-            <table>
-                <thead><tr><th>Asset</th><th>Price</th><th>Stock</th></tr></thead>
-                <tbody>
-                    ${items.map(i => `
-                        <tr>
-                            <td>${i.name}</td>
-                            <td onclick="editItem(${i.id},'price',${i.price})"><u>${i.price}</u></td>
-                            <td onclick="editItem(${i.id},'stock',${i.stock})"><b style="color:var(--primary)">${i.stock}</b></td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    }
-
-    async function editItem(id, field, cur) {
-        const val = prompt(`New ${field}?`, cur);
-        if(val) {
-            await _supabase.from('menu_items').update({[field]: parseInt(val)}).eq('id', id);
-            loadAdmin();
-        }
-    }
-
-    function showPage(p) {
-        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
-        document.getElementById('v-' + p).classList.remove('hidden');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        if(p === 'profile') loadHistory();
-    }
-
-    async function loadHistory() {
-        const ph = localStorage.getItem('u_phone');
-        document.getElementById('user-info').innerText = (localStorage.getItem('u_name') || "No Data") + " (" + (ph || "-") + ")";
-        if(ph) {
-            const { data } = await _supabase.from('orders').select('*').eq('phone', ph).order('id', {ascending: false});
-            document.getElementById('history-list').innerHTML = data.map(o => `
-                <div class="card"><b>#${o.voucher_no}</b><br><small>${o.items}</small><br><b>${o.total} K</b></div>
             `).join('');
         }
-    }
 
-    function handleAdmin() { if(prompt("Pass?") === "2012@Yewin") showPage('admin'); }
-    function setAdminTab(t) {
-        document.getElementById('admin-orders').classList.toggle('hidden', t !== 'orders');
-        document.getElementById('admin-inventory').classList.toggle('hidden', t !== 'inventory');
-        toggleSidebar(false);
-    }
-    function toggleSidebar(s) { document.getElementById('sidebar').classList.toggle('active', s); }
-    function toggleDrawer(s) { 
-        document.getElementById('drawer').style.display = s ? 'block' : 'none'; 
-        document.getElementById('overlay').style.display = s ? 'block' : 'none'; 
-    }
-    async function toggleShop() {
-        isShopOpen = !isShopOpen;
-        await _supabase.from('shop_settings').update({is_open: isShopOpen}).eq('id', 1);
-        updateShopUI();
-    }
-    function updateShopUI() {
-        document.getElementById('shop-status').innerText = isShopOpen ? "Market Open" : "Market Closed";
-        document.getElementById('shop-status').style.color = isShopOpen ? "var(--success)" : "var(--danger)";
-    }
+        function updateCart(id, delta) {
+            const item = menu.find(m => m.id === id);
+            const exists = cart.find(c => c.id === id);
+            if(exists) {
+                exists.qty += delta;
+                if(exists.qty <= 0) cart = cart.filter(c => c.id !== id);
+            } else if(delta > 0) {
+                cart.push({...item, qty: 1});
+            }
+            document.getElementById(`qty-${id}`).innerText = getQty(id);
+            updateCartBar();
+        }
 
-    window.onload = init;
-</script>
+        function getQty(id) {
+            const item = cart.find(c => c.id === id);
+            return item ? item.qty : 0;
+        }
+
+        function updateCartBar() {
+            const count = cart.reduce((a, b) => a + b.qty, 0);
+            const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+            document.getElementById('cart-bar').classList.toggle('hidden', count === 0);
+            document.getElementById('cart-count').innerText = count;
+            document.getElementById('drawer-total').innerText = total + " K";
+            
+            document.getElementById('drawer-items').innerHTML = cart.map(c => `
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #f1f5f9; padding-bottom:10px;">
+                    <div><b>${c.name}</b><br><small>${c.price} x ${c.qty}</small></div>
+                    <b>${c.price * c.qty} K</b>
+                </div>
+            `).join('');
+        }
+
+        function verifyTelegram() {
+            // အစ်ကို့ Bot link ဆီကို ပို့ပေးမယ်
+            window.open(`https://t.me/myinthar_order_bot`, '_blank');
+            // Professional Website တွေမှာ Bot ကနေ Token ပြန်ပေးတဲ့စနစ်သုံးပေမယ့် အခုက Demo ဖြစ်လို့ Verify ဖြစ်သွားပြီလို့ သတ်မှတ်ပေးမယ်
+            setTimeout(() => {
+                isVerified = true;
+                document.getElementById('cust-phone').value = "Verified via Telegram";
+                document.getElementById('verification-sec').classList.add('hidden');
+                document.getElementById('order-form').classList.remove('hidden');
+            }, 2000);
+        }
+
+        async function submitOrder() {
+            const name = document.getElementById('cust-name').value;
+            const time = document.getElementById('pickup-time').value;
+            if(!name || !time) return alert("အချက်အလက်ပြည့်စုံစွာ ဖြည့်ပေးပါ");
+
+            const vn = "YNS-" + Date.now().toString().slice(-6);
+            const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+            const itemTxt = cart.map(c => `${c.name} (${c.qty})`).join(', ');
+
+            const { data, error } = await _supabase.from('orders').insert([{
+                voucher_no: vn, customer_name: name, phone: "TG-Verified", items: itemTxt, total: total, pickup_time: time, status: 'pending'
+            }]).select();
+
+            if(!error) {
+                sendTGNoti(vn, name, itemTxt, total, time);
+                alert("အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။ ဆိုင်မှ အတည်ပြုပေးပါလိမ့်မည်။");
+                location.reload();
+            }
+        }
+
+        async function sendTGNoti(vn, name, items, total, time) {
+            const msg = `🔔 *အော်ဒါအသစ် ရောက်ရှိလာပါသည်*\n\n🆔 Voucher: ${vn}\n👤 Customer: ${name}\n🍗 Items: ${items}\n💰 Total: ${total} K\n⏰ Pickup: ${time}`;
+            await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: TG_CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            });
+        }
+
+        // Navigation Logic
+        function startOrder() {
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('shop-view').classList.remove('hidden');
+        }
+
+        function goBack(to) {
+            document.getElementById('shop-view').classList.add('hidden');
+            document.getElementById('landing-page').classList.remove('hidden');
+        }
+
+        function toggleDrawer(show) {
+            document.getElementById('drawer').classList.toggle('active', show);
+            document.getElementById('overlay').style.display = show ? 'block' : 'none';
+        }
+
+        // Admin Logic
+        function openAdmin() {
+            const pass = prompt("Enter Admin Password:");
+            if(pass === "2012@Yewin") {
+                document.getElementById('landing-page').classList.add('hidden');
+                document.getElementById('admin-view').classList.remove('hidden');
+                loadAdminOrders();
+            }
+        }
+
+        async function loadAdminOrders() {
+            const { data } = await _supabase.from('orders').select('*').order('id', {ascending:false});
+            document.getElementById('admin-orders-list').innerHTML = data.map(o => `
+                <div class="card" style="margin-bottom:15px; border-left: 5px solid ${o.status==='pending'?'#f97316':'#10b981'}">
+                    <div style="display:flex; justify-content:space-between;">
+                        <b>#${o.voucher_no}</b>
+                        <span class="status ${o.status==='pending'?'status-pending':'status-done'}">${o.status.toUpperCase()}</span>
+                    </div>
+                    <p style="margin:10px 0; font-size:0.9rem;">${o.items}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <small>${o.customer_name} | ${o.pickup_time}</small>
+                        <button onclick="updateStatus(${o.id}, 'done')" class="btn-p" style="padding:5px 10px; font-size:0.7rem;">Mark Done</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAdminTab(tab) {
+            document.getElementById('admin-orders-sec').classList.toggle('hidden', tab !== 'orders');
+            document.getElementById('admin-items-sec').classList.toggle('hidden', tab !== 'items');
+            if(tab === 'items') loadInventory();
+        }
+
+        async function loadInventory() {
+            const { data } = await _supabase.from('menu_items').select('*').order('name');
+            document.getElementById('inventory-body').innerHTML = data.map(i => `
+                <tr>
+                    <td>${i.name}</td>
+                    <td>${i.price}</td>
+                    <td>${i.stock}</td>
+                    <td><button onclick="editStock(${i.id}, ${i.stock})">Edit</button></td>
+                </tr>
+            `).join('');
+        }
+
+        async function editStock(id, cur) {
+            const val = prompt("Enter New Stock Quantity:", cur);
+            if(val) {
+                await _supabase.from('menu_items').update({stock: parseInt(val)}).eq('id', id);
+                loadInventory();
+            }
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
 

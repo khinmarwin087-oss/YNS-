@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍗 မြင်သာကြက်ကင် - POS System</title>
+    <title>🍗 မြင်သာကြက်ကင် - Business POS</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -13,15 +13,16 @@
         .header { background: linear-gradient(135deg, #f39c12, #d35400); color: white; padding: 20px; text-align: center; }
         .content { padding: 15px; }
         .input-group { margin-bottom: 12px; }
-        label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Pyidaungsu'; }
+        label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Pyidaungsu'; font-size: 15px; }
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
         .menu-item.sold-out { opacity: 0.5; background: #f9f9f9; pointer-events: none; }
         .qty-controls { display: flex; align-items: center; gap: 10px; }
-        .btn-qty { width: 32px; height: 32px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-qty { width: 34px; height: 34px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 18px; color: var(--secondary); }
         .footer-cart { background: var(--dark); color: white; padding: 20px; text-align: center; position: sticky; bottom: 0; border-radius: 20px 20px 0 0; }
-        .btn-main { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn-main { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 17px; }
         .app-selector { background: #fff3e0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-around; border: 1px solid #ffe0b2; }
+        .app-selector label { margin: 0; cursor: pointer; display: flex; align-items: center; gap: 5px; }
     </style>
 </head>
 <body>
@@ -29,49 +30,55 @@
 <div class="container">
     <div class="header">
         <h2>🍗 မြင်သာကြက်ကင်</h2>
-        <p>Real-time Stock Management</p>
+        <p>Direct Order POS System</p>
     </div>
 
     <div class="content">
-        <div class="input-group"><label>👤 ဝယ်ယူသူအမည်</label><input type="text" id="cust-name"></div>
-        <div class="input-group"><label>📞 ဖုန်းနံပါတ်</label><input type="tel" id="cust-phone"></div>
-        <div class="input-group"><label>📅 လာယူမည့် ရက်စွဲနှင့် အချိန်</label><input type="datetime-local" id="pickup-datetime"></div>
+        <div class="input-group">
+            <label>👤 ဝယ်ယူသူအမည်</label>
+            <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
+        </div>
+        <div class="input-group">
+            <label>📞 ဖုန်းနံပါတ်</label>
+            <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
+        </div>
+        <div class="input-group">
+            <label>📅 လာယူမည့် ရက်စွဲနှင့် အချိန်</label>
+            <input type="datetime-local" id="pickup-datetime">
+        </div>
 
         <div class="app-selector">
-            <label><input type="radio" name="send-via" value="viber" checked> Viber 🟣</label>
+            <label><input type="radio" name="send-via" value="viber" checked> Viber Business 🟣</label>
             <label><input type="radio" name="send-via" value="telegram"> Telegram 🔵</label>
         </div>
 
-        <h3 style="font-size: 16px; border-left: 4px solid var(--secondary); padding-left: 10px;">စားဖွယ်မီနူးများ</h3>
+        <h3 style="font-size: 16px; border-left: 4px solid var(--secondary); padding-left: 10px; color: var(--dark);">🍱 စားဖွယ်မီနူးများ</h3>
         <div id="menu-list">မီနူးများ ဆွဲယူနေသည်...</div>
     </div>
 
     <div class="footer-cart">
-        <div style="font-size: 18px; margin-bottom: 12px;">စုစုပေါင်း: <span id="total-price">0</span> MMK</div>
+        <div style="font-size: 19px; margin-bottom: 12px; font-weight: bold;">စုစုပေါင်း: <span id="total-price">0</span> MMK</div>
         <button class="btn-main" onclick="submitOrder()">🚀 အော်ဒါတင်ပို့မည်</button>
     </div>
 </div>
 
 <script>
-    // သင်ပေးထားသော Key အသစ်များ
     const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlYWJ0dnF6eHBrZXBnY2R1dHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNzQzNDMsImV4cCI6MjA4MTg1MDM0M30.BbxmM65uoTDcf_nTP6w5siSF6Y5_eM4peqYJCAxR90I";
-    
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
-    const MY_PHONE = "959767287345";
+
+    const MY_PHONE = "959767287345"; 
+    const VIBER_BUSINESS_URI = "d42829d6-dced-11f0-a2db-36dcc9215546"; 
 
     let cart = {};
     let menuData = [];
 
     async function fetchMenu() {
         const { data, error } = await _supabase.from('menu_items').select('*').order('name');
-        if (error) {
-            console.error('Fetch Error:', error);
-            document.getElementById('menu-list').innerText = "Data ဆွဲယူ၍မရပါ။ RLS Policy ကို ပိတ်ထားပေးရန် လိုအပ်ပါသည်။";
-            return;
+        if (data) {
+            menuData = data;
+            renderMenu();
         }
-        menuData = data;
-        renderMenu();
     }
 
     function renderMenu() {
@@ -79,12 +86,12 @@
         list.innerHTML = menuData.map(item => `
             <div class="menu-item ${item.is_sold_out || item.stock_qty <= 0 ? 'sold-out' : ''}">
                 <div>
-                    <b>${item.name}</b><br>
-                    <small>${item.price.toLocaleString()} K (လက်ကျန်: ${item.stock_qty})</small>
+                    <b style="font-size:15px;">${item.name}</b><br>
+                    <small style="color:#666;">${item.price.toLocaleString()} K (လက်ကျန်: ${item.stock_qty})</small>
                 </div>
                 <div class="qty-controls">
                     <button class="btn-qty" onclick="updateQty('${item.name}', -1)">-</button>
-                    <span id="qty-${item.name}">0</span>
+                    <span id="qty-${item.name}" style="font-weight:bold; min-width:20px; text-align:center;">0</span>
                     <button class="btn-qty" onclick="updateQty('${item.name}', 1)">+</button>
                 </div>
             </div>
@@ -96,8 +103,12 @@
         cart[name] = (cart[name] || 0) + change;
         if (cart[name] < 0) cart[name] = 0;
         if (cart[name] > item.stock_qty) cart[name] = item.stock_qty;
-        document.getElementById(`qty-${name}`).innerText = cart[name];
         
+        document.getElementById(`qty-${name}`).innerText = cart[name];
+        calculateTotal();
+    }
+
+    function calculateTotal() {
         let total = 0;
         menuData.forEach(i => total += (cart[i.name] || 0) * i.price);
         document.getElementById('total-price').innerText = total.toLocaleString();
@@ -107,23 +118,48 @@
         const name = document.getElementById('cust-name').value;
         const phone = document.getElementById('cust-phone').value;
         const pickup = document.getElementById('pickup-datetime').value;
+        const total = document.getElementById('total-price').innerText;
         const sendVia = document.querySelector('input[name="send-via"]:checked').value;
 
-        if (!name || !phone || !pickup) return alert("အချက်အလက် ပြည့်စုံစွာ ဖြည့်ပါ။");
+        if (!name || !phone || !pickup || total === "0") return alert("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်စွက်ပေးပါ။");
 
         let itemsArr = [];
         for (let k in cart) {
             if (cart[k] > 0) {
-                itemsArr.push(`${k} (${cart[k]})`);
+                itemsArr.push(`${k} [${cart[k]} ခု]`);
                 const item = menuData.find(i => i.name === k);
                 await _supabase.from('menu_items').update({ stock_qty: item.stock_qty - cart[k] }).eq('id', item.id);
             }
         }
 
-        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ)*\nဝယ်သူ: ${name}\nဖုန်း: ${phone}\nအချိန်: ${pickup}\nမှာယူမှု: ${itemsArr.join(", ")}\nစုစုပေါင်း: ${document.getElementById('total-price').innerText} MMK`;
+        // Database သို့ သိမ်းဆည်းခြင်း
+        const { data } = await _supabase.from('orders').insert([{
+            customer_name: name, phone: phone, items: itemsArr.join(", "), total: total, pickup_time: pickup
+        }]).select();
 
-        if (sendVia === 'viber') window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodeURIComponent(msg)}`;
-        else window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
+        const orderId = data[0].id;
+        const pickupTime = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
+
+        // ပိုမိုရှင်းလင်းသော Message Format
+        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါအသစ်)*\n` +
+                    `━━━━━━━━━━━━━━━━━━\n` +
+                    `🆔 *Order ID:* #${orderId}\n` +
+                    `👤 *ဝယ်သူ:* ${name}\n` +
+                    `📞 *ဖုန်း:* ${phone}\n` +
+                    `📅 *လာယူမည်:* ${pickupTime}\n` +
+                    `━━━━━━━━━━━━━━━━━━\n` +
+                    `📦 *မှာယူသည့်စာရင်း:*\n` +
+                    itemsArr.map(i => "▪️ " + i).join('\n') + `\n\n` +
+                    `💰 *စုစုပေါင်း:* *${total} MMK*\n` +
+                    `━━━━━━━━━━━━━━━━━━`;
+
+        if (sendVia === 'viber') {
+            // Viber Business (Public Account) Link
+            window.location.href = `viber://pa?chatURI=${VIBER_BUSINESS_URI}&text=${encodeURIComponent(msg)}`;
+        } else {
+            // Telegram Link
+            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
+        }
     }
 
     window.onload = fetchMenu;

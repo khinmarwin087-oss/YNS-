@@ -12,13 +12,13 @@
         .header { background: linear-gradient(135deg, #fbbf24, #d35400); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; }
         .container { max-width: 600px; margin: auto; padding: 15px; margin-bottom: 100px; }
         .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .menu-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #eee; }
+        .menu-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between; }
         .item-name { font-weight: 700; font-size: 14px; }
         .item-price { color: var(--secondary); font-weight: bold; font-size: 13px; margin: 5px 0; }
         .qty-box { display: flex; align-items: center; justify-content: space-between; background: #f1f5f9; border-radius: 8px; padding: 3px; }
         .btn-qty { width: 30px; height: 30px; border: none; background: white; border-radius: 6px; cursor: pointer; color: var(--secondary); font-weight: bold; }
         .footer-bar { position: fixed; bottom: 0; width: 100%; max-width: 600px; background: white; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 -3px 15px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        .btn-checkout { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .btn-checkout { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
         #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
         .modal-content { background: white; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; }
         .app-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
@@ -73,7 +73,6 @@
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
     
     const MY_PHONE = "959767287345";
-    const VIBER_BUSINESS_URI = "d42829d6-dced-11f0-a2db-36dcc9215546";
 
     let cart = {};
     let menuData = [];
@@ -151,8 +150,8 @@
         const encodedMsg = encodeURIComponent(msg);
 
         if (sendVia === 'viber') {
-            window.location.href = `viber://pa?chatURI=${VIBER_BUSINESS_URI}&text=${encodedMsg}`;
-            setTimeout(() => { window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodedMsg}`; }, 1000);
+            // Viber Direct Chat Link ကို ပြောင်းလဲအသုံးပြုထားသည်
+            window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodedMsg}`;
         } else {
             window.location.href = `https://t.me/+${MY_PHONE}?text=${encodedMsg}`;
         }
@@ -161,3 +160,4 @@
 </script>
 </body>
 </html>
+

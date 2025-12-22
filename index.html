@@ -55,7 +55,7 @@
         <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
         
         <label style="font-size:12px; font-weight:bold;">ဖုန်းနံပါတ်</label>
-        <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
+        <input type="tel" id="cust-phone" placeholder="09xxxxxxxxx">
         
         <label style="font-size:12px; font-weight:bold;">လာယူမည့်အချိန်</label>
         <input type="datetime-local" id="pickup-datetime">
@@ -69,10 +69,9 @@
             🔵 Telegram ဖြင့် တိုက်ရိုက်ပို့မည်
         </button>
 
-        <div class="guide-box" id="viber-guide">
-            <b>💡 Viber ဖြင့် ပို့နည်းလမ်းညွှန်:</b><br>
-            ၁။ ခလုတ်နှိပ်လျှင် အော်ဒါစာသားကို Copy အလိုအလျောက် ယူသွားပါမည်။<br>
-            ၂။ Viber ပွင့်လာလျှင် ဆိုင်ရှင် Chat ထဲ၌ <b>Paste (ကူးထည့်)</b> လုပ်၍ ပို့ပေးပါ။
+        <div class="guide-box">
+            <b>💡 လမ်းညွှန်:</b><br>
+            Viber ဖြင့်ပို့လျှင် အော်ဒါစာသားကို Copy ယူသွားပါမည်။ ဆိုင်ရှင် Chat ထဲတွင် <b>Paste (ကူးထည့်)</b> လုပ်၍ ပို့ပေးပါ။
         </div>
         
         <div class="notice">⚠️ အော်ဒါတင်ပြီးပါက <b>09767287345</b> သို့ <br>ဖုန်းဖြင့် အကြောင်းကြားပေးပါ။</div>
@@ -152,23 +151,32 @@
 
         if (error) { return alert("Error: " + error.message); }
 
-        const pickupTime = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
-        
-        // Message Format with English Phone Number
-        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${pickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက 09767287345 သို့ ဖုန်းဆက်ပေးပါ။`;
+        // Time format ပြောင်းလဲခြင်း (AM/PM)
+        const dateObj = new Date(pickup);
+        const formattedPickupTime = dateObj.toLocaleString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: true 
+        });
+
+        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${formattedPickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက 09767287345 သို့ ဖုန်းဆက်ပေးပါ။`;
 
         if (sendVia === 'viber') {
             navigator.clipboard.writeText(msg).then(() => {
-                alert("အော်ဒါစာသားကို Copy ယူပြီးပါပြီ။ Viber ပွင့်လာလျှင် ဆိုင်ရှင် Chat ထဲ၌ Paste လုပ်၍ ပို့ပေးပါ။");
-                window.location.href = `viber://contact?number=959767287345`;
+                alert("အော်ဒါစာသားကို Copy ယူပြီးပါပြီ။ Viber ပွင့်လာပါက ဆိုင်ရှင် Chat ထဲတွင် Paste လုပ်၍ ပို့ပေးပါ။");
+                window.location.href = `viber://contact?number=${MY_PHONE.replace('0', '95')}`;
             }).catch(err => {
-                window.location.href = `viber://contact?number=959767287345&draft=${encodeURIComponent(msg)}`;
+                window.location.href = `viber://contact?number=${MY_PHONE.replace('0', '95')}&draft=${encodeURIComponent(msg)}`;
             });
         } else {
-            window.location.href = `https://t.me/+959767287345?text=${encodeURIComponent(msg)}`;
+            window.location.href = `https://t.me/+${MY_PHONE.replace('0', '95')}?text=${encodeURIComponent(msg)}`;
         }
     }
     window.onload = fetchMenu;
 </script>
 </body>
 </html>
+

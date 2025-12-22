@@ -15,18 +15,13 @@
         .input-group { margin-bottom: 12px; }
         label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; }
         input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Pyidaungsu'; }
-        
         .menu-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
         .menu-item.sold-out { opacity: 0.5; background: #f9f9f9; pointer-events: none; }
         .qty-controls { display: flex; align-items: center; gap: 10px; }
-        .btn-qty { width: 32px; height: 32px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 18px; }
-        
+        .btn-qty { width: 32px; height: 32px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .footer-cart { background: var(--dark); color: white; padding: 20px; text-align: center; position: sticky; bottom: 0; border-radius: 20px 20px 0 0; }
-        .btn-main { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .btn-main:hover { background: #e67e22; }
+        .btn-main { width: 100%; padding: 15px; background: var(--secondary); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; }
         .app-selector { background: #fff3e0; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-around; border: 1px solid #ffe0b2; }
-        .app-selector label { margin: 0; color: #333; cursor: pointer; font-weight: bold; }
-        .sold-text { color: red; font-size: 11px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -38,25 +33,16 @@
     </div>
 
     <div class="content">
-        <div class="input-group">
-            <label>👤 ဝယ်ယူသူအမည်</label>
-            <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
-        </div>
-        <div class="input-group">
-            <label>📞 ဖုန်းနံပါတ်</label>
-            <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
-        </div>
-        <div class="input-group">
-            <label>📅 လာယူမည့် ရက်စွဲနှင့် အချိန်</label>
-            <input type="datetime-local" id="pickup-datetime">
-        </div>
+        <div class="input-group"><label>👤 ဝယ်ယူသူအမည်</label><input type="text" id="cust-name"></div>
+        <div class="input-group"><label>📞 ဖုန်းနံပါတ်</label><input type="tel" id="cust-phone"></div>
+        <div class="input-group"><label>📅 လာယူမည့် ရက်စွဲနှင့် အချိန်</label><input type="datetime-local" id="pickup-datetime"></div>
 
         <div class="app-selector">
             <label><input type="radio" name="send-via" value="viber" checked> Viber 🟣</label>
             <label><input type="radio" name="send-via" value="telegram"> Telegram 🔵</label>
         </div>
 
-        <h3 style="font-size: 16px; color: var(--dark); border-left: 4px solid var(--secondary); padding-left: 10px;">စားဖွယ်မီနူးများ</h3>
+        <h3 style="font-size: 16px; border-left: 4px solid var(--secondary); padding-left: 10px;">စားဖွယ်မီနူးများ</h3>
         <div id="menu-list">မီနူးများ ဆွဲယူနေသည်...</div>
     </div>
 
@@ -67,75 +53,53 @@
 </div>
 
 <script>
-    const SB_URL = "https://ltusknkpwbyriikeyday.supabase.co";
-    const SB_KEY = "sb_publishable_u9Y8SIpzqsT4WkyONV4J2w__Xwc09Fv";
+    // သင်ပေးထားသော Key အသစ်များ
+    const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
+    const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlYWJ0dnF6eHBrZXBnY2R1dHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNzQzNDMsImV4cCI6MjA4MTg1MDM0M30.BbxmM65uoTDcf_nTP6w5siSF6Y5_eM4peqYJCAxR90I";
+    
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
     const MY_PHONE = "959767287345";
 
     let cart = {};
     let menuData = [];
 
-    // ၁။ Database မှ Menu ကို Error Handling ပါဝင်စွာ ဆွဲထုတ်ခြင်း
     async function fetchMenu() {
-        const { data, error } = await _supabase
-            .from('menu_items')
-            .select('*')
-            .order('name');
-            
+        const { data, error } = await _supabase.from('menu_items').select('*').order('name');
         if (error) {
-            console.error('Error:', error);
-            document.getElementById('menu-list').innerText = "Data ဆွဲယူ၍မရပါ...";
+            console.error('Fetch Error:', error);
+            document.getElementById('menu-list').innerText = "Data ဆွဲယူ၍မရပါ။ RLS Policy ကို ပိတ်ထားပေးရန် လိုအပ်ပါသည်။";
             return;
         }
-        
-        if (data) {
-            menuData = data;
-            renderMenu();
-        }
+        menuData = data;
+        renderMenu();
     }
 
     function renderMenu() {
         const list = document.getElementById('menu-list');
-        list.innerHTML = menuData.map(item => {
-            const isSoldOut = item.is_sold_out || item.stock_qty <= 0;
-            return `
-                <div class="menu-item ${isSoldOut ? 'sold-out' : ''}">
-                    <div>
-                        <b>${item.name}</b><br>
-                        <small style="color:#777;">${item.price.toLocaleString()} K (လက်ကျန်: ${item.stock_qty})</small>
-                        ${isSoldOut ? '<br><span class="sold-text">ကုန်သွားပါပြီ (Sold Out)</span>' : ''}
-                    </div>
-                    <div class="qty-controls">
-                        <button class="btn-qty" onclick="updateQty('${item.name}', -1)">-</button>
-                        <span id="qty-${item.name}" style="min-width:20px; text-align:center; font-weight:bold;">0</span>
-                        <button class="btn-qty" onclick="updateQty('${item.name}', 1)">+</button>
-                    </div>
+        list.innerHTML = menuData.map(item => `
+            <div class="menu-item ${item.is_sold_out || item.stock_qty <= 0 ? 'sold-out' : ''}">
+                <div>
+                    <b>${item.name}</b><br>
+                    <small>${item.price.toLocaleString()} K (လက်ကျန်: ${item.stock_qty})</small>
                 </div>
-            `;
-        }).join('');
+                <div class="qty-controls">
+                    <button class="btn-qty" onclick="updateQty('${item.name}', -1)">-</button>
+                    <span id="qty-${item.name}">0</span>
+                    <button class="btn-qty" onclick="updateQty('${item.name}', 1)">+</button>
+                </div>
+            </div>
+        `).join('');
     }
 
     function updateQty(name, change) {
         const item = menuData.find(i => i.name === name);
-        let currentQty = cart[name] || 0;
-        let newQty = currentQty + change;
-
-        if (newQty < 0) newQty = 0;
-        if (newQty > item.stock_qty) {
-            alert("လက်ကျန် " + item.stock_qty + " ခုသာ ရှိပါတော့သည်။");
-            return;
-        }
-
-        cart[name] = newQty;
-        document.getElementById(`qty-${name}`).innerText = newQty;
-        calculateTotal();
-    }
-
-    function calculateTotal() {
+        cart[name] = (cart[name] || 0) + change;
+        if (cart[name] < 0) cart[name] = 0;
+        if (cart[name] > item.stock_qty) cart[name] = item.stock_qty;
+        document.getElementById(`qty-${name}`).innerText = cart[name];
+        
         let total = 0;
-        menuData.forEach(item => {
-            if (cart[item.name]) total += cart[item.name] * item.price;
-        });
+        menuData.forEach(i => total += (cart[i.name] || 0) * i.price);
         document.getElementById('total-price').innerText = total.toLocaleString();
     }
 
@@ -143,64 +107,23 @@
         const name = document.getElementById('cust-name').value;
         const phone = document.getElementById('cust-phone').value;
         const pickup = document.getElementById('pickup-datetime').value;
-        const total = document.getElementById('total-price').innerText;
         const sendVia = document.querySelector('input[name="send-via"]:checked').value;
 
-        if (!name || !phone || !pickup || total === "0") {
-            return alert("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်စွက်ပေးပါ။");
-        }
+        if (!name || !phone || !pickup) return alert("အချက်အလက် ပြည့်စုံစွာ ဖြည့်ပါ။");
 
         let itemsArr = [];
-        // Stock Update Process
         for (let k in cart) {
             if (cart[k] > 0) {
+                itemsArr.push(`${k} (${cart[k]})`);
                 const item = menuData.find(i => i.name === k);
-                itemsArr.push(`${k} (${cart[k]} ခု)`);
-                
-                // Database ထဲမှာ Stock နုတ်ခြင်း
-                const newStock = item.stock_qty - cart[k];
-                await _supabase
-                    .from('menu_items')
-                    .update({ 
-                        stock_qty: newStock,
-                        is_sold_out: newStock <= 0 
-                    })
-                    .eq('id', item.id);
+                await _supabase.from('menu_items').update({ stock_qty: item.stock_qty - cart[k] }).eq('id', item.id);
             }
         }
-        
-        const itemsText = itemsArr.join(", ");
 
-        // Orders Table ထဲသို့ အော်ဒါအသစ် သိမ်းဆည်းခြင်း
-        const { data, error: orderErr } = await _supabase.from('orders').insert([{
-            customer_name: name, 
-            phone: phone, 
-            items: itemsText, 
-            total: total, 
-            pickup_time: pickup
-        }]).select();
+        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ)*\nဝယ်သူ: ${name}\nဖုန်း: ${phone}\nအချိန်: ${pickup}\nမှာယူမှု: ${itemsArr.join(", ")}\nစုစုပေါင်း: ${document.getElementById('total-price').innerText} MMK`;
 
-        if (orderErr) return alert("Order သိမ်းဆည်း၍မရပါ- " + orderErr.message);
-
-        // App Messaging
-        const dateFormatted = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
-        const orderMsg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါအသစ်)*\n` +
-                         `--------------------------\n` +
-                         `🆔 Order ID: #${data[0].id}\n` +
-                         `👤 ဝယ်သူ: ${name}\n` +
-                         `📞 ဖုန်း: ${phone}\n` +
-                         `📅 လာယူမည်: ${dateFormatted}\n` +
-                         `📦 မှာယူမှု: ${itemsText}\n` +
-                         `💰 စုစုပေါင်း: *${total} MMK*\n` +
-                         `--------------------------`;
-
-        if (sendVia === 'viber') {
-            window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodeURIComponent(orderMsg)}`;
-        } else {
-            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(orderMsg)}`;
-        }
-
-        alert("အော်ဒါစာရင်းကို App ထဲတွင် 'Send' နှိပ်ပေးပါ။");
+        if (sendVia === 'viber') window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodeURIComponent(msg)}`;
+        else window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
     }
 
     window.onload = fetchMenu;

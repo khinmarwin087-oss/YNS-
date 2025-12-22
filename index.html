@@ -8,94 +8,62 @@
     <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #e67e22; --secondary: #d35400; --bg: #f8fafc; --dark: #1e293b; }
-        body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); margin: 0; padding: 0; color: var(--dark); }
-        
-        .header { background: linear-gradient(135deg, #fbbf24, #d35400); color: white; padding: 30px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .header h2 { margin: 0; font-size: 24px; }
-        
+        body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        .header { background: linear-gradient(135deg, #fbbf24, #d35400); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .container { max-width: 600px; margin: auto; padding: 15px; }
-
-        /* Menu Grid Style (2 Columns) */
-        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px; }
-        .menu-card { background: white; border-radius: 15px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .menu-card.sold-out { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
-        .item-name { font-weight: 700; font-size: 15px; margin-bottom: 5px; color: #334155; }
-        .item-price { color: var(--secondary); font-weight: bold; font-size: 14px; margin-bottom: 10px; }
-        
-        /* Qty Buttons inside Card */
-        .qty-box { display: flex; align-items: center; justify-content: space-between; background: #f1f5f9; border-radius: 10px; padding: 4px; }
-        .btn-qty { width: 30px; height: 30px; border: none; background: white; border-radius: 8px; cursor: pointer; font-weight: bold; color: var(--secondary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .qty-num { font-weight: bold; font-size: 14px; }
-
-        /* Floating Checkout Bar */
-        .footer-bar { position: fixed; bottom: 0; width: 100%; max-width: 600px; background: white; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
-        .total-text { font-size: 14px; color: #64748b; }
-        .total-amount { font-size: 20px; font-weight: bold; color: var(--dark); display: block; }
-        .btn-checkout { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
-
-        /* Modal (Checkout Overlay) */
-        #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 90%; max-width: 400px; padding: 25px; border-radius: 25px; position: relative; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-size: 13px; margin-bottom: 5px; font-weight: bold; }
-        input { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 10px; box-sizing: border-box; font-family: 'Pyidaungsu'; }
-        
-        .app-choice { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-app { flex: 1; padding: 12px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+        .menu-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #eee; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-name { font-weight: 700; font-size: 14px; color: #334155; }
+        .item-price { color: var(--secondary); font-weight: bold; font-size: 13px; margin: 5px 0; }
+        .qty-box { display: flex; align-items: center; justify-content: space-between; background: #f1f5f9; border-radius: 8px; padding: 3px; }
+        .btn-qty { width: 30px; height: 30px; border: none; background: white; border-radius: 6px; cursor: pointer; color: var(--secondary); font-weight: bold; font-size: 18px; }
+        .footer-bar { position: fixed; bottom: 0; width: 100%; max-width: 600px; background: white; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 -3px 15px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .btn-checkout { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
+        .modal-content { background: white; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .app-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; display: block; text-align: center; text-decoration: none; }
         .viber-bg { background: #7360f2; }
         .tele-bg { background: #0088cc; }
-        
-        .notice { background: #fffbeb; border: 1px solid #fef3c7; color: #92400e; padding: 10px; border-radius: 10px; font-size: 12px; margin-top: 15px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Pyidaungsu'; }
+        .notice { background: #fffbeb; color: #92400e; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; border: 1px solid #fef3c7; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2>🍗 မြင်သာကြက်ကင်</h2>
-    <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.9;">အရသာကောင်းမွန်သော ကြက်ကင်နှင့် အကင်စုံ</p>
+    <h2 style="margin:0;">🍗 မြင်သာကြက်ကင်</h2>
+    <p style="margin:5px 0 0 0; font-size:13px; opacity:0.9;">ရသာစုံလင် အကင်စုံ</p>
 </div>
 
-<div class="container" style="margin-bottom: 100px;">
-    <h3 style="font-size: 17px; margin-left: 5px;">🔥 မီနူးများ</h3>
-    <div id="menu-grid" class="menu-grid">
-        </div>
+<div class="container" style="margin-bottom: 90px;">
+    <div id="menu-grid" class="menu-grid">မီနူးများ ဆွဲယူနေသည်...</div>
 </div>
 
 <div class="footer-bar">
     <div>
-        <span class="total-text">စုစုပေါင်း ကျသင့်ငွေ</span>
-        <span class="total-amount"><span id="total-price">0</span> K</span>
+        <small style="color:#64748b;">စုစုပေါင်း ကျသင့်ငွေ</small><br>
+        <b style="font-size:20px;"><span id="total-price">0</span> K</b>
     </div>
     <button class="btn-checkout" onclick="openCheckout()">Check Out ➔</button>
 </div>
 
 <div id="checkout-modal">
     <div class="modal-content">
-        <h3 style="margin-top:0;">📋 အော်ဒါအတည်ပြုရန်</h3>
-        <div class="input-group">
-            <label>👤 ဝယ်သူအမည်</label>
-            <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
-        </div>
-        <div class="input-group">
-            <label>📞 ဖုန်းနံပါတ်</label>
-            <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
-        </div>
-        <div class="input-group">
-            <label>📅 လာယူမည့်အချိန်</label>
-            <input type="datetime-local" id="pickup-datetime">
-        </div>
+        <h3 style="margin:0 0 20px 0; text-align:center;">📋 အော်ဒါတင်ရန်</h3>
+        <label style="font-size:13px; font-weight:bold;">ဝယ်သူအမည်</label>
+        <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
+        
+        <label style="font-size:13px; font-weight:bold;">ဖုန်းနံပါတ်</label>
+        <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
+        
+        <label style="font-size:13px; font-weight:bold;">လာယူမည့်အချိန်</label>
+        <input type="datetime-local" id="pickup-datetime">
 
-        <p style="font-size: 13px; font-weight: bold; margin-bottom: 10px;">ဘယ် App ကနေ ပို့မလဲ?</p>
-        <div class="app-choice">
-            <button class="btn-app viber-bg" onclick="submitOrder('viber')">Viber 🟣</button>
-            <button class="btn-app tele-bg" onclick="submitOrder('telegram')">Telegram 🔵</button>
-        </div>
-
-        <div class="notice">
-            ⚠️ အော်ဒါတင်ပြီးပါက ဆိုင်ရှင်အား ဖုန်းဖြင့် <br>
-            <b>၀၉-၇၆၇ ၂၈၇ ၃၄၅</b> သို့ ဆက်သွယ်ပေးပါ။
-        </div>
-        <button onclick="closeCheckout()" style="width:100%; border:none; background:none; color:#94a3b8; margin-top:15px; font-size:13px;">မမှာသေးပါ (ပြန်ထွက်မည်)</button>
+        <button class="app-btn viber-bg" id="viber-btn" onclick="submitOrder('viber')">Viber မှ ပို့မည် 🟣</button>
+        <button class="app-btn tele-bg" id="tele-btn" onclick="submitOrder('telegram')">Telegram မှ ပို့မည် 🔵</button>
+        
+        <div class="notice">⚠️ အော်ဒါတင်ပြီးပါက <b>၀၉၇၆၇၂၈၇၃၄၅</b> သို့ <br>ဖုန်းဖြင့် အကြောင်းကြားပေးပါ။</div>
+        <button onclick="closeCheckout()" style="width:100%; border:none; background:none; color:#94a3b8; margin-top:15px; cursor:pointer;">မမှာသေးပါ (ပိတ်မည်)</button>
     </div>
 </div>
 
@@ -103,6 +71,7 @@
     const SB_URL = "https://deabtvqzxpkepgcdutzd.supabase.co";
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlYWJ0dnF6eHBrZXBnY2R1dHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNzQzNDMsImV4cCI6MjA4MTg1MDM0M30.BbxmM65uoTDcf_nTP6w5siSF6Y5_eM4peqYJCAxR90I";
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
+    
     const MY_PHONE = "959767287345";
     const VIBER_BUSINESS_URI = "d42829d6-dced-11f0-a2db-36dcc9215546";
 
@@ -121,69 +90,75 @@
                 <div>
                     <div class="item-name">${item.name}</div>
                     <div class="item-price">${item.price.toLocaleString()} K</div>
+                    <small style="font-size:10px; color:#999;">လက်ကျန်: ${item.stock_qty}</small>
                 </div>
                 <div class="qty-box">
                     <button class="btn-qty" onclick="updateQty('${item.name}', -1)">-</button>
-                    <span class="qty-num" id="qty-${item.name}">0</span>
+                    <span id="qty-${item.name}" style="font-weight:bold;">0</span>
                     <button class="btn-qty" onclick="updateQty('${item.name}', 1)">+</button>
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
     function updateQty(name, change) {
         const item = menuData.find(i => i.name === name);
         cart[name] = (cart[name] || 0) + change;
         if (cart[name] < 0) cart[name] = 0;
-        if (cart[name] > item.stock_qty) cart[name] = item.stock_qty;
+        if (cart[name] > item.stock_qty) { cart[name] = item.stock_qty; alert("လက်ကျန်ထက် ပိုမှာလို့မရပါ"); }
         document.getElementById(`qty-${name}`).innerText = cart[name];
-        
         let total = 0;
         menuData.forEach(i => total += (cart[i.name] || 0) * i.price);
         document.getElementById('total-price').innerText = total.toLocaleString();
     }
 
     function openCheckout() {
-        if (document.getElementById('total-price').innerText === "0") return alert("အရင်ဦးစွာ ပစ္စည်းရွေးချယ်ပေးပါ။");
+        if (document.getElementById('total-price').innerText === "0") return alert("ပစ္စည်း အရင်ရွေးချယ်ပါ။");
         document.getElementById('checkout-modal').style.display = 'flex';
     }
 
-    function closeCheckout() {
-        document.getElementById('checkout-modal').style.display = 'none';
-    }
+    function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
 
     async function submitOrder(sendVia) {
         const name = document.getElementById('cust-name').value;
         const phone = document.getElementById('cust-phone').value;
         const pickup = document.getElementById('pickup-datetime').value;
+        const total = document.getElementById('total-price').innerText;
 
-        if (!name || !phone || !pickup) return alert("အချက်အလက်များကို ပြည့်စုံစွာ ဖြည့်စွက်ပေးပါ။");
+        if (!name || !phone || !pickup) return alert("အချက်အလက် ပြည့်စုံအောင် ဖြည့်ပါ။");
 
         let itemsArr = [];
         for (let k in cart) {
             if (cart[k] > 0) {
-                itemsArr.push(`${k} [${cart[k]} ခု]`);
+                itemsArr.push(`${k} (${cart[k]} ခု)`);
                 const item = menuData.find(i => i.name === k);
                 await _supabase.from('menu_items').update({ stock_qty: item.stock_qty - cart[k] }).eq('id', item.id);
             }
         }
 
-        const { data } = await _supabase.from('orders').insert([{
-            customer_name: name, phone: phone, items: itemsArr.join(", "), total: document.getElementById('total-price').innerText, pickup_time: pickup
+        const { data, error } = await _supabase.from('orders').insert([{
+            customer_name: name, phone: phone, items: itemsArr.join(", "), total: total, pickup_time: pickup
         }]).select();
 
+        if (error) return alert("Error: " + error.message);
+
         const pickupTime = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
-        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${pickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူသည့်စာရင်း:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${document.getElementById('total-price').innerText} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက ဆိုင်ရှင်ဖုန်း ၀၉၇၆၇၂၈၇၃၄၅ သို့ အကြောင်းကြားပေးပါ။`;
+        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${pickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက ၀၉၇၆၇၂၈၇၃၄၅ သို့ ဆက်သွယ်ပေးပါ။`;
+
+        const encodedMsg = encodeURIComponent(msg);
 
         if (sendVia === 'viber') {
-            window.location.href = `viber://pa?chatURI=${VIBER_BUSINESS_URI}&text=${encodeURIComponent(msg)}`;
+            // Viber Direct Link Format များ (Viber BusinessURI က အလုပ်မလုပ်ရင် Personal နံပါတ်နဲ့ ပွင့်ပါမယ်)
+            const viberLink = `viber://pa?chatURI=${VIBER_BUSINESS_URI}&text=${encodedMsg}`;
+            const viberBackup = `viber://contact?number=${MY_PHONE}&draft=${encodedMsg}`;
+            
+            window.location.href = viberLink;
+            setTimeout(() => { window.location.href = viberBackup; }, 800);
         } else {
-            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
+            // Telegram Standard Link
+            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodedMsg}`;
         }
     }
-
     window.onload = fetchMenu;
 </script>
 </body>
 </html>
-

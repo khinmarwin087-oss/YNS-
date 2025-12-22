@@ -55,7 +55,7 @@
         <input type="text" id="cust-name" placeholder="အမည်ဖြည့်ပါ">
         
         <label style="font-size:12px; font-weight:bold;">ဖုန်းနံပါတ်</label>
-        <input type="tel" id="cust-phone" placeholder="09xxxxxxxxx">
+        <input type="tel" id="cust-phone" placeholder="၀၉xxxxxxxxx">
         
         <label style="font-size:12px; font-weight:bold;">လာယူမည့်အချိန်</label>
         <input type="datetime-local" id="pickup-datetime">
@@ -69,12 +69,13 @@
             🔵 Telegram ဖြင့် တိုက်ရိုက်ပို့မည်
         </button>
 
-        <div class="guide-box">
-            <b>💡 လမ်းညွှန်:</b><br>
-            Viber ဖြင့်ပို့လျှင် အော်ဒါစာသားကို Copy ယူသွားပါမည်။ ဆိုင်ရှင် Chat ထဲတွင် <b>Paste (ကူးထည့်)</b> လုပ်၍ ပို့ပေးပါ။
+        <div class="guide-box" id="viber-guide" style="display:none;">
+            <b>💡 Viber ဖြင့် ပို့နည်းလမ်းညွှန်:</b><br>
+            ၁။ ခလုတ်နှိပ်လိုက်လျှင် အော်ဒါစာသားများကို Copy အလိုအလျောက် ယူသွားပါမည်။<br>
+            ၂။ Viber ပွင့်လာပါက ဆိုင်ရှင် Chat ထဲတွင် ခဏဖိနှိပ်ပြီး <b>Paste (ကူးထည့်)</b> လုပ်၍ ပို့ပေးပါ။
         </div>
         
-        <div class="notice">⚠️ အော်ဒါတင်ပြီးပါက <b>09767287345</b> သို့ <br>ဖုန်းဖြင့် အကြောင်းကြားပေးပါ။</div>
+        <div class="notice">⚠️ အော်ဒါတင်ပြီးပါက <b>၀၉၇၆၇၂၈၇၃၄၅</b> သို့ <br>ဖုန်းဖြင့် အကြောင်းကြားပေးပါ။</div>
         <button onclick="closeCheckout()" style="width:100%; border:none; background:none; color:#94a3b8; margin-top:15px; cursor:pointer;">မမှာသေးပါ (ပိတ်မည်)</button>
     </div>
 </div>
@@ -84,7 +85,7 @@
     const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlYWJ0dnF6eHBrZXBnY2R1dHpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyNzQzNDMsImV4cCI6MjA4MTg1MDM0M30.BbxmM65uoTDcf_nTP6w5siSF6Y5_eM4peqYJCAxR90I";
     const _supabase = window.supabase.createClient(SB_URL, SB_KEY);
     
-    const MY_PHONE = "09767287345";
+    const MY_PHONE = "959767287345";
 
     let cart = {};
     let menuData = [];
@@ -124,6 +125,7 @@
     function openCheckout() {
         if (document.getElementById('total-price').innerText === "0") return alert("ပစ္စည်း အရင်ရွေးပါ။");
         document.getElementById('checkout-modal').style.display = 'flex';
+        document.getElementById('viber-guide').style.display = 'block'; // လမ်းညွှန်ချက် အမြဲပြထားမည်
     }
 
     function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
@@ -151,28 +153,22 @@
 
         if (error) { return alert("Error: " + error.message); }
 
-        // Time format ပြောင်းလဲခြင်း (AM/PM)
-        const dateObj = new Date(pickup);
-        const formattedPickupTime = dateObj.toLocaleString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            hour12: true 
-        });
-
-        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${formattedPickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက 09767287345 သို့ ဖုန်းဆက်ပေးပါ။`;
+        const pickupTime = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
+        const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${pickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက 09767287345 သို့ ဖုန်းဆက်ပေးပါ။`;
 
         if (sendVia === 'viber') {
+            // Viber အတွက် စာသားကို Copy ယူခြင်း
             navigator.clipboard.writeText(msg).then(() => {
                 alert("အော်ဒါစာသားကို Copy ယူပြီးပါပြီ။ Viber ပွင့်လာပါက ဆိုင်ရှင် Chat ထဲတွင် Paste လုပ်၍ ပို့ပေးပါ။");
-                window.location.href = `viber://contact?number=${MY_PHONE.replace('0', '95')}`;
+                window.location.href = `viber://contact?number=${MY_PHONE}`;
             }).catch(err => {
-                window.location.href = `viber://contact?number=${MY_PHONE.replace('0', '95')}&draft=${encodeURIComponent(msg)}`;
+                // Clipboard error backup
+                window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodeURIComponent(msg)}`;
             });
         } else {
-            window.location.href = `https://t.me/+${MY_PHONE.replace('0', '95')}?text=${encodeURIComponent(msg)}`;
+            // Telegram အတွက် Direct Send Link
+            const teleMsg = msg.replace(/\*/g, ''); // Telegram link formats can be sensitive
+            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
         }
     }
     window.onload = fetchMenu;

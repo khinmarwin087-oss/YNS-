@@ -20,12 +20,13 @@
         .footer-bar { position: fixed; bottom: 0; width: 100%; max-width: 600px; background: white; padding: 15px 20px; box-sizing: border-box; box-shadow: 0 -3px 15px rgba(0,0,0,0.1); border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .btn-checkout { background: var(--secondary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
         #checkout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: center; justify-content: center; }
-        .modal-content { background: white; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; }
-        .app-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; }
+        .modal-content { background: white; width: 85%; max-width: 380px; padding: 25px; border-radius: 20px; max-height: 90vh; overflow-y: auto; }
+        .app-btn { width: 100%; padding: 14px; border: none; border-radius: 10px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px; }
         input { width: 100%; padding: 12px; margin: 8px 0 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-family: 'Pyidaungsu'; }
         .viber-bg { background: #7360f2; }
         .tele-bg { background: #0088cc; }
-        .notice { background: #fffbeb; color: #92400e; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; border: 1px solid #fef3c7; margin-top: 15px; }
+        .guide-box { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 12px; border-radius: 10px; font-size: 13px; margin-top: 15px; }
+        .notice { background: #fffbeb; color: #92400e; padding: 10px; border-radius: 8px; font-size: 12px; text-align: center; border: 1px solid #fef3c7; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -59,8 +60,20 @@
         <label style="font-size:12px; font-weight:bold;">လာယူမည့်အချိန်</label>
         <input type="datetime-local" id="pickup-datetime">
 
-        <button class="app-btn viber-bg" onclick="submitOrder('viber')">Viber မှ ပို့မည် 🟣</button>
-        <button class="app-btn tele-bg" onclick="submitOrder('telegram')">Telegram မှ ပို့မည် 🔵</button>
+        <p style="font-size: 13px; font-weight: bold; margin: 10px 0 5px 0;">ပို့မည့်နည်းလမ်း ရွေးချယ်ပါ</p>
+        
+        <button class="app-btn viber-bg" onclick="submitOrder('viber')">
+            🟣 Viber ဖြင့်ပို့မည် (Copy ယူမည်)
+        </button>
+        <button class="app-btn tele-bg" onclick="submitOrder('telegram')">
+            🔵 Telegram ဖြင့် တိုက်ရိုက်ပို့မည်
+        </button>
+
+        <div class="guide-box" id="viber-guide" style="display:none;">
+            <b>💡 Viber ဖြင့် ပို့နည်းလမ်းညွှန်:</b><br>
+            ၁။ ခလုတ်နှိပ်လိုက်လျှင် အော်ဒါစာသားများကို Copy အလိုအလျောက် ယူသွားပါမည်။<br>
+            ၂။ Viber ပွင့်လာပါက ဆိုင်ရှင် Chat ထဲတွင် ခဏဖိနှိပ်ပြီး <b>Paste (ကူးထည့်)</b> လုပ်၍ ပို့ပေးပါ။
+        </div>
         
         <div class="notice">⚠️ အော်ဒါတင်ပြီးပါက <b>၀၉၇၆၇၂၈၇၃၄၅</b> သို့ <br>ဖုန်းဖြင့် အကြောင်းကြားပေးပါ။</div>
         <button onclick="closeCheckout()" style="width:100%; border:none; background:none; color:#94a3b8; margin-top:15px; cursor:pointer;">မမှာသေးပါ (ပိတ်မည်)</button>
@@ -104,7 +117,6 @@
         if (cart[name] < 0) cart[name] = 0;
         if (cart[name] > item.stock_qty) cart[name] = item.stock_qty;
         document.getElementById(`qty-${name}`).innerText = cart[name];
-        
         let total = 0;
         menuData.forEach(i => total += (cart[i.name] || 0) * i.price);
         document.getElementById('total-price').innerText = total.toLocaleString();
@@ -113,6 +125,7 @@
     function openCheckout() {
         if (document.getElementById('total-price').innerText === "0") return alert("ပစ္စည်း အရင်ရွေးပါ။");
         document.getElementById('checkout-modal').style.display = 'flex';
+        document.getElementById('viber-guide').style.display = 'block'; // လမ်းညွှန်ချက် အမြဲပြထားမည်
     }
 
     function closeCheckout() { document.getElementById('checkout-modal').style.display = 'none'; }
@@ -135,11 +148,7 @@
         }
 
         const { data, error } = await _supabase.from('orders').insert([{
-            customer_name: name,
-            phone: phone,
-            items: itemsArr.join(", "),
-            total: total,
-            pickup_time: pickup
+            customer_name: name, phone: phone, items: itemsArr.join(", "), total: total, pickup_time: pickup
         }]).select();
 
         if (error) { return alert("Error: " + error.message); }
@@ -147,13 +156,19 @@
         const pickupTime = new Date(pickup).toLocaleString('my-MM', { dateStyle: 'medium', timeStyle: 'short' });
         const msg = `🍗 *မြင်သာကြက်ကင် (အော်ဒါ #${data[0].id})*\n━━━━━━━━━━━━━━━━━━\n👤 *ဝယ်သူ:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *လာယူမည်:* ${pickupTime}\n━━━━━━━━━━━━━━━━━━\n📦 *မှာယူမှု:*\n${itemsArr.map(i => "▪️ " + i).join('\n')}\n\n💰 *စုစုပေါင်း:* *${total} MMK*\n━━━━━━━━━━━━━━━━━━\n⚠️ အော်ဒါတင်ပြီးပါက ၀၉၇၆၇၂၈၇၃၄၅ သို့ ဖုန်းဆက်ပေးပါ။`;
 
-        const encodedMsg = encodeURIComponent(msg);
-
         if (sendVia === 'viber') {
-            // Viber Direct Chat Link ကို ပြောင်းလဲအသုံးပြုထားသည်
-            window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodedMsg}`;
+            // Viber အတွက် စာသားကို Copy ယူခြင်း
+            navigator.clipboard.writeText(msg).then(() => {
+                alert("အော်ဒါစာသားကို Copy ယူပြီးပါပြီ။ Viber ပွင့်လာပါက ဆိုင်ရှင် Chat ထဲတွင် Paste လုပ်၍ ပို့ပေးပါ။");
+                window.location.href = `viber://contact?number=${MY_PHONE}`;
+            }).catch(err => {
+                // Clipboard error backup
+                window.location.href = `viber://contact?number=${MY_PHONE}&draft=${encodeURIComponent(msg)}`;
+            });
         } else {
-            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodedMsg}`;
+            // Telegram အတွက် Direct Send Link
+            const teleMsg = msg.replace(/\*/g, ''); // Telegram link formats can be sensitive
+            window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
         }
     }
     window.onload = fetchMenu;

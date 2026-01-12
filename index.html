@@ -115,7 +115,7 @@
                 ${item.image ? `<img src="${item.image}" class="card-img">` : `<div style="height:110px; background:#eee;"></div>`}
                 <div class="card-info">
                     <span class="item-name">${item.name}</span>
-                    <span class="item-price">${item.price} K</span>
+                    <span class="item-price">${item.price} Ks</span>
                     <button class="btn-add" onclick="addToCart(${item.id})">+ ထည့်မည်</button>
                 </div>
             </div>
@@ -148,7 +148,7 @@
             total += item.price * cart[id];
             html += `
                 <div class="cart-item">
-                    <div style="flex:1;"><b>${item.name}</b><br><small>${item.price} K</small></div>
+                    <div style="flex:1;"><b>${item.name}</b><br><small>${item.price} Ks</small></div>
                     <div class="cart-qty-ctrl">
                         <button class="btn-op" onclick="updateQty(${id}, -1)">-</button>
                         <input type="number" class="qty-num" value="${cart[id]}" onchange="manualQty(${id}, this.value)">

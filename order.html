@@ -281,12 +281,14 @@
         }, 100);
     }
     
+     // 🌟 အဆင့်မြှင့်တင်ထားသော အော်ဒါပို့စနစ် (Auto Send Customer & Shop Owner)
     async function sendOrder(via) {
         const name = document.getElementById('in-name').value;
-        const phone = document.getElementById('in-phone').value;
+        const telegramId = document.getElementById('in-phone').value; // ဝယ်သူ ဖြည့်လိုက်သော Telegram ID နံပါတ်
         const time = document.getElementById('in-time').value;
         const otherDate = document.getElementById('in-date').value;
-        if(!name || !phone || !time) return myPop("အချက်အလက်တွေ ပြည့်စုံအောင် ဖြည့်ပေးပါ ✨");
+        
+        if(!name || !telegramId || !time) return myPop("အချက်အလက်တွေ ပြည့်စုံအောင် ဖြည့်ပေးပါ ✨");
 
         let dayStr = chosenDay === 'today' ? "ဒီနေ့ (Today)" : otherDate;
         let items = [];
@@ -295,24 +297,46 @@
             items.push(`▪️ ${i.name} (${cart[id]} ခု)`);
         }
         const total = document.getElementById('bar-total').innerText;
-        const msg = `🍗 *မြင်သာကြက်ကင် - အော်ဒါ*\n👤 *အမည်:* ${name}\n📞 *ဖုန်း:* ${phone}\n📅 *နေ့ရက်:* ${dayStr}\n🕒 *အချိန်:* ${time}\n━━━━━━━━━━━━━━\n${items.join('\n')}\n━━━━━━━━━━━━━━\n💰 *စုစုပေါင်း:* *${total} MMK*\n\n🛒 *ပြန်လည်မှာယူရန်နှိပ်ပါ* 👇\n${WEB_LINK}`;
+
+        // 1️⃣ ဆိုင်ရှင်၏ Telegram Group/Chat ဆီသို့ ပို့မည့် အော်ဒါစာရင်း
+        const ownerMsg = `🍗 *မြင်သာကြက်ကင် - အော်ဒါအသစ်*\n👤 *အမည်:* ${name}\n🆔 *Telegram ID:* ${telegramId}\n📅 *နေ့ရက်:* ${dayStr}\n🕒 *အချိန်:* ${time}\n━━━━━━━━━━━━━━\n${items.join('\n')}\n━━━━━━━━━━━━━━\n💰 *စုစုပေါင်း:* *${total} MMK*\n\n🛒 *အော်ဒါပြန်ကြည့်ရန်* 👇\n${WEB_LINK}`;
+
+        // 2️⃣ ဝယ်သူ့ထံသို့ Bot မှတစ်ဆင့် တိုက်ရိုက် Auto ပို့ပေးမည့် အောင်မြင်ကြောင်းစာတို
+        const customerMsg = `🎉 *Order Success!*\n\n${name} လူကြီးမင်းခင်ဗျာ... မြင်သာကြက်ကင်မှ လူကြီးမင်း၏ အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်။ ဆိုင်မှ (၅) မိနစ်အတွင်း ပြန်လည်ဆက်သွယ်ပေးပါမည်။ ကျေးဇူးတင်ရှိပါသည်ခင်ဗျာ။ ✨`;
+
         try {
+            // 🚀 သင့်ဆိုင်ရှင် Telegram Chat ID ဆီသို့ အော်ဒါစာရင်း လှမ်းပို့ခြင်း
             await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+                body: JSON.stringify({ chat_id: CHAT_ID, text: ownerMsg, parse_mode: 'Markdown' })
             });
 
-           if(via === 'viber') {
-                navigator.clipboard.writeText(msg).then(() => {
-                    myPop("Copy ကူးပြီးပါပြီ။ Viber မှာ Paste လုပ်ပြီး ပို့ပေးပါ!");
+            // 🚀 ဝယ်သူ့ရဲ့ Telegram ID ထဲသို့ Auto Success Message တိုက်ရိုက်လှမ်းပို့ခြင်း
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: telegramId, text: customerMsg, parse_mode: 'Markdown' })
+            });
+
+            // ခလုတ်ရွေးချယ်မှုအလိုက် App ဖွင့်ပေးခြင်း
+            if(via === 'viber') {
+                navigator.clipboard.writeText(ownerMsg).then(() => {
+                    myPop("အော်ဒါကို Copy ကူးပြီးပါပြီ။ Viber တွင် Paste လုပ်ပြီး ထပ်မံပေးပို့နိုင်ပါသည်။");
                     setTimeout(() => { window.location.href = `viber://chat?number=%2B${MY_PHONE}`; }, 1200);
                 });
             } else {
-                window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(msg)}`;
+                window.location.href = `https://t.me/+${MY_PHONE}?text=${encodeURIComponent(ownerMsg)}`;
             }
-            cart = {}; updateFloatingBar(); document.getElementById('cart-sheet').style.display = 'none';
-        } catch (e) { myPop("Error! Bot ဆီသို့ အော်ဒါပို့မရပါ။"); }
+
+            // Cart အား Reset ချပြီး ပိတ်လိုက်ခြင်း
+            cart = {}; 
+            updateFloatingBar(); 
+            document.getElementById('cart-sheet').style.display = 'none';
+
+        } catch (e) { 
+            myPop("Error! Telegram စနစ်သို့ အော်ဒါပို့၍မရပါ။"); 
+        }
     }
 
     window.onload = renderMenu;

@@ -388,7 +388,7 @@ const CHAT_ID = "8116152317";
 const menuData = [
   { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, category: 'အသား', image: 'https://i.ibb.co/FLb4YzNT/1771770596329.png' },
   { id: 20, name: 'ကြက်ပေါင်', price: 4000, category: 'အသား', image: 'https://i.ibb.co/twQQYmYN/1771771044356.png' },
-  { id: 1, name: 'ကြက်ပေါင်', price: 3000, category: 'အသား', image: 'https://i.ibb.co/JWsqDFX9/1768228481848.png' },
+  { id: 1, name: 'ကြက်ပေါင်', price: 3000, category: 'အသား', image: 'https://i.ibb.co/JWsqDFX9/1768228481848.png' }, available: false
   { id: 3, name: 'ဆိတ်သားကင်', price: 1500, category: 'အသား', image: 'https://i.ibb.co/twQjTScV/IMG-20251231-003231.png' },
   { id: 14, name: 'လက်မောင်းလုံး', price: 1000, category: 'အသား', image: '' },
   { id: 7, name: 'အတောင်ပျံ (CP)', price: 1000, category: 'အရိုး', image: 'https://i.ibb.co/rKJY26TM/1767147666947.png' },
@@ -416,16 +416,26 @@ function renderMenu() {
     const q = document.getElementById('searchInput').value.toLowerCase();
     const grid = document.getElementById('grid-box');
     const items = menuData.filter(i => (activeCat === 'All' || i.category === activeCat) && i.name.toLowerCase().includes(q));
-    grid.innerHTML = items.map(i => `
-        <div class="card">
+    
+    grid.innerHTML = items.map(i => {
+        // available က false ဖြစ်နေရင် ခလုတ်ပိတ်ဖို့ စစ်ဆေးခြင်း
+        const isAvailable = i.available !== false;
+        
+        return `
+        <div class="card" style="${!isAvailable ? 'opacity: 0.7;' : ''}">
             <img src="${i.image || 'https://via.placeholder.com/150'}" class="card-img" onclick="openImageViewer('${i.image || 'https://via.placeholder.com/150'}', '${i.name}')">
             <div class="card-info">
                 <span class="item-name">${i.name}</span>
                 <span class="item-price">${i.price} Ks</span>
-                <button class="btn-add" onclick="addToCart(${i.id})">+ ထည့်မည်</button>
+                ${isAvailable 
+                    ? `<button class="btn-add" onclick="addToCart(${i.id})">+ ထည့်မည်</button>`
+                    : `<button class="btn-add" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed;">ကုန်သွားပါပြီ ❌</button>`
+                }
             </div>
-        </div>`).join('');
+        </div>`;
+    }).join('');
 }
+    
     
     
 

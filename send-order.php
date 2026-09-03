@@ -7,7 +7,7 @@
  */
 
 // ---- ဒီနေရာမှာသာ Token ကို ထည့်ပါ (client ဆီ ဘယ်လိုမှ မပေါ်ပါ) ----
-define('BOT_TOKEN', '8215695761:AAF1qDjAJn7gjiHyzf8t7W6c8e51cim98sU');
+define('BOT_TOKEN', '8215695761:AAG7c5gq8NTLgX3-hrVTDe6O5EM6q3wLObY');
 define('CHAT_ID', '8116152317');
 // -------------------------------------------------------------
 

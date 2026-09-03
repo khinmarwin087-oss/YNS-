@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6N321JW2GM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-6N321JW2GM');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🍗 မြင်သာကြက်ကင် POS</title>
+    
+    <!-- Fonts ချိတ်ဆက်မှု (Google Fonts စနစ်တကျ စုစည်းထားခြင်း) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,700;1,700&family=Reem+Kufi:wght@700&family=Pyidaungsu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+      :root { 
+    --pearl: #ffffff; 
+    --bg: #f1f5f9; 
+    --accent: #f59e0b; 
+    --text: #1e293b; 
+    --sub: #64748b; 
+    --danger: #ef4444; 
+}
+body { font-family: 'Pyidaungsu', sans-serif; background: var(--bg); margin: 0; padding-bottom: 90px; color: var(--text); font-size: 14px; }
+
+/* အဆင့်မြှင့်တင်ထားသော Top Nav UI (AliExpress Style) */
+.top-nav { 
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); 
+    padding: 18px 14px; 
+    position: sticky; 
+    top: 0; 
+    z-index: 100; 
+    border-radius: 0 0 24px 24px; 
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15); 
+}
+
+/* Branding Area Layout */
+.brand-area { 
+    position: relative; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    padding: 0 2px 14px 2px; 
+}
+
+/* ဆိုင်အမည် စာသားဒီဇိုင်း အလှဆင်ခြင်း */
+.brand-title { 
+    font-size: 22px; 
+    font-weight: 800; 
+    margin: 0; 
+    color: #ffffff; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* လခြမ်းပုံစံအိုင်ကွန်ကို 3D ပတ်ချာလည် လည်စေမည့် Animation အစစ် */
+.brand-title i {
+    animation: moon3DSpin 3s infinite linear;
+    color: #fbbf24; /* ရွှေဝါရောင် လခြမ်း */
+    display: inline-block;
+}
+
+@keyframes moon3DSpin {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(360deg); }
+}
+
+/* ခေတ်မှီဆန်းသစ်သော Reem Kufi Font ပုံစံ ပြောင်းလဲခြင်း */
+.halal-badge {
+    font-family: 'Reem Kufi', sans-serif !important; 
+    font-size: 13px; 
+    font-weight: bold;
+    color: #10b981; 
+    background: rgba(16, 185, 129, 0.15);
+    padding: 3px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    margin-top: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+        
+        
+
+/* မှတ်တမ်းခလုတ်ကို ခေါင်းစီးနောက်ခံနှင့် လိုက်ဖက်အောင် အလှဆင်ခြင်း */
+.btn-history-top { 
+    background: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    padding: 8px 14px; 
+    border-radius: 12px; 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: #ffffff; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+.btn-history-top:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Search Bar with Cross (X) Button UI */
+.search-container { position: relative; width: 100%; margin-bottom: 5px; }
+
+/* ခေါင်းစီးထဲက ပင်မ Search Box ကိုလည်း အရောင်လိုက်ညှိခြင်း */
+.search-box { 
+    background: rgba(255, 255, 255, 0.08); 
+    border-radius: 12px; 
+    padding: 2px 35px 2px 12px; 
+    display: flex; 
+    align-items: center; 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    transition: all 0.3s ease;
+}
+.search-box:focus-within {
+    background: #ffffff;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+}
+.search-box input { 
+    border: none; 
+    background: transparent; 
+    padding: 8px; 
+    width: 100%; 
+    outline: none; 
+    font-size: 13px; 
+    color: #ffffff; /* စာရိုက်ရင် အဖြူရောင်ထွက်မည် */
+}
+.search-box input:focus {
+    color: #1e293b; /* Focus ဖြစ်ချိန် စာရိုက်ရင် အမည်းရောင်ပြောင်းမည် */
+}
+/* Focus ဖြစ်သွားရင် Search Icon အရောင်ပြောင်းရန် */
+.search-box:focus-within i {
+    color: #1e293b !important;
+}
+.btn-clear-search { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; font-size: 14px; cursor: pointer; display: none; padding: 5px; }
+
+/* Categories */
+.cat-row { display: flex; overflow-x: auto; gap: 6px; padding: 12px 0 2px; scrollbar-width: none; }
+.cat-row::-webkit-scrollbar { display: none; }
+.cat-btn { 
+    background: rgba(255, 255, 255, 0.06); 
+    border: 1px solid rgba(255, 255, 255, 0.12); 
+    padding: 6px 14px; 
+    border-radius: 10px; 
+    white-space: nowrap; 
+    font-size: 12px; 
+    font-weight: bold; 
+    color: #cbd5e1;
+    cursor: pointer; 
+    transition: all 0.2s ease;
+}
+.cat-btn.active { 
+    background: #ffffff; 
+    color: #0f172a; 
+    border-color: #ffffff; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Grid Cards */
+.container { padding: 10px; max-width: 500px; margin: auto; }
+.menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.card { background: var(--pearl); border-radius: 15px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #edf2f7; }
+.card-img { width: 100%; height: 100px; object-fit: cover; background: #eee; cursor: pointer; transition: transform 0.2s ease, opacity 0.2s ease; }
+.card-img:hover { transform: scale(1.03); opacity: 0.9; }
+.card-info { padding: 10px; text-align: center; }
+.item-name { font-weight: 700; font-size: 13px; display: block; height: 32px; margin-bottom: 4px; overflow: hidden; }
+.item-price { color: #0f172a; font-weight: 800; font-size: 14px; }
+.btn-add { width: 100%; padding: 8px; margin-top: 8px; border: none; background: #f1f5f9; color: #1e293b; border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer; }
+
+/* Floating Cart Bar */
+.cart-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: #1e293b; color: white; padding: 12px 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; max-width: 480px; margin: auto; z-index: 90; }
+
+/* AliExpress/Amazon Style Full Screen Page Overlay */
+.overlay { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 200; overflow: hidden; }
+.modal-sheet { background: var(--bg); position: absolute; inset: 0; max-width: 500px; margin: auto; display: flex; flex-direction: column; height: 100%; }
+.modal-header { padding: 15px; background: white; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; z-index: 210; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+.modal-body { flex: 1; overflow-y: auto; padding: 15px; scroll-behavior: smooth; }
+.back-btn { background: #f1f5f9; border: none; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+
+/* Cart Page Items Card UI */
+.cart-section-card { background: var(--pearl); border-radius: 18px; padding: 15px; border: 1px solid #e2e8f0; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); }
+.cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f1f5f9; }
+.cart-item:last-child { border-bottom: none; }
+.cart-item-img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; background: #f1f5f9; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-info b { font-size: 13px; line-height: 1.3; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cart-item-info span { font-size: 13px; color: var(--text); font-weight: bold; margin-top: 2px; display: block; }
+.cart-total-row { text-align: right; padding-top: 15px; font-weight: 800; font-size: 14px; border-top: 1px solid #f1f5f9; }
+
+/* Qty Controls */
+.qty-group { display: flex; align-items: center; background: #ffffff; border-radius: 8px; border: 1px solid #cbd5e1; height: 30px; overflow: hidden; }
+.btn-q { width: 28px; height: 30px; border: none; background: white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.btn-q:hover { background: #f1f5f9; }
+.val-q { width: 32px; height: 30px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: 13px; outline: none; padding: 0; margin: 0; }
+.btn-del { color: var(--danger); background: #fff1f2; border: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+
+/* Form Styling */
+#form-box { margin-top: 0; }
+.form-card { background: var(--pearl); border-radius: 18px; padding: 15px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px rgba(0,0,0,0.01); }
+.step-notice { background: #f8fafc; border: 1px solid #cbd5e1; color: #1e293b; padding: 10px 12px; border-radius: 10px; font-size: 12px; font-weight: bold; margin-bottom: 12px; line-height: 1.4; }
+
+label { font-size: 11px; font-weight: bold; color: var(--sub); margin-bottom: 5px; display: block; }
+input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 12px; box-sizing: border-box; font-size: 14px; background: #f8fafc; }
+input:focus { border-color: var(--accent); background: white; outline: none; }
+
+.date-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.date-chip { background: #f8fafc; border: 1px solid #cbd5e1; padding: 10px; border-radius: 10px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; }
+.date-chip.active { background: #1e293b; border-color: #1e293b; color: white; }
+
+.btn-main { width: 100%; padding: 14px; background: linear-gradient(180deg, #534b46 0%, #3a332f 100%); color: white; border: 1px solid #2e2825; border-radius: 15px; font-weight: 800; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(58, 51, 47, 0.25); }
+.btn-main:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; box-shadow: none; border: none; }
+.alert-pop { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 80%; max-width: 300px; padding: 25px 20px; border-radius: 20px; z-index: 1000; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        
+/* Minimalist Black & White Voucher Table UI */
+.receipt-card { background: #ffffff; border: 2px solid #0f172a; border-radius: 16px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(15,23,42,0.05); margin-top: 10px; color: #0f172a; }
+.receipt-header { text-align: center; color: #0f172a; padding: 0 0 12px 0; margin-bottom: 15px; }
+.receipt-header b { font-size: 22px; display: block; letter-spacing: 0.5px; }
+.receipt-header span { font-size: 12px; font-weight: bold; display: block; margin-top: 2px; }
+.receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: bold; }
+.receipt-divider { border-top: 2px dashed #0f172a; margin: 12px 0; }
+
+/* Voucher Table Grid */
+.v-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 12px; font-weight: bold; }
+.v-table th { border-bottom: 2px solid #0f172a; text-align: left; padding: 6px 4px; color: #64748b; font-size: 11px; }
+.v-table td { padding: 8px 4px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.receipt-total-text { font-size: 16px; font-weight: 900; color: #ef4444; }
+
+/* History Compact List UI */
+.history-item { background: var(--pearl); border: 1px solid #e2e8f0; border-radius: 16px; padding: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+.history-info { font-size: 13px; line-height: 1.6; font-weight: bold; }
+.btn-view-voucher { background: #1e293b; color: white; border: none; padding: 8px 14px; border-radius: 10px; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+
+/* Order History Specific Search Bar UI */
+.history-search { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 2px 35px 2px 10px; display: flex; align-items: center; margin-bottom: 15px; position: relative; }
+.history-search input { border: none; background: transparent; padding: 10px 5px; width: 100%; outline: none; font-size: 13px; font-weight: bold; margin-bottom: 0; }
+
+/* Image Viewer Modal Background (AliExpress Style) */
+.img-viewer-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); z-index: 999; backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+.img-viewer-box { position: relative; max-width: 90%; max-height: 80vh; display: flex; flex-direction: column; align-items: center; }
+.img-viewer-src { max-width: 100%; max-height: 70vh; border-radius: 12px; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.img-viewer-title { color: white; margin-top: 15px; font-size: 16px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-family: 'Pyidaungsu', sans-serif; }
+.btn-close-viewer { position: absolute; top: -45px; right: 0; background: rgba(255,255,255,0.2); border: none; color: white; width: 35px; height: 35px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.btn-close-viewer:hover { background: rgba(255,255,255,0.4); }
+
+/* ==== Maintenance Notice Banner (Premium Style) ==== */
+.maintenance-banner {
+    margin: 14px 14px 0 14px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    border: 1px solid #fbbf24;
+    box-shadow: 0 4px 16px rgba(251, 191, 36, 0.18);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.maintenance-banner .mb-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 3px 8px rgba(217, 119, 6, 0.35);
+    animation: mbPulse 2.2s infinite ease-in-out;
+}
+@keyframes mbPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+.maintenance-banner .mb-text b {
+    display: block;
+    font-size: 13.5px;
+    color: #92400e;
+    margin-bottom: 2px;
+}
+.maintenance-banner .mb-text span {
+    display: block;
+    font-size: 12px;
+    color: #b45309;
+    line-height: 1.5;
+}
+.btn-main.is-disabled-maintenance {
+    background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%) !important;
+    color: #f8fafc !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    border: none !important;
+    opacity: 0.9;
+}
+    
+        
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <div class="brand-area" style="align-items: flex-start;">
+        <div style="display: flex; flex-direction: column;">
+            <h2 class="brand-title">
+                <i class="fa-solid fa-moon"></i> မြင်သာကြက်ကင်
+            </h2>
+            <div>
+                <span class="halal-badge">حلال | Halal ✨</span>
+            </div>
+        </div>
+        <button class="btn-history-top" onclick="viewOrderHistory()" style="margin-top: 4px;">
+            <i class="fa-solid fa-clock-rotate-left"></i> မှတ်တမ်း
+        </button>
+        </div>
+        
+    
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass" style="color:rgba(255,255,255,0.4); font-size: 13px;"></i>
+            <input type="text" id="searchInput" placeholder="ဟင်းပွဲအမည် ရိုက်ရှာပါ..." onkeyup="checkSearchInput()">
+        </div>
+        <button id="clearSearchBtn" class="btn-clear-search" style="color: rgba(255,255,255,0.5);" onclick="clearMenuSearch()"><i class="fa-solid fa-circle-xmark"></i></button>
+    </div>
+
+    <div class="cat-row">
+        <div class="cat-btn active" onclick="filterCat('All', this)">အားလုံး</div>
+        <div class="cat-btn" onclick="filterCat('အသား', this)">အသား</div>
+        <div class="cat-btn" onclick="filterCat('အရိုး', this)">အရိုး</div>
+        <div class="cat-btn" onclick="filterCat('ကလီစာ', this)">ကလီစာ</div>
+        <div class="cat-btn" onclick="filterCat('အသီးအရွက်', this)">အသီးအရွက်</div>
+        <div class="cat-btn" onclick="filterCat('အရေခွံ', this)">အရေခွံ</div>
+        <div class="cat-btn" onclick="filterCat('ဥ', this)">ဥ</div>
+    </div>
+    </div>
+    
+    
+    <div class="maintenance-banner">
+        <div class="mb-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <div class="mb-text">
+            <b>Order စနစ်ကို ခေတ္တပြင်ဆင်နေပါသည် 🛠️</b>
+            <span>ဈေးနှုန်းများ ကြည့်ရှုနိုင်ပါသည်၊ Order တင်ခြင်းကိုမူ ခေတ္တပိတ်ထားပါသည်။ မကြာမီ ပြန်လည်ဖွင့်လှစ်ပေးပါမည်။</span>
+        </div>
+    </div>
+
+<div class="container">
+    <div id="grid-box" class="menu-grid"></div>
+</div>
+
+<div class="cart-bar" id="cart-bar" style="display: none;">
+    <div>စုစုပေါင်း: <b id="bar-total">0</b> Ks</div>
+    <button style="background:var(--pearl); border:none; color:var(--accent); padding:8px 16px; border-radius:10px; font-weight:800; font-size:13px;" onclick="openCart()">ခြင်းတောင်း ➔</button>
+</div>
+
+<div id="cart-sheet" class="overlay">
+    <div class="modal-sheet">
+        <div class="modal-header">
+            <div style="display:flex; align-items:center;">
+                <button class="back-btn" id="modal-back"><i class="fa-solid fa-arrow-left"></i></button>
+                <h3 id="modal-title" style="margin:0 0 0 10px; font-size: 16px;">ခြင်းတောင်းစာရင်း</h3>
+            </div>
+            <span id="item-count-badge" style="background:#f1f5f9; padding:5px 12px; border-radius:12px; font-weight:bold; font-size:14px; color:#1e293b;">0 မျိုး</span>
+        </div>
+        
+        <div class="modal-body" id="modal-scroll-area">
+            <div id="receipt-view" style="display: none;"></div>
+
+            <div id="cart-content-wrapper">
+                <div class="cart-section-card">
+                    <div id="cart-list"></div>
+                </div>
+                
+                <div id="form-box" style="display: none;">
+                    <div class="form-card">
+                        <div class="step-notice">
+                            ⚠️ သတိပေးချက်: "အော်ဒါအတည်ပြုမည်" ကို နှိပ်ပြီးပါက ခြင်းတောင်းထဲမှ ပစ္စည်းများ Auto Reset ဖြစ်သွားမည် ဖြစ်သဖြင့် စာရင်းကို သေချာ ပြန်လည်စစ်ဆေးပေးပါရန်။
+                        </div>
+
+                        <label>👤 ဝယ်သူအမည်</label>
+                        <input type="text" id="in-name" placeholder="အမည်ဖြည့်ပါ">
+                        <label>📞 ဖုန်းနံပါတ် သို့မဟုတ် Telegram ID</label>
+                        <input type="tel" id="in-phone" placeholder="၀၉... သို့မဟုတ် Chat ID">
+                        <label>📅 ရက်စွဲ</label>
+                        <div class="date-choices">
+                            <div class="date-chip active" id="chip-today" onclick="selectDate('today')">ဒီနေ့</div>
+                            <div class="date-chip" id="change-date-btn" onclick="selectDate('other')">တခြားရက်</div>
+                        </div>
+                        <div id="custom-date-row" style="display:none;">
+                            <label>🗓️ ရက်စွဲ</label>
+                            <input type="date" id="in-date">
+                        </div>
+                        <label>🕒 အချိန်</label>
+                        <input type="time" id="in-time">
+                        
+                        <div style="padding: 10px; border: 1px solid #ddd; border-radius: 12px; background: #fff; margin-bottom: 15px;">
+                            <p style="font-size: 13px; color: #555; margin: 0; line-height: 1.5;">
+                                📜 အော်ဒါတင်ပြီး <strong>(၅) မိနစ်အတွင်း</strong> ဆိုင်မှ အကြောင်းမပြန်ပါက ဖုန်းဆက်ပေးပါရန် မေတ္တာရပ်ခံအပ်ပါသည်။
+                            </p>
+                        </div>
+                        
+                        <button id="submit-order-btn" class="btn-main" style="background: #0f172a;" onclick="sendOrder()">
+                            <i class="fa-solid fa-circle-check"></i> အော်ဒါအတည်ပြုမည် ➔
+                        </button>
+                    </div>
+                </div>
+                <button id="next-btn" class="btn-main is-disabled-maintenance" style="margin-top:10px;" onclick="myPop('🛠️ Order စနစ်ကို ခေတ္တပြင်ဆင်နေပါသည်။ ခဏစောင့်ပေးပါရန် လေးစားစွာ တောင်းပန်အပ်ပါသည်။')"><i class="fa-solid fa-lock"></i> Order ခေတ္တပိတ်ထားပါသည်</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="alert-bg" class="overlay" style="z-index: 999; background: rgba(0,0,0,0.4);"></div>
+<div id="alert-pop" class="alert-pop">
+    <p id="alert-msg" style="font-weight:bold;"></p>
+    <button class="btn-main" onclick="closeAlert()">နားလည်ပါပြီ</button>
+</div>
+
+    <div id="imageViewerModal" class="img-viewer-overlay" onclick="closeImageViewer()">
+    <div class="img-viewer-box" onclick="event.stopPropagation()">
+        <button class="btn-close-viewer" onclick="closeImageViewer()"><i class="fa-solid fa-xmark"></i></button>
+        <img id="viewerImageTarget" src="" class="img-viewer-src" alt="Menu Large Image">
+        <div id="viewerImageTitle" class="img-viewer-title">ဟင်းပွဲအမည်</div>
+    </div>
+    </div>
+    
+<script>
+       // Bot Token / Chat ID ကို ဒီနေရာမှာ ထားလို့မရတော့ပါ (Security)
+// ယခုတော့ send-order.php ကနေတဆင့်သာ Telegram ကို ပို့ပါမယ်
+
+const menuData = [
+  { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, category: 'အသား', image: 'https://i.ibb.co/FLb4YzNT/1771770596329.png' },
+  { id: 20, name: 'ကြက်ပေါင်', price: 4000, category: 'အသား', image: 'https://i.ibb.co/twQQYmYN/1771771044356.png' },
+  { id: 1, name: 'ကြက်ပေါင်', price: 3000, category: 'အသား', image: 'https://i.ibb.co/JWsqDFX9/1768228481848.png', available: false },
+  { id: 3, name: 'ဆိတ်သားကင်', price: 1500, category: 'အသား', image: 'https://i.ibb.co/twQjTScV/IMG-20251231-003231.png' },
+  { id: 14, name: 'လက်မောင်းလုံး', price: 1000, category: 'အသား', image: '' },
+  { id: 7, name: 'အတောင်ပျံ (CP)', price: 1000, category: 'အရိုး', image: 'https://i.ibb.co/rKJY26TM/1767147666947.png' },
+  { id: 18, name: 'အပ်မှို', price: 1000, category: 'အသီးအရွက်', image: 'https://i.ibb.co/PsGSSTK4/1768228089572.png' },
+  { id: 19, name: 'ငုံးဥ', price: 1000, category: 'ဥ', image: 'https://i.ibb.co/xtyy8V0N/1768211447515.png' },
+  { id: 4, name: 'အသား ချောင်း(ကြက်)', price: 1000, category: 'အသား', image: 'https://i.ibb.co/rRd5P91j/1767118697374.png' },
+  { id: 15, name: 'အဆီပူး', price: 1000, category: 'အရေခွံ', image: 'https://i.ibb.co/PGcW9j6r/1767118749960.png' },
+  { id: 13, name: 'ခြေထောက်(CP)', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dPMPdR9/1771774751760.png' },
+  { id: 5, name: 'အရေခွံ', price: 700, category: 'အရေခွံ', image: 'https://i.ibb.co/MkJqnDyG/1767147480724.png' },
+  { id: 6, name: 'အတောင်ပျံ', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dpqp2BJ/1771771310595.png' },
+  { id: 8, name: 'အူ', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/0VZfW6jW/1771771269724.png' },
+  { id: 11, name: 'အသည်းမြစ်', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/twRsK5S7/1767147537379.png' },
+  { id: 16, name: 'အသားတု', price: 400, category: 'အသီးအရွက်', image: 'https://i.ibb.co/hpPRPDr/1768208099763.png' },
+  { id: 21, name: 'အာလူး', price: 500, category: 'အသီးအရွက်', image: '' },
+  { id: 9, name: 'ခေါင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/Y4dYQ0Q2/1771774457826.png' },
+  { id: 10, name: 'လည် ချောင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/bjL850PP/1768208169381.png' },
+  { id: 12, name: 'ခြေထောက်', price: 400, category: 'အရိုး', image: '' },
+  { id: 17, name: 'ရုံးပတေသီး', price: 300, category: 'အသီးအရွက်', image: 'https://i.ibb.co/cSCzCKN5/1768228376693.png' },
+  { id: 22, name: 'ကြက်ဥပေါင်း', price: 1500, category: 'အသီးအရွက်', image: '' },
+  { id: 23, name: 'ကြက်စပ်ပြား', price: 1500, category: 'အသီးအရွက်', image: '' },
+    { id: 23, name: 'ဂဏန်းကြက်အူချောင်း', price: 1000, category: 'အသီးအရွက်', image: '' }
+];
+
+let cart = {};
+let activeCat = 'All', chosenDay = 'today';
+
+function renderMenu() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const grid = document.getElementById('grid-box');
+    const items = menuData.filter(i => (activeCat === 'All' || i.category === activeCat) && i.name.toLowerCase().includes(q));
+    
+    grid.innerHTML = items.map(i => {
+        // available က false ဖြစ်နေရင် ခလုတ်ပိတ်ဖို့ စစ်ဆေးခြင်း
+        const isAvailable = i.available !== false;
+        
+        return `
+        <div class="card" style="${!isAvailable ? 'opacity: 0.7;' : ''}">
+            <img src="${i.image || 'https://via.placeholder.com/150'}" class="card-img" onclick="openImageViewer('${i.image || 'https://via.placeholder.com/150'}', '${i.name}')">
+            <div class="card-info">
+                <span class="item-name">${i.name}</span>
+                <span class="item-price">${i.price} Ks</span>
+                ${isAvailable 
+                    ? `<button class="btn-add" onclick="addToCart(${i.id})">+ ထည့်မည်</button>`
+                    : `<button class="btn-add" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed;">မရနိုင်သေးပါ ❌</button>`
+                }
+            </div>
+        </div>`;
+    }).join('');
+}
+    
+    
+    
+
+function checkSearchInput() {
+    const q = document.getElementById('searchInput').value;
+    const clearBtn = document.getElementById('clearSearchBtn');
+    
+    if (q.length > 0) {
+        clearBtn.style.display = 'block';
+        // စာရိုက်ထားချိန်တွင် (X) ခလုတ်ကို အမည်းရောင်ပြောင်းရန်
+        clearBtn.style.color = '#1e293b';
+    } else {
+        clearBtn.style.display = 'none';
+    }
+    renderMenu();
+}
+    
+
+function clearMenuSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('clearSearchBtn').style.display = 'none';
+    renderMenu();
+}
+
+function filterCat(c, el) {
+    activeCat = c;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderMenu();
+}
+
+function addToCart(id) { cart[id] = (cart[id] || 0) + 1; updateFloatingBar(); }
+
+function updateFloatingBar() {
+    let t = 0;
+    for (let id in cart) t += cart[id] * menuData.find(m => m.id == id).price;
+    document.getElementById('cart-bar').style.display = t > 0 ? 'flex' : 'none';
+    document.getElementById('bar-total').innerText = t.toLocaleString();
+}
+
+function openCart() {
+    document.getElementById('receipt-view').style.display = 'none';
+    document.getElementById('cart-content-wrapper').style.display = 'block';
+
+    const list = document.getElementById('cart-list');
+    let html = '', total = 0, count = 0;
+    for (let id in cart) {
+        const item = menuData.find(m => m.id == id);
+        total += item.price * cart[id];
+        count++;
+        html += `
+        <div class="cart-item">
+            <img src="${item.image || 'https://via.placeholder.com/50'}" class="cart-item-img">
+            <div class="cart-item-info">
+                <b>${item.name}</b>
+                <span>${item.price.toLocaleString()} Ks</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div class="qty-group">
+                    <button class="btn-q" onclick="changeQty(${id}, -1)">-</button>
+                    <input type="number" class="val-q" value="${cart[id]}" onchange="manualQty(${id}, this.value)">
+                    <button class="btn-q" onclick="changeQty(${id}, 1)">+</button>
+                </div>
+                <button class="btn-del" onclick="removeItem(${id})"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+        </div>`;
+    }
+    document.getElementById('item-count-badge').innerText = count + " မျိုး";
+    list.innerHTML = html + '<div class="cart-total-row">စုစုပေါင်း: <span style="color:#0f172a; font-size: 18px; margin-left: 5px;">' + total.toLocaleString() + '</span> Ks</div>';
+         
+    document.getElementById('cart-sheet').style.display = 'block';
+    document.getElementById('form-box').style.display = 'none';
+    document.getElementById('next-btn').style.display = 'block';
+    document.getElementById('modal-title').innerText = "ခြင်းတောင်းစာရင်း";
+    document.getElementById('modal-back').onclick = () => { document.getElementById('cart-sheet').style.display = 'none'; };
+}
+
+function removeItem(id) { delete cart[id]; if (Object.keys(cart).length === 0) document.getElementById('cart-sheet').style.display = 'none'; else openCart(); updateFloatingBar(); }
+function changeQty(id, d) { cart[id] += d; if (cart[id] <= 0) delete cart[id]; if (Object.keys(cart).length === 0) document.getElementById('cart-sheet').style.display = 'none'; else openCart(); updateFloatingBar(); }
+function manualQty(id, v) { let n = parseInt(v); if (n <= 0 || isNaN(n)) delete cart[id]; else cart[id] = n; if (Object.keys(cart).length === 0) document.getElementById('cart-sheet').style.display = 'none'; else openCart(); updateFloatingBar(); }
+
+function selectDate(day) { chosenDay = day; document.getElementById('chip-today').classList.toggle('active', day === 'today'); document.getElementById('change-date-btn').classList.toggle('active', day === 'other'); document.getElementById('custom-date-row').style.display = day === 'other' ? 'block' : 'none'; }
+function myPop(m) { document.getElementById('alert-msg').innerText = m; document.getElementById('alert-bg').style.display = 'block'; document.getElementById('alert-pop').style.display = 'block'; }
+function closeAlert() { document.getElementById('alert-bg').style.display = 'none'; document.getElementById('alert-pop').style.display = 'none'; }
+
+function step2() { 
+    document.getElementById('form-box').style.display = 'block'; 
+    document.getElementById('next-btn').style.display = 'none'; 
+    document.getElementById('modal-title').innerText = "အချက်အလက်ဖြည့်ပါ"; 
+    
+    document.getElementById('modal-back').onclick = () => {
+        document.getElementById('form-box').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        document.getElementById('modal-title').innerText = "ခြင်းတောင်းစာရင်း";
+        document.getElementById('modal-back').onclick = () => { document.getElementById('cart-sheet').style.display = 'none'; };
+    };
+    setTimeout(() => { document.getElementById('form-box').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+}
+
+async function sendOrder() {
+    const name = document.getElementById('in-name').value.trim();
+    const phone = document.getElementById('in-phone').value.trim();
+    const time = document.getElementById('in-time').value;
+    const otherDate = document.getElementById('in-date').value;
+    
+    if(!name || !phone || !time) return myPop("အချက်အလက်တွေ ပြည့်စုံအောင် ဖြည့်ပေးပါ ✨");
+
+    const submitBtn = document.getElementById('submit-order-btn');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> အော်ဒါပို့နေပါသည်...";
+
+    const vCode = `#MS-${Math.floor(1000 + Math.random() * 9000)}`;
+    let dayStr = chosenDay === 'today' ? "ဒီနေ့" : otherDate;
+    let itemsText = [], receiptTableRowsHtml = '', totalAmount = 0, canvasItems = [];
+
+    for(let id in cart) {
+        const i = menuData.find(m => m.id == id);
+        let itemTotal = i.price * cart[id];
+        totalAmount += itemTotal;
+        itemsText.push(`▪️ ${i.name} (${cart[id]} ခု)`);
+        canvasItems.push({ name: i.name, price: i.price.toLocaleString(), qty: cart[id], total: itemTotal.toLocaleString() });
+        
+        receiptTableRowsHtml += `<tr><td>${i.name}</td><td>${i.price.toLocaleString()} Ks</td><td class="text-center">${cart[id]}</td><td class="text-right">${itemTotal.toLocaleString()} Ks</td></tr>`;
+    }
+
+    const formattedTotal = totalAmount.toLocaleString();
+    const ownerMsg = `🍗 *မြင်သာကြက်ကင် - အော်ဒါအသစ်*\n🧾 *ဘောက်ချာနံပါတ်:* \`${vCode}\`\n👤 *အမည်:* ${name}\n📞 *ဖုန်း/ID:* ${phone}\n📅 *နေ့ရက်:* ${dayStr}\n🕒 *အချိန်:* ${time}\n━━━━━━━━━━━━━━\n${itemsText.join('\n')}\n━━━━━━━━━━━━━━\n💰 *စုစုပေါင်း:* *${formattedTotal} MMK*`;
+
+    try {
+        await fetch('https://yns.khinmarwin087.workers.dev/api/send-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: ownerMsg }) });
+
+        let orderHistory = JSON.parse(localStorage.getItem('order_history') || '[]');
+        orderHistory.unshift({ vCode, name, phone, date: dayStr, time, total: formattedTotal, tableRowsHtml: receiptTableRowsHtml, canvasItems });
+        if(orderHistory.length > 5) orderHistory.pop();
+        localStorage.setItem('order_history', JSON.stringify(orderHistory));
+
+        showReceipt(vCode, name, phone, dayStr, time, receiptTableRowsHtml, formattedTotal, canvasItems);
+        cart = {}; updateFloatingBar(); 
+    } catch (e) { 
+        myPop("Error! ပြန်လည်ကြိုးစားပေးပါ။"); 
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "<i class='fa-solid fa-circle-check'></i> အော်ဒါအတည်ပြုမည် ➔";
+    }
+}
+
+function showReceipt(vCode, name, phone, date, time, tableRowsHtml, total, canvasItems) {
+    document.getElementById('cart-content-wrapper').style.display = 'none';
+    document.getElementById('modal-title').innerText = "🎉 အော်ဒါတင်ပြီးပါပြီ";
+    document.getElementById('item-count-badge').innerText = "Success";
+    document.getElementById('modal-back').style.display = 'none'; 
+
+    const receiptView = document.getElementById('receipt-view');
+    receiptView.style.display = 'block';
+    receiptView.innerHTML = `<div style="text-align: center; color: #0f172a; margin: 15px 0;"><i class="fa-solid fa-circle-check" style="font-size: 40px;"></i><h4 style="margin: 8px 0 3px; font-size: 15px;">အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်!</h4><p style="font-size: 11px; color: var(--sub); margin: 0 10px; line-height:1.4;">ဘောက်ချာပုံရိပ်ကို Auto ဒေါင်းလုဒ်ရယူပေးထားပါသည်။</p></div><div class="receipt-card"><div class="receipt-header"><b>🍗 မြင်သာကြက်ကင်</b><span style="font-size:12px; color:#ef4444; margin-top:4px;">Voucher No: ${vCode}</span></div><div class="receipt-row"><span>ဝယ်သူအမည်:</span> <span>${name}</span></div><div class="receipt-row"><span>ဖုန်း/ID:</span> <span>${phone}</span></div><div class="receipt-row"><span>နေ့ရက်/အချိန်:</span> <span>${date} (${time})</span></div><div class="receipt-divider"></div><table class="v-table"><thead><tr><th>အမည်</th><th>ဈေးနှုန်း</th><th class="text-center">ခုရေ</th><th class="text-right">စုစုပေါင်း</th></tr></thead><tbody>${tableRowsHtml}</tbody></table><div class="receipt-divider"></div><div class="receipt-row receipt-total-text"><span>စုစုပေါင်းကျသင့်ငွေ:</span> <span>${total} Ks</span></div></div><button class="btn-main" style="margin-top: 20px; background: #1e293b;" onclick="location.reload()"><i class="fa-solid fa-house"></i> ပင်မစာမျက်နှာသို့ ပြန်သွားမည်</button>`;
+    setTimeout(() => { generateHDVoucher(vCode, name, phone, date, time, total, canvasItems); }, 600);
+}
+
+function filterOrderHistory() {
+    const q = document.getElementById('historySearchInput').value.toLowerCase();
+    const list = JSON.parse(localStorage.getItem('order_history') || '[]');
+    renderHistoryItems(list.filter(item => item.vCode.toLowerCase().includes(q) || item.name.toLowerCase().includes(q) || item.phone.toLowerCase().includes(q)));
+}
+
+function clearHistorySearch() { document.getElementById('historySearchInput').value = ''; document.getElementById('clearHistorySearchBtn').style.display = 'none'; filterOrderHistory(); }
+
+function checkHistorySearchInput() {
+    const q = document.getElementById('historySearchInput').value;
+    document.getElementById('clearHistorySearchBtn').style.display = q.length > 0 ? 'block' : 'none';
+    filterOrderHistory();
+}
+
+function renderHistoryItems(list) {
+    const displayArea = document.getElementById('historyItemsContainer');
+    if(list.length === 0) { displayArea.innerHTML = '<p style="text-align:center; color:var(--sub); font-weight:bold; padding:20px 0;">ရှာဖွေမှုရလဒ် မရှိပါ ❌</p>'; return; }
+    let listHtml = ''; const originalList = JSON.parse(localStorage.getItem('order_history') || '[]');
+    list.forEach((data) => {
+        const origIdx = originalList.findIndex(item => item.vCode === data.vCode);
+        listHtml += `<div class="history-item"><div class="history-info"><span style="color:#ef4444;">${data.vCode}</span> - ${data.name}<br><small style="color:var(--sub);">${data.date} (${data.time})</small><br><span>ကျသင့်ငွေ: ${data.total} Ks</span></div><button class="btn-view-voucher" onclick="renderSingleHistory(${origIdx})">Voucher ကြည့်မည်</button></div>`;
+    });
+    displayArea.innerHTML = listHtml;
+}
+
+function viewOrderHistory() {
+    const historyData = localStorage.getItem('order_history');
+    if(!historyData || JSON.parse(historyData).length === 0) return myPop("မှာယူထားသော မှတ်တမ်း မရှိသေးပါ ခင်ဗျာ။ 🍗");
+    
+    document.getElementById('cart-content-wrapper').style.display = 'none';
+    document.getElementById('modal-title').innerText = "📜 မှာယူမှုမှတ်တမ်း";
+    document.getElementById('item-count-badge').innerText = "History";
+    document.getElementById('modal-back').onclick = () => { document.getElementById('cart-sheet').style.display = 'none'; };
+    
+    const receiptView = document.getElementById('receipt-view');
+    receiptView.style.display = 'block';
+    receiptView.innerHTML = `<div class="history-search" style="margin-top:10px;"><i class="fa-solid fa-magnifying-glass" style="color:#94a3b8; font-size: 12px; margin-right: 5px;"></i><input type="text" id="historySearchInput" placeholder="အော်ဒါကုဒ် သို့မဟုတ် ဝယ်သူအမည်ဖြင့် ရှာရန်..." onkeyup="checkHistorySearchInput()"><button id="clearHistorySearchBtn" class="btn-clear-search" onclick="clearHistorySearch()"><i class="fa-solid fa-circle-xmark"></i></button></div><div id="historyItemsContainer"></div>`;
+    
+    renderHistoryItems(JSON.parse(historyData));
+    document.getElementById('cart-sheet').style.display = 'block';
+}
+
+function renderSingleHistory(index) {
+    const data = JSON.parse(localStorage.getItem('order_history'))[index];
+    document.getElementById('receipt-view').innerHTML = `<div class="receipt-card" style="margin-top: 15px;"><div class="receipt-header"><b>🍗 မြင်သာကြက်ကင်</b><span style="font-size:12px; color:#ef4444; margin-top:4px;">Voucher No: ${data.vCode}</span></div><div class="receipt-row"><span>ဝယ်သူအမည်:</span> <span>${data.name}</span></div><div class="receipt-row"><span>ဖုန်း/ID:</span> <span>${data.phone}</span></div><div class="receipt-row"><span>နေ့ရက်/အချိန်:</span> <span>${data.date} (${data.time})</span></div><div class="receipt-divider"></div><table class="v-table"><thead><tr><th>အမည်</th><th>ဈေးနှုန်း</th><th class="text-center">ခုရေ</th><th class="text-right">စုစုပေါင်း</th></tr></thead><tbody>${data.tableRowsHtml}</tbody></table><div class="receipt-divider"></div><div class="receipt-row receipt-total-text"><span>စုစုပေါင်းကျသင့်ငွေ:</span> <span>${data.total} Ks</span></div></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;"><button class="btn-main" style="background: #64748b;" onclick="viewOrderHistory()"><i class="fa-solid fa-arrow-left"></i> ပြန်သွားမည်</button><button class="btn-main" style="background: #1e293b;" onclick="generateHDVoucher('${data.vCode}', '${data.name}', '${data.phone}', '${data.date}', '${data.time}', '${data.total}', ${JSON.stringify(data.canvasItems)})"><i class="fa-solid fa-download"></i> Voucher ဒေါင်းလုဒ်</button></div>`;
+}
+
+function generateHDVoucher(vCode, name, phone, date, time, total, items) {
+    const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+    const baseWidth = 480; let baseHeight = 350 + (items.length * 30);
+    const scale = 2; canvas.width = baseWidth * scale; canvas.height = baseHeight * scale; ctx.scale(scale, scale);
+
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, baseWidth, baseHeight);
+    ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 3; ctx.strokeRect(10, 10, baseWidth - 20, baseHeight - 20);
+    ctx.fillStyle = '#0f172a'; ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif'; ctx.fillText('🍗 မြင်သာကြက်ကင်', baseWidth / 2, 45);
+    ctx.font = 'bold 13px sans-serif'; ctx.fillStyle = '#ef4444'; ctx.fillText(`Voucher No: ${vCode}`, baseWidth / 2, 70);
+    ctx.font = 'bold 11px sans-serif'; ctx.fillStyle = '#64748b'; ctx.fillText('ဝယ်ယူအားပေးမှုကို ကျေးဇူးတင်ပါသည်', baseWidth / 2, 90);
+    
+    ctx.textAlign = 'left'; ctx.fillStyle = '#0f172a'; ctx.font = '13px sans-serif';
+    ctx.fillText(`ဝယ်သူအမည်:   ${name}`, 30, 125); ctx.fillText(`ဖုန်း / ID:        ${phone}`, 30, 150); ctx.fillText(`နေ့ရက်/အချိန်:  ${date} (${time})`, 30, 175);
+    ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(25, 195); ctx.lineTo(baseWidth - 25, 195); ctx.stroke(); ctx.setLineDash([]);
+
+    ctx.fillStyle = '#64748b'; ctx.font = 'bold 11px sans-serif'; ctx.fillText('အမည်', 30, 220); ctx.fillText('ဈေးနှုန်း', 180, 220); ctx.textAlign = 'center'; ctx.fillText('ခုရေ', 310, 220); ctx.textAlign = 'right'; ctx.fillText('စုစုပေါင်း', baseWidth - 30, 220);
+    ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(25, 230); ctx.lineTo(baseWidth - 25, 230); ctx.stroke();
+    
+    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 13px sans-serif'; let currentY = 255;
+    items.forEach(item => {
+        ctx.textAlign = 'left'; ctx.fillText(item.name, 30, currentY); ctx.fillText(`${item.price} Ks`, 180, currentY);
+        ctx.textAlign = 'center'; ctx.fillText(item.qty, 310, currentY); ctx.textAlign = 'right'; ctx.fillText(`${item.total} Ks`, baseWidth - 30, currentY);
+        currentY += 30;
+    });
+
+    ctx.setLineDash([6, 4]); ctx.strokeStyle = '#0f172a'; ctx.beginPath(); ctx.moveTo(25, currentY - 10); ctx.lineTo(baseWidth - 25, currentY - 10); ctx.stroke(); ctx.setLineDash([]);
+    currentY += 20; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'left'; ctx.fillStyle = '#0f172a'; ctx.fillText('စုစုပေါင်းကျသင့်ငွေ:', 30, currentY);
+    ctx.textAlign = 'right'; ctx.fillStyle = '#ef4444'; ctx.font = 'bold 18px sans-serif'; ctx.fillText(`${total} Ks`, baseWidth - 30, currentY);
+
+    try { const link = document.createElement('a'); link.download = `Voucher-${vCode}.png`; link.href = canvas.toDataURL('image/png'); link.click(); } catch (e) {}
+}
+
+    // ပုံကို အကြီးချဲ့ပြပေးမည့် စနစ်ဖွင့်ခြင်း
+function openImageViewer(imgUrl, itemName) {
+    document.getElementById('viewerImageTarget').src = imgUrl;
+    document.getElementById('viewerImageTitle').innerText = itemName;
+    document.getElementById('imageViewerModal').style.display = 'flex';
+}
+
+// ပုံကြီးကြည့်ရှုရာမှ ပိတ်ပြီး ပင်မစာမျက်နှာသို့ ပြန်သွားခြင်း
+function closeImageViewer() {
+    document.getElementById('imageViewerModal').style.display = 'none';
+    document.getElementById('viewerImageTarget').src = ''; // Memory သက်သာစေရန် ပုံလမ်းကြောင်းကို ခေတ္တဖျက်ထားခြင်း
+}
+    
+window.onload = renderMenu;
+
+  </script>
+  </body>
+  </html>

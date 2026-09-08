@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1"
+  >
+
+  <title>Orders Management • YNS Kitchen</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .dash-header-custom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 12px 4px;
+      margin-bottom: 12px;
+    }
+
+    .header-center-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--navy, #0f172a);
+
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    .top-actions-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+      position: relative;
+      z-index: 20;
+    }
+
+    .icon-circle-btn {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      background: #fff;
+      border: 1px solid var(--line, #e2e8f0);
+
+      display: grid;
+      place-items: center;
+
+      font-size: 16px;
+      color: var(--navy, #0f172a);
+
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .icon-circle-btn:active {
+      transform: scale(0.96);
+    }
+
+    .icon-circle-btn.active {
+      background: var(--navy, #0f172a);
+      color: #fff;
+    }
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    .search-popover {
+      display: none;
+
+      margin-bottom: 12px;
+
+      background: #fff;
+      padding: 8px 14px;
+
+      border-radius: 14px;
+      border: 1px solid var(--line, #e2e8f0);
+
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-popover.show {
+      display: flex;
+    }
+
+    .search-popover input {
+      width: 100%;
+
+      border: 0;
+      outline: none;
+
+      font-size: 14px;
+
+      background: transparent;
+    }
+
+
+    /* =========================================================
+       DATE POPOVER
+    ========================================================= */
+
+    .date-popover {
+      display: none;
+
+      position: absolute;
+
+      top: 50px;
+      right: 0;
+
+      background: #fff;
+
+      border: 1px solid var(--line, #e2e8f0);
+
+      border-radius: 16px;
+
+      padding: 14px;
+
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+      z-index: 100;
+
+      width: 240px;
+
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .date-popover.show {
+      display: flex;
+    }
+
+    .date-popover label {
+      font-size: 11px;
+
+      font-weight: 700;
+
+      color: var(--muted, #64748b);
+
+      text-transform: uppercase;
+    }
+
+    .date-popover input {
+      width: 100%;
+
+      box-sizing: border-box;
+
+      border: 1px solid var(--line, #e2e8f0);
+
+      border-radius: 8px;
+
+      padding: 8px;
+
+      font-size: 13px;
+
+      outline: none;
+    }
+
+    .date-reset-btn {
+      background: #f1f5f9;
+
+      border: 0;
+
+      padding: 8px;
+
+      border-radius: 8px;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      color: #334155;
+
+      cursor: pointer;
+    }
+
+
+    /* =========================================================
+       ORDER CARD
+    ========================================================= */
+
+    .order-card {
+      background: #fff;
+
+      border-radius: 16px;
+
+      padding: 16px;
+
+      margin-bottom: 14px;
+
+      border: 1px solid #e2e8f0;
+
+      box-shadow:
+        0 2px 5px rgba(15, 23, 42, 0.03);
+    }
+
+    .order-header {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: flex-start;
+
+      gap: 12px;
+    }
+
+    .order-header-left {
+      min-width: 0;
+    }
+
+    .voucher-label {
+      display: inline-block;
+
+      font-size: 11px;
+
+      background: #f1f5f9;
+
+      padding: 4px 9px;
+
+      border-radius: 6px;
+
+      color: #64748b;
+
+      font-weight: 700;
+    }
+
+    .customer-name {
+      margin: 7px 0 2px;
+
+      font-size: 17px;
+
+      font-weight: 800;
+
+      color: #0f172a;
+
+      word-break: break-word;
+    }
+
+    .customer-phone {
+      color: #64748b;
+
+      font-size: 12px;
+    }
+
+    .order-header-right {
+      text-align: right;
+
+      flex-shrink: 0;
+    }
+
+    .order-date {
+      font-size: 11px;
+
+      color: #64748b;
+
+      display: block;
+
+      margin-bottom: 4px;
+
+      white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       STATUS BADGE
+    ========================================================= */
+
+    .order-badge {
+      display: inline-block;
+
+      padding: 5px 9px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+
+      font-weight: 800;
+    }
+
+    .badge-new,
+    .badge-pending {
+      background: #eff6ff;
+      color: #2563eb;
+    }
+
+    .badge-cooking,
+    .badge-processing {
+      background: #fff7ed;
+      color: #ea580c;
+    }
+
+    .badge-ready {
+      background: #f0fdf4;
+      color: #16a34a;
+    }
+
+    .badge-completed {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .badge-cancelled {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+
+    /* =========================================================
+       ITEMS TABLE
+    ========================================================= */
+
+    .items-table-wrap {
+      overflow-x: auto;
+
+      margin: 14px 0;
+
+      border: 1px solid #e2e8f0;
+
+      border-radius: 10px;
+
+      background: #fff;
+    }
+
+    .items-table {
+      width: 100%;
+
+      min-width: 430px;
+
+      border-collapse: collapse;
+
+      font-size: 13px;
+    }
+
+    .items-table thead tr {
+      background: #f8fafc;
+
+      color: #64748b;
+
+      font-size: 11px;
+
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .items-table th {
+      padding: 9px 10px;
+
+      font-weight: 700;
+    }
+
+    .items-table td {
+      padding: 10px;
+
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .items-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .item-name {
+      text-align: left;
+
+      font-weight: 700;
+
+      color: #0f172a;
+    }
+
+    .item-price {
+      text-align: right;
+
+      white-space: nowrap;
+    }
+
+    .item-qty {
+      text-align: center;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+    }
+
+    .item-total {
+      text-align: right;
+
+      font-weight: 800;
+
+      white-space: nowrap;
+    }
+
+    .no-items {
+      padding: 16px !important;
+
+      text-align: center;
+
+      color: #94a3b8;
+
+      font-size: 12px;
+    }
+
+
+    /* =========================================================
+       TOTAL + STATUS ACTION AREA
+       
+       LEFT  = Grand Total
+       RIGHT = Status Buttons
+    ========================================================= */
+
+    .total-status-row {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 10px;
+
+      margin-top: 12px;
+    }
+
+    .order-grand-total {
+      flex: 1;
+
+      min-width: 0;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 8px;
+
+      padding: 12px 14px;
+
+      background: #fef2f2;
+
+      border-radius: 12px;
+
+      border: 1px solid #fecaca;
+
+      box-sizing: border-box;
+    }
+
+    .order-grand-total-label {
+      font-size: 13px;
+
+      font-weight: 700;
+
+      color: #991b1b;
+
+      white-space: nowrap;
+    }
+
+    .red-total {
+      font-size: 18px;
+
+      font-weight: 800;
+
+      color: #dc2626;
+
+      white-space: nowrap;
+    }
+
+
+    /* =========================================================
+       STATUS ACTION BUTTONS
+    ========================================================= */
+
+    .order-actions {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: flex-end;
+
+      gap: 7px;
+
+      flex-shrink: 0;
+    }
+
+    .btn-action {
+      min-height: 44px;
+
+      padding: 9px 13px;
+
+      border-radius: 10px;
+
+      border: none;
+
+      font-size: 12px;
+
+      font-weight: 800;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 6px;
+
+      cursor: pointer;
+
+      color: #fff;
+
+      box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.10);
+
+      transition: 0.15s;
+
+      white-space: nowrap;
+    }
+
+    .btn-action:active {
+      transform: scale(0.97);
+    }
+
+    .btn-accept {
+      background: #2563eb;
+    }
+
+    .btn-ready {
+      background: #16a34a;
+    }
+
+    .btn-cancel {
+      background: #dc2626;
+    }
+
+    .btn-complete {
+      background: #2563eb;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 620px) {
+
+      .order-card {
+        padding: 14px;
+      }
+
+      .total-status-row {
+        align-items: stretch;
+      }
+
+      .order-grand-total {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        min-height: 66px;
+      }
+
+      .red-total {
+        font-size: 17px;
+      }
+
+      .order-actions {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        justify-content: center;
+      }
+
+      .order-actions .btn-action {
+        width: 100%;
+
+        min-width: 0;
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+      }
+
+    }
+
+
+    @media (max-width: 420px) {
+
+      .total-status-row {
+        gap: 8px;
+      }
+
+      .order-grand-total {
+        padding: 10px;
+      }
+
+      .order-grand-total-label {
+        font-size: 11px;
+      }
+
+      .red-total {
+        font-size: 15px;
+      }
+
+      .btn-action {
+        font-size: 11px;
+
+        padding: 8px 9px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+  <!-- =======================================================
+       SIDEBAR
+  ======================================================== -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+
+      <div class="brand-icon">
+        🍗
+      </div>
+
+      <div>
+        <b>YNS Kitchen</b>
+        <small>Admin Panel</small>
+      </div>
+
+    </div>
+
+    <div class="nav-title">
+      MAIN MENU
+    </div>
+
+    <nav class="nav" id="sidebarNav"></nav>
+
+  </aside>
+
+
+  <!-- =======================================================
+       MAIN
+  ======================================================== -->
+
+  <main class="main">
+
+
+    <!-- HEADER -->
+
+    <header class="dash-header-custom">
+
+      <button
+        class="icon-circle-btn"
+        onclick="toggleSidebar()"
+        aria-label="Menu"
+      >
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+
+      <h1 class="header-center-title">
+        Orders
+      </h1>
+
+
+      <div class="top-actions-right">
+
+        <!-- SEARCH -->
+
+        <button
+          class="icon-circle-btn"
+          id="searchBtn"
+          onclick="toggleSearch()"
+          aria-label="Search"
+        >
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+
+        <!-- DATE -->
+
+        <button
+          class="icon-circle-btn"
+          id="dateBtn"
+          onclick="toggleDate()"
+          aria-label="Date"
+        >
+          <i class="fa-solid fa-calendar-days"></i>
+        </button>
+
+
+        <!-- DATE POPOVER -->
+
+        <div
+          class="date-popover"
+          id="datePopover"
+        >
+
+          <label>
+            Filter By Date
+          </label>
+
+          <input
+            type="date"
+            id="filterDate"
+            onchange="applyFilters()"
+          >
+
+          <button
+            class="date-reset-btn"
+            onclick="clearDateFilter()"
+          >
+            <i class="fa-solid fa-rotate-right"></i>
+            Reset
+          </button>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- SEARCH POPOVER -->
+
+    <div
+      class="search-popover"
+      id="searchPopover"
+    >
+
+      <i
+        class="fa-solid fa-magnifying-glass"
+        style="color:#94a3b8;"
+      ></i>
+
+      <input
+        type="text"
+        id="searchInput"
+        oninput="applyFilters()"
+        placeholder="Voucher, Name, Phone ရှာရန်..."
+      >
+
+      <i
+        class="fa-solid fa-xmark"
+        onclick="toggleSearch()"
+        style="cursor:pointer;color:#94a3b8;"
+      ></i>
+
+    </div>
+
+
+    <!-- STATUS TABS -->
+
+    <div class="status-tabs">
+
+      <button
+        class="tab-btn active"
+        onclick="filterStatus('all', this)"
+      >
+        All
+      </button>
+
+      <button
+        class="tab-btn"
+        onclick="filterStatus('new', this)"
+      >
+        New
+      </button>
+
+      <button
+        class="tab-btn"
+        onclick="filterStatus('cooking', this)"
+      >
+        Cooking
+      </button>
+
+      <button
+        class="tab-btn"
+        onclick="filterStatus('ready', this)"
+      >
+        Ready
+      </button>
+
+    </div>
+
+
+    <!-- ORDERS -->
+
+    <div id="ordersListContainer">
+
+      <p style="color:gray;text-align:center;">
+        အော်ဒါများကို ရယူနေသည်...
+      </p>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<script src="js/main.js"></script>
+
+
+<script>
+
+  /* =========================================================
+     GLOBAL STATE
+  ========================================================= */
+
+  let rawOrders = [];
+
+  let currentStatus = "all";
+
+
+  /* =========================================================
+     DATE
+  ========================================================= */
+
+  function setDefaultDate() {
+
+    const input = document.getElementById("filterDate");
+
+    if (!input) return;
+
+    const now = new Date();
+
+    const year = now.getFullYear();
+
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+
+    const day = String(now.getDate()).padStart(2, "0");
+
+    input.value = `${year}-${month}-${day}`;
+  }
+
+
+  /* =========================================================
+     SAFE JSON
+  ========================================================= */
+
+  function safeJsonParse(value) {
+
+    if (typeof value !== "string") {
+      return value;
+    }
+
+    try {
+
+      return JSON.parse(value);
+
+    } catch (error) {
+
+      console.warn(
+        "JSON parse failed:",
+        value
+      );
+
+      return [];
+
+    }
+
+  }
+
+
+  /* =========================================================
+     GET ORDER ITEMS
+     
+     Supports:
+     items
+     order_items
+     orderItems
+     products
+     details
+  ========================================================= */
+
+  function parseOrderItems(order) {
+
+    let raw =
+      order.items ??
+      order.order_items ??
+      order.orderItems ??
+      order.products ??
+      order.details ??
+      [];
+
+
+    raw = safeJsonParse(raw);
+
+
+    /*
+      Some APIs return:
+
+      {
+        items: [...]
+      }
+    */
+
+    if (
+      raw &&
+      !Array.isArray(raw) &&
+      Array.isArray(raw.items)
+    ) {
+
+      raw = raw.items;
+
+    }
+
+
+    /*
+      Sometimes:
+
+      {
+        data: {
+          items: [...]
+        }
+      }
+    */
+
+    if (
+      raw &&
+      !Array.isArray(raw) &&
+      raw.data &&
+      Array.isArray(raw.data.items)
+    ) {
+
+      raw = raw.data.items;
+
+    }
+
+
+    return Array.isArray(raw)
+      ? raw
+      : [];
+
+  }
+
+
+  /* =========================================================
+     ITEM NAME
+  ========================================================= */
+
+  function getItemName(item) {
+
+    return (
+      item.name ??
+      item.title ??
+      item.product_name ??
+      item.productName ??
+      item.menu_name ??
+      item.menuName ??
+      item.food_name ??
+      item.foodName ??
+      "Unknown Item"
+    );
+
+  }
+
+
+  /* =========================================================
+     ITEM PRICE
+  ========================================================= */
+
+  function getItemPrice(item) {
+
+    return Number(
+      item.price ??
+      item.unit_price ??
+      item.unitPrice ??
+      item.amount ??
+      item.sale_price ??
+      item.salePrice ??
+      0
+    ) || 0;
+
+  }
+
+
+  /* =========================================================
+     ITEM QTY
+  ========================================================= */
+
+  function getItemQty(item) {
+
+    return Number(
+      item.qty ??
+      item.quantity ??
+      item.count ??
+      1
+    ) || 1;
+
+  }
+
+
+  /* =========================================================
+     ORDER ID
+  ========================================================= */
+
+  function getOrderId(order) {
+
+    return (
+      order.id ??
+      order.order_id ??
+      order.orderId ??
+      order.voucher_id ??
+      order.voucherId ??
+      "N/A"
+    );
+
+  }
+
+
+  /* =========================================================
+     CUSTOMER NAME
+  ========================================================= */
+
+  function getCustomerName(order) {
+
+    return (
+      order.customer_name ??
+      order.customerName ??
+      order.name ??
+      order.customer ??
+      "Guest"
+    );
+
+  }
+
+
+  /* =========================================================
+     PHONE
+  ========================================================= */
+
+  function getPhone(order) {
+
+    return (
+      order.phone ??
+      order.customer_phone ??
+      order.customerPhone ??
+      "-"
+    );
+
+  }
+
+
+  /* =========================================================
+     TOTAL
+  ========================================================= */
+
+  function getOrderTotal(order, items) {
+
+    let total = Number(
+      order.total ??
+      order.grand_total ??
+      order.grandTotal ??
+      order.total_amount ??
+      order.totalAmount ??
+      order.amount ??
+      0
+    ) || 0;
+
+
+    /*
+      Backend total မပေးထားရင်
+      item price × quantity နဲ့တွက်
+    */
+
+    if (!total && items.length) {
+
+      total = items.reduce(
+        (sum, item) => {
+
+          return (
+            sum +
+            (
+              getItemPrice(item) *
+              getItemQty(item)
+            )
+          );
+
+        },
+        0
+      );
+
+    }
+
+
+    return total;
+
+  }
+
+
+  /* =========================================================
+     LOAD ORDERS
+  ========================================================= */
+
+  async function loadOrders() {
+
+    const container =
+      document.getElementById(
+        "ordersListContainer"
+      );
+
+
+    try {
+
+      const res =
+        await apiFetch(
+          "/api/admin/orders"
+        );
+
+
+      /*
+        Support:
+
+        {
+          orders: [...]
+        }
+
+        OR
+
+        [...]
+      */
+
+      if (Array.isArray(res)) {
+
+        rawOrders = res;
+
+      } else if (
+        res &&
+        Array.isArray(res.orders)
+      ) {
+
+        rawOrders = res.orders;
+
+      } else if (
+        res &&
+        res.data &&
+        Array.isArray(res.data.orders)
+      ) {
+
+        rawOrders = res.data.orders;
+
+      } else {
+
+        rawOrders = [];
+
+      }
+
+
+      applyFilters();
+
+
+    } catch (error) {
+
+      console.error(
+        "Load orders error:",
+        error
+      );
+
+
+      container.innerHTML = `
+        <div style="
+          text-align:center;
+          padding:40px;
+          color:#dc2626;
+        ">
+          Orders ဒေတာ ရယူ၍ မရပါ။
+        </div>
+      `;
+
+    }
+
+  }
+
+
+  /* =========================================================
+     SEARCH
+  ========================================================= */
+
+  function toggleSearch() {
+
+    const box =
+      document.getElementById(
+        "searchPopover"
+      );
+
+    const btn =
+      document.getElementById(
+        "searchBtn"
+      );
+
+
+    box.classList.toggle("show");
+
+    btn.classList.toggle("active");
+
+
+    if (
+      box.classList.contains("show")
+    ) {
+
+      document
+        .getElementById("searchInput")
+        .focus();
+
+    }
+
+  }
+
+
+  

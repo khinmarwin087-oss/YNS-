@@ -21,12 +21,12 @@ function json(data, status = 200) {
 function requireAdmin(request, env) {
   const key = request.headers.get("X-Admin-Key") || "";
   const expected = env.ADMIN_KEY || "";
-  if (!expected) return false; // if no key configured, lock everything down
+  if (!expected) return false;
   return key === expected;
 }
 
 async function ensureSchema(env) {
-  // Safe to run on every cold start — CREATE TABLE IF NOT EXISTS is idempotent.
+  if (!env.DB) return;
   await env.DB.batch([
     env.DB.prepare(`CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,9 +53,6 @@ async function ensureSchema(env) {
   ]);
 }
 
-// ---------------------------------------------------------------------------
-// Public: receive an order from the customer POS, store it in D1, forward to Telegram
-// ---------------------------------------------------------------------------
 async function handleSendOrder(request, env) {
   let body;
   try {
@@ -68,8 +65,6 @@ async function handleSendOrder(request, env) {
     return json({ ok: false, error: "Missing text" }, 400);
   }
 
-  // Structured fields are optional so older client versions still work,
-  // but without them the order can't be saved to the database.
   const voucherCode = body.vCode || null;
   const customerName = body.name || null;
   const phone = body.phone || null;
@@ -77,7 +72,7 @@ async function handleSendOrder(request, env) {
   const total = Number.isFinite(body.total) ? body.total : null;
 
   let orderId = null;
-  if (items && total !== null) {
+  if (items && total !== null && env.DB) {
     try {
       const result = await env.DB.prepare(
         `INSERT INTO orders (voucher_code, customer_name, phone, items_json, total, status, payment_status)
@@ -85,9 +80,8 @@ async function handleSendOrder(request, env) {
       )
         .bind(voucherCode, customerName, phone, JSON.stringify(items), total)
         .run();
-      orderId = result.meta.last_row_id;
+      orderId = result.meta ? result.meta.last_row_id : null;
     } catch (e) {
-      // Don't block the Telegram notification just because the DB insert failed.
       console.log("DB insert failed:", e.message);
     }
   }
@@ -114,54 +108,50 @@ async function handleSendOrder(request, env) {
   return json({ ok: true, order_id: orderId, telegram: tgResult });
 }
 
-// ---------------------------------------------------------------------------
-// Admin: dashboard stats
-// ---------------------------------------------------------------------------
 async function handleStats(request, env) {
   const db = env.DB;
+  if (!db) return json({ ok: false, error: "Database not configured" }, 500);
 
   const totalsToday = await db
     .prepare(
       `SELECT COALESCE(SUM(total),0) as revenue, COUNT(*) as orders
        FROM orders WHERE date(created_at) = date('now') AND status != 'Cancelled'`
     )
-    .first();
+    .first() || { revenue: 0, orders: 0 };
 
   const totalsYesterday = await db
     .prepare(
       `SELECT COALESCE(SUM(total),0) as revenue, COUNT(*) as orders
        FROM orders WHERE date(created_at) = date('now','-1 day') AND status != 'Cancelled'`
     )
-    .first();
+    .first() || { revenue: 0, orders: 0 };
 
   const totalsAllTime = await db
     .prepare(
       `SELECT COALESCE(SUM(total),0) as revenue, COUNT(*) as orders
        FROM orders WHERE status != 'Cancelled'`
     )
-    .first();
+    .first() || { revenue: 0, orders: 0 };
 
   const newOrdersToday = await db
     .prepare(`SELECT COUNT(*) as c FROM orders WHERE date(created_at) = date('now') AND status = 'New'`)
-    .first();
+    .first() || { c: 0 };
   const newOrdersYesterday = await db
     .prepare(`SELECT COUNT(*) as c FROM orders WHERE date(created_at) = date('now','-1 day') AND status = 'New'`)
-    .first();
+    .first() || { c: 0 };
 
   const customersTotal = await db
     .prepare(`SELECT COUNT(DISTINCT phone) as c FROM orders WHERE phone IS NOT NULL AND phone != ''`)
-    .first();
+    .first() || { c: 0 };
   const customersLastWeek = await db
     .prepare(
       `SELECT COUNT(DISTINCT phone) as c FROM orders
        WHERE phone IS NOT NULL AND phone != '' AND date(created_at) < date('now','-7 day')`
     )
-    .first();
+    .first() || { c: 0 };
 
   const statusCounts = await db
-    .prepare(
-      `SELECT status, COUNT(*) as c FROM orders GROUP BY status`
-    )
+    .prepare(`SELECT status, COUNT(*) as c FROM orders GROUP BY status`)
     .all();
   const statusMap = { New: 0, Processing: 0, Completed: 0, Cancelled: 0 };
   for (const row of statusCounts.results || []) {
@@ -238,10 +228,8 @@ async function handleStats(request, env) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Admin: orders list (search / filter / pagination)
-// ---------------------------------------------------------------------------
 async function handleOrdersList(request, env) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   const url = new URL(request.url);
   const search = (url.searchParams.get("search") || "").trim();
   const status = url.searchParams.get("status") || "";
@@ -260,7 +248,7 @@ async function handleOrdersList(request, env) {
     binds.push(status);
   }
 
-  const countRow = await env.DB.prepare(`SELECT COUNT(*) as c FROM orders ${where}`).bind(...binds).first();
+  const countRow = await env.DB.prepare(`SELECT COUNT(*) as c FROM orders ${where}`).bind(...binds).first() || { c: 0 };
   const rows = await env.DB
     .prepare(`SELECT * FROM orders ${where} ORDER BY id DESC LIMIT ? OFFSET ?`)
     .bind(...binds, pageSize, offset)
@@ -270,6 +258,7 @@ async function handleOrdersList(request, env) {
 }
 
 async function handleOrderUpdate(request, env, id) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   let body;
   try {
     body = await request.json();
@@ -292,15 +281,14 @@ async function handleOrderUpdate(request, env, id) {
   return json({ ok: true });
 }
 
-// ---------------------------------------------------------------------------
-// Admin: products CRUD
-// ---------------------------------------------------------------------------
 async function handleProductsList(env) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   const rows = await env.DB.prepare(`SELECT * FROM products ORDER BY id DESC`).all();
   return json({ ok: true, products: rows.results || [] });
 }
 
 async function handleProductCreate(request, env) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   let b;
   try {
     b = await request.json();
@@ -323,10 +311,11 @@ async function handleProductCreate(request, env) {
       b.low_stock_threshold ?? 10
     )
     .run();
-  return json({ ok: true, id: result.meta.last_row_id });
+  return json({ ok: true, id: result.meta ? result.meta.last_row_id : null });
 }
 
 async function handleProductUpdate(request, env, id) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   let b;
   try {
     b = await request.json();
@@ -357,14 +346,13 @@ async function handleProductUpdate(request, env, id) {
 }
 
 async function handleProductDelete(env, id) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   await env.DB.prepare(`DELETE FROM products WHERE id = ?`).bind(id).run();
   return json({ ok: true });
 }
 
-// ---------------------------------------------------------------------------
-// Admin: customers (aggregated from orders)
-// ---------------------------------------------------------------------------
 async function handleCustomers(env) {
+  if (!env.DB) return json({ ok: false, error: "Database not configured" }, 500);
   const rows = await env.DB
     .prepare(
       `SELECT phone, MAX(customer_name) as name, COUNT(*) as orders, SUM(total) as spent, MAX(created_at) as last_order
@@ -375,9 +363,6 @@ async function handleCustomers(env) {
   return json({ ok: true, customers: rows.results || [] });
 }
 
-// ---------------------------------------------------------------------------
-// Router
-// ---------------------------------------------------------------------------
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -393,13 +378,11 @@ export default {
       console.log("Schema init error:", e.message);
     }
 
-    // Public endpoint used by the customer-facing POS
     if (path === "/api/send-order") {
       if (request.method !== "POST") return json({ ok: false, error: "Method not allowed" }, 405);
       return handleSendOrder(request, env);
     }
 
-    // Everything else under /api/admin/* requires the admin key
     if (path.startsWith("/api/admin/")) {
       if (!requireAdmin(request, env)) {
         return json({ ok: false, error: "Unauthorized" }, 401);
@@ -431,7 +414,6 @@ export default {
       if (path === "/api/admin/customers" && request.method === "GET") {
         return handleCustomers(env);
       }
-      // A cheap way for the admin panel to verify a key without hitting real data
       if (path === "/api/admin/ping" && request.method === "GET") {
         return json({ ok: true });
       }
@@ -439,7 +421,10 @@ export default {
       return json({ ok: false, error: "Not found" }, 404);
     }
 
-    // Everything else: serve static files (the customer POS + admin panel)
-    return env.ASSETS.fetch(request);
+    if (env.ASSETS) {
+      return env.ASSETS.fetch(request);
+    }
+
+    return json({ ok: false, error: "Assets binding not found" }, 404);
   },
 };

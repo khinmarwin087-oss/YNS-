@@ -385,33 +385,60 @@ input:focus { border-color: var(--accent); background: white; outline: none; }
        // Bot Token / Chat ID ကို ဒီနေရာမှာ ထားလို့မရတော့ပါ (Security)
 // ယခုတော့ send-order.php ကနေတဆင့်သာ Telegram ကို ပို့ပါမယ်
 
-const menuData = [
-  { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, category: 'အသား', image: 'https://i.ibb.co/FLb4YzNT/1771770596329.png' },
-  { id: 20, name: 'ကြက်ပေါင်', price: 4000, category: 'အသား', image: 'https://i.ibb.co/twQQYmYN/1771771044356.png' },
-  { id: 1, name: 'ကြက်ပေါင်', price: 3000, category: 'အသား', image: 'https://i.ibb.co/JWsqDFX9/1768228481848.png', available: false },
-  { id: 3, name: 'ဆိတ်သားကင်', price: 1500, category: 'အသား', image: 'https://i.ibb.co/twQjTScV/IMG-20251231-003231.png' },
-  { id: 14, name: 'လက်မောင်းလုံး', price: 1000, category: 'အသား', image: '' },
-  { id: 7, name: 'အတောင်ပျံ (CP)', price: 1000, category: 'အရိုး', image: 'https://i.ibb.co/rKJY26TM/1767147666947.png' },
-  { id: 18, name: 'အပ်မှို', price: 1000, category: 'အသီးအရွက်', image: 'https://i.ibb.co/PsGSSTK4/1768228089572.png' },
-  { id: 19, name: 'ငုံးဥ', price: 1000, category: 'ဥ', image: 'https://i.ibb.co/xtyy8V0N/1768211447515.png' },
-  { id: 4, name: 'အသား ချောင်း(ကြက်)', price: 1000, category: 'အသား', image: 'https://i.ibb.co/rRd5P91j/1767118697374.png' },
-  { id: 15, name: 'အဆီပူး', price: 1000, category: 'အရေခွံ', image: 'https://i.ibb.co/PGcW9j6r/1767118749960.png' },
-  { id: 13, name: 'ခြေထောက်(CP)', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dPMPdR9/1771774751760.png' },
-  { id: 5, name: 'အရေခွံ', price: 700, category: 'အရေခွံ', image: 'https://i.ibb.co/MkJqnDyG/1767147480724.png' },
-  { id: 6, name: 'အတောင်ပျံ', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dpqp2BJ/1771771310595.png' },
-  { id: 8, name: 'အူ', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/0VZfW6jW/1771771269724.png' },
-  { id: 11, name: 'အသည်းမြစ်', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/twRsK5S7/1767147537379.png' },
-  { id: 16, name: 'အသားတု', price: 400, category: 'အသီးအရွက်', image: 'https://i.ibb.co/hpPRPDr/1768208099763.png' },
-  { id: 21, name: 'အာလူး', price: 500, category: 'အသီးအရွက်', image: '' },
-  { id: 9, name: 'ခေါင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/Y4dYQ0Q2/1771774457826.png' },
-  { id: 10, name: 'လည် ချောင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/bjL850PP/1768208169381.png' },
-  { id: 12, name: 'ခြေထောက်', price: 400, category: 'အရိုး', image: '' },
-  { id: 17, name: 'ရုံးပတေသီး', price: 300, category: 'အသီးအရွက်', image: 'https://i.ibb.co/cSCzCKN5/1768228376693.png' },
-  { id: 22, name: 'ကြက်ဥပေါင်း', price: 1500, category: 'အသီးအရွက်', image: '' },
-  { id: 23, name: 'ကြက်စပ်ပြား', price: 1500, category: 'အသီးအရွက်', image: '' },
-    { id: 23, name: 'ဂဏန်းကြက်အူချောင်း', price: 1000, category: 'အသီးအရွက်', image: '' }
-];
+// const menuData = [
+//   { id: 2, name: 'ကြက်ရင်အုံ', price: 4000, category: 'အသား', image: 'https://i.ibb.co/FLb4YzNT/1771770596329.png' },
+//   { id: 20, name: 'ကြက်ပေါင်', price: 4000, category: 'အသား', image: 'https://i.ibb.co/twQQYmYN/1771771044356.png' },
+//   { id: 1, name: 'ကြက်ပေါင်', price: 3000, category: 'အသား', image: 'https://i.ibb.co/JWsqDFX9/1768228481848.png', available: false },
+//   { id: 3, name: 'ဆိတ်သားကင်', price: 1500, category: 'အသား', image: 'https://i.ibb.co/twQjTScV/IMG-20251231-003231.png' },
+//   { id: 14, name: 'လက်မောင်းလုံး', price: 1000, category: 'အသား', image: '' },
+//   { id: 7, name: 'အတောင်ပျံ (CP)', price: 1000, category: 'အရိုး', image: 'https://i.ibb.co/rKJY26TM/1767147666947.png' },
+//   { id: 18, name: 'အပ်မှို', price: 1000, category: 'အသီးအရွက်', image: 'https://i.ibb.co/PsGSSTK4/1768228089572.png' },
+//   { id: 19, name: 'ငုံးဥ', price: 1000, category: 'ဥ', image: 'https://i.ibb.co/xtyy8V0N/1768211447515.png' },
+//   { id: 4, name: 'အသား ချောင်း(ကြက်)', price: 1000, category: 'အသား', image: 'https://i.ibb.co/rRd5P91j/1767118697374.png' },
+//   { id: 15, name: 'အဆီပူး', price: 1000, category: 'အရေခွံ', image: 'https://i.ibb.co/PGcW9j6r/1767118749960.png' },
+//   { id: 13, name: 'ခြေထောက်(CP)', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dPMPdR9/1771774751760.png' },
+//   { id: 5, name: 'အရေခွံ', price: 700, category: 'အရေခွံ', image: 'https://i.ibb.co/MkJqnDyG/1767147480724.png' },
+//   { id: 6, name: 'အတောင်ပျံ', price: 700, category: 'အရိုး', image: 'https://i.ibb.co/7dpqp2BJ/1771771310595.png' },
+//   { id: 8, name: 'အူ', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/0VZfW6jW/1771771269724.png' },
+//   { id: 11, name: 'အသည်းမြစ်', price: 700, category: 'ကလီစာ', image: 'https://i.ibb.co/twRsK5S7/1767147537379.png' },
+//   { id: 16, name: 'အသားတု', price: 400, category: 'အသီးအရွက်', image: 'https://i.ibb.co/hpPRPDr/1768208099763.png' },
+//   { id: 21, name: 'အာလူး', price: 500, category: 'အသီးအရွက်', image: '' },
+//   { id: 9, name: 'ခေါင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/Y4dYQ0Q2/1771774457826.png' },
+//   { id: 10, name: 'လည် ချောင်း', price: 400, category: 'အရိုး', image: 'https://i.ibb.co/bjL850PP/1768208169381.png' },
+//   { id: 12, name: 'ခြေထောက်', price: 400, category: 'အရိုး', image: '' },
+//   { id: 17, name: 'ရုံးပတေသီး', price: 300, category: 'အသီးအရွက်', image: 'https://i.ibb.co/cSCzCKN5/1768228376693.png' },
+//   { id: 22, name: 'ကြက်ဥပေါင်း', price: 1500, category: 'အသီးအရွက်', image: '' },
+//   { id: 23, name: 'ကြက်စပ်ပြား', price: 1500, category: 'အသီးအရွက်', image: '' },
+//     { id: 23, name: 'ဂဏန်းကြက်အူချောင်း', price: 1000, category: 'အသီးအရွက်', image: '' }
+// ];
 
+let products = [];
+
+// Database (Worker) ထဲမှ Products များ လှမ်းဆွဲယူသည့် Function
+async function loadProductsFromDB() {
+  try {
+    const response = await fetch('https://yns.khinmarwin087.workers.dev/api/products');
+    const data = await response.json();
+    
+    if (data.ok && data.products) {
+      products = data.products;
+      // မူလ Menu UI ကို ရေးဆွဲပေးသည့် function ကို ပြန်ခေါ်ပေးပါ
+      if (typeof renderProducts === 'function') {
+        renderProducts();
+      } else if (typeof renderMenu === 'function') {
+        renderMenu();
+      }
+    }
+  } catch (error) {
+    console.error("Products load မရပါ:", error);
+  }
+}
+
+// Page စဖွင့်သည်နှင့် Database ထဲမှ Product များကို လှမ်းယူမည်
+document.addEventListener('DOMContentLoaded', () => {
+  loadProductsFromDB();
+});
+    
 let cart = {};
 let activeCat = 'All', chosenDay = 'today';
 

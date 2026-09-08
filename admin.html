@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>မြင်သာကြက်ကင် • Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--ink:#172033;--muted:#718096;--line:#e8edf3;--navy:#101a2d;--accent:#f59e0b;--accent2:#f97316;--green:#10b981;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--shadow:0 10px 35px rgba(16,26,45,.06);--r:20px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Pyidaungsu,"Reem Kufi",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0}.app{min-height:100vh;display:flex}.sidebar{width:260px;background:var(--navy);color:#fff;padding:22px 16px;position:fixed;inset:0 auto 0 0;z-index:20;display:flex;flex-direction:column}.brand{display:flex;align-items:center;gap:12px;padding:8px 10px 25px}.brand-icon{width:43px;height:43px;border-radius:14px;background:linear-gradient(135deg,#fbbf24,#f97316);display:grid;place-items:center;font-size:21px}.brand b{font-size:17px}.brand small{display:block;color:#9ba7ba;font-size:11px;margin-top:2px}.nav-title{font-size:10px;color:#68758b;letter-spacing:1.5px;padding:12px 12px 7px}.nav button{width:100%;background:transparent;color:#aeb8c8;text-align:left;padding:11px 12px;border-radius:12px;margin:2px 0;display:flex;align-items:center;gap:12px;transition:.2s}.nav button i{width:19px;text-align:center}.nav button:hover,.nav button.active{background:#1d2940;color:#fff}.nav button.active{box-shadow:inset 3px 0 var(--accent)}.badge{margin-left:auto;background:#ef4444;color:white;border-radius:20px;padding:2px 7px;font-size:10px}.side-bottom{margin-top:auto;border-top:1px solid #263149;padding-top:14px}.main{margin-left:260px;width:calc(100% - 260px);padding:24px 28px 40px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.topbar h1{font-size:25px;margin:0}.topbar p{margin:4px 0 0;color:var(--muted);font-size:13px}.actions{display:flex;align-items:center;gap:10px}.icon-btn,.avatar{width:42px;height:42px;border-radius:13px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;color:#64748b}.avatar{background:var(--navy);color:#fff;font-weight:700}.mobile-menu{display:none}.page{display:none}.page.active{display:block}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}.kpi{padding:20px}.kpi-top{display:flex;justify-content:space-between;align-items:center}.kpi-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#fff7e8;color:#e98a00}.kpi:nth-child(2) .kpi-icon{background:#eefcf7;color:var(--green)}.kpi:nth-child(3) .kpi-icon{background:#eff6ff;color:var(--blue)}.kpi:nth-child(4) .kpi-icon{background:#f5f3ff;color:var(--purple)}.kpi .label{font-size:12px;color:var(--muted);margin-top:15px}.kpi .value{font-size:25px;font-weight:700;margin-top:4px}.trend{font-size:11px;color:var(--green);margin-top:5px}.dashboard-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;margin-top:18px}.panel{padding:20px}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.panel-head h2{font-size:16px;margin:0}.panel-head span{font-size:12px;color:var(--muted)}.select{border:1px solid var(--line);border-radius:10px;padding:8px 11px;background:white;color:#566174;font-size:12px}.chart{height:245px;position:relative}.chart svg{width:100%;height:100%;overflow:visible}.legend{display:flex;gap:18px;font-size:11px;color:var(--muted);margin-top:4px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:5px}.dot2{background:#cbd5e1}.status-list{display:grid;gap:16px}.status-row{display:grid;grid-template-columns:110px 1fr 45px;align-items:center;gap:10px;font-size:12px}.bar{height:8px;background:#edf1f5;border-radius:99px;overflow:hidden}.fill{height:100%;border-radius:99px;background:var(--accent)}.fill.green{background:var(--green)}.fill.blue{background:var(--blue)}.fill.red{background:var(--red)}.lower{display:grid;grid-template-columns:1.8fr 1fr;gap:18px;margin-top:18px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:620px}.table th,.table td{text-align:left;padding:13px 10px;border-bottom:1px solid var(--line);font-size:12px}.table th{color:#8a95a6;font-weight:500}.table tr:last-child td{border-bottom:0}.status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:10px;font-weight:600}.pending{background:#fff7e8;color:#b76a00}.confirmed{background:#eef6ff;color:#2563eb}.done{background:#ecfdf5;color:#047857}.cancelled{background:#fef2f2;color:#b91c1c}.product-list{display:grid;gap:12px}.product{display:flex;align-items:center;gap:11px}.product-img{width:42px;height:42px;border-radius:12px;background:#fff3d6;display:grid;place-items:center;font-size:20px}.product-info{flex:1}.product-info b{display:block;font-size:12px}.product-info small{color:var(--muted);font-size:10px}.price{font-size:12px;font-weight:700}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}.search{flex:1;min-width:190px;position:relative}.search i{position:absolute;left:12px;top:11px;color:#9aa4b2}.search input{width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line);border-radius:11px;background:white;outline:0}.btn{padding:10px 14px;border-radius:11px;background:var(--navy);color:white;font-size:12px}.btn.orange{background:var(--accent);color:#1d1608}.btn.light{background:white;color:#4b5563;border:1px solid var(--line)}.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.mini{padding:17px}.mini small{color:var(--muted);font-size:11px}.mini b{display:block;font-size:21px;margin-top:5px}.grid-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.item-card{padding:18px}.item-card .emoji{font-size:30px;margin-bottom:12px}.item-card h3{font-size:14px;margin:0 0 4px}.item-card p{font-size:11px;color:var(--muted);margin:0 0 12px}.item-card .row{display:flex;justify-content:space-between;align-items:center}.toggle{width:38px;height:22px;border-radius:20px;background:#cbd5e1;padding:3px}.toggle.on{background:var(--green)}.toggle:after{content:"";display:block;width:16px;height:16px;background:white;border-radius:50%;transition:.2s}.toggle.on:after{transform:translateX(16px)}.alert{display:flex;align-items:center;gap:12px;padding:14px;border:1px solid #fee2e2;background:#fffafa;border-radius:14px;margin-bottom:10px}.alert i{color:var(--red)}.alert b{font-size:12px}.alert small{display:block;color:var(--muted);font-size:10px}.customer{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.customer:last-child{border:0}.customer .avatar2{width:36px;height:36px;border-radius:50%;background:#eef2ff;display:grid;place-items:center;font-size:12px;font-weight:700;color:#4f46e5}.settings{max-width:780px}.setting-row{display:flex;align-items:center;justify-content:space-between;padding:17px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border:0}.setting-row b{font-size:13px}.setting-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.notice{padding:14px 16px;border-radius:14px;background:#fff7e8;color:#8a5700;font-size:11px;margin-bottom:16px}.empty{padding:50px;text-align:center;color:var(--muted)}@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.dashboard-grid,.lower{grid-template-columns:1fr}.grid-cards{grid-template-columns:repeat(2,1fr)}}@media(max-width:760px){.sidebar{transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%;padding:18px}.mobile-menu{display:grid}.topbar h1{font-size:20px}.kpis,.stats-strip,.grid-cards{grid-template-columns:1fr}.topbar{align-items:flex-start}.topbar p{font-size:11px}.actions .icon-btn:not(.mobile-menu){display:none}}
+</style>
+
+<style id="unified-overview-style">
+.overview-card{
+  background:linear-gradient(180deg,#fff 0%,#fbfcfe 100%);
+  border:1px solid #e7ebf0;
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(15,23,42,.06);
+  overflow:hidden;
+  margin-bottom:22px;
+}
+.overview-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px 18px;
+  border-bottom:1px solid #edf0f3;
+}
+.overview-title{font-size:20px;font-weight:800;color:#172033}
+.overview-subtitle{margin-top:4px;font-size:13px;color:#7a8494}
+.overview-filter{
+  border:1px solid #e5e9ef;background:#fff;color:#475467;
+  border-radius:11px;padding:9px 12px;font:inherit;font-size:13px;cursor:pointer
+}
+.overview-metrics{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+}
+.metric{
+  display:flex;align-items:center;gap:11px;padding:18px 16px;
+  min-width:0;border-right:1px solid #edf0f3;
+}
+.metric:last-child{border-right:0}
+.metric-icon{
+  width:38px;height:38px;flex:0 0 38px;border-radius:11px;
+  display:grid;place-items:center;background:#f3f5f8;color:#475467
+}
+.metric small{display:block;color:#7a8494;font-size:11px;white-space:nowrap}
+.metric strong{display:block;color:#172033;font-size:16px;margin-top:3px;white-space:nowrap}
+.metric em{display:block;font-style:normal;color:#16a34a;font-size:10px;margin-top:2px;white-space:nowrap}
+.metric-icon.pending,.metric-icon.stock{color:#d97706;background:#fff7e6}
+.metric-icon.cancelled{color:#dc2626;background:#fff1f2}
+.metric-icon.completed{color:#16a34a;background:#effbf3}
+.metric-icon.revenue{color:#7c3aed;background:#f5f3ff}
+.metric-icon.orders{color:#2563eb;background:#eff6ff}
+.metric-icon.customers{color:#0891b2;background:#ecfeff}
+
+@media(max-width:1180px){
+  .overview-metrics{grid-template-columns:repeat(4,1fr)}
+  .metric{border-bottom:1px solid #edf0f3}
+  .metric:nth-child(4),.metric:nth-child(7){border-right:0}
+}
+@media(max-width:700px){
+  .overview-head{padding:18px 16px}
+  .overview-filter{display:none}
+  .overview-metrics{grid-template-columns:repeat(2,1fr)}
+  .metric{padding:15px 13px;border-right:1px solid #edf0f3}
+  .metric:nth-child(2n){border-right:0}
+  .metric strong{font-size:14px}
+}
+</style>
+
+
+<style id="layout-correction">
+/* Conventional admin layout: navigation and page headings stay left aligned */
+.sidebar{align-items:stretch}
+.brand{justify-content:flex-start}
+.nav-title{text-align:left}
+.nav{width:100%}
+.nav button{justify-content:flex-start;text-align:left}
+.main{display:block;text-align:left}
+.topbar{width:100%;text-align:left}
+.topbar>div:first-child{justify-content:flex-start}
+.topbar h1,.topbar p{text-align:left}
+.page{text-align:left}
+.overview-card{text-align:left}
+.overview-head{align-items:flex-start}
+.overview-metrics{text-align:left}
+.metric{justify-content:flex-start;text-align:left}
+.metric>div{text-align:left}
+</style>
+
+
+<style id="premium-admin-v4">
+/* V4: conventional left-aligned SaaS admin shell */
+html,body{min-height:100%;width:100%}
+body{overflow-x:hidden}
+.app{display:flex;min-height:100vh;align-items:stretch}
+.sidebar{flex:0 0 260px;width:260px;left:0;top:0;bottom:0;justify-content:flex-start}
+.main{flex:1 1 auto;min-width:0;margin-left:260px;width:auto;padding:28px 32px 48px}
+.topbar{min-height:58px;margin:0 0 22px;display:flex;align-items:center;justify-content:space-between}
+.topbar>div:first-child{display:flex;align-items:center;justify-content:flex-start;text-align:left}
+.topbar h1,.topbar p{margin-left:0;text-align:left}
+.page{width:100%;max-width:none;margin:0;text-align:left}
+.page.active{display:block}
+.overview-card{width:100%;margin:0 0 20px;text-align:left}
+.overview-head{display:flex;align-items:center;justify-content:space-between;text-align:left}
+.overview-title,.overview-subtitle{text-align:left}
+.overview-metrics{width:100%;display:grid;text-align:left}
+.metric{display:flex;align-items:center;justify-content:flex-start;text-align:left}
+.metric>div{text-align:left}
+.dashboard-grid,.lower{width:100%;align-items:stretch}
+.card,.panel{width:100%}
+
+/* Keep navigation labels and links pinned to the left */
+.nav-title{width:100%;text-align:left!important;padding-left:12px}
+.nav{display:block;width:100%;text-align:left}
+.nav button{display:flex;width:100%;justify-content:flex-start!important;text-align:left!important}
+.nav button i{flex:0 0 19px}
+.brand{width:100%;justify-content:flex-start!important;text-align:left}
+.brand>div:last-child{text-align:left}
+
+/* Avoid accidental centering from browser/user-agent styles */
+input,select,button{text-align:inherit}
+.table th,.table td{text-align:left}
+
+/* Responsive shell */
+@media(max-width:1100px){
+  .main{padding:24px}
+}
+@media(max-width:760px){
+  .sidebar{position:fixed;flex-basis:260px;width:260px}
+  .main{margin-left:0;width:100%;padding:18px}
+  .topbar{align-items:flex-start}
+}
+</style>
+
+
+<style id="overview-layout-v4">
+.overview-metrics{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+</style>
+
+<style id="admin-extra-v5">
+/* Auth gate */
+#authGate{position:fixed;inset:0;background:linear-gradient(135deg,#101a2d,#1d2940);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}
+.auth-card{background:#fff;border-radius:22px;padding:36px 32px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center}
+.auth-card .brand-icon{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#fbbf24,#f97316);display:grid;place-items:center;font-size:28px;margin:0 auto 14px}
+.auth-card h2{margin:0 0 6px;font-size:19px}
+.auth-card p{margin:0 0 20px;color:var(--muted);font-size:12px}
+.auth-card input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:12px;outline:0;font-size:14px}
+.auth-card .btn{width:100%;padding:12px;border-radius:12px;font-size:13px}
+.auth-error{color:var(--red);font-size:12px;min-height:16px;margin-bottom:8px}
+.app.locked{display:none}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(16,26,45,.55);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+.modal-overlay.open{display:flex}
+.modal-box{background:#fff;border-radius:20px;padding:26px;max-width:440px;width:100%;max-height:90vh;overflow:auto}
+.modal-box h3{margin:0 0 18px;font-size:17px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}
+.field input,.field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;outline:0;font-size:13px;background:#fff}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:10px;margin-top:18px}
+.modal-actions .btn{flex:1}
+
+/* Toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:13px 18px;border-radius:12px;font-size:13px;box-shadow:var(--shadow);z-index:800;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:14px;font-size:12px;color:var(--muted)}
+.pagination button{padding:7px 12px;border-radius:9px;background:#fff;border:1px solid var(--line);color:#475467}
+.pagination button:disabled{opacity:.4;cursor:not-allowed}
+
+/* Product card actions */
+.item-card .actions{display:flex;gap:8px;margin-top:10px}
+.item-card .actions button{flex:1;padding:7px;border-radius:9px;font-size:11px}
+
+.stock-tag{font-size:10px;padding:3px 8px;border-radius:8px;background:#f3f5f8;color:#475467}
+.stock-tag.low{background:#fff1f2;color:#dc2626}
+
+.loading-row td{text-align:center;color:var(--muted);padding:30px}
+</style>
+
+</head>
+<body>
+
+<div id="authGate">
+  <div class="auth-card">
+    <div class="brand-icon">🍗</div>
+    <h2>Admin Panel</h2>
+    <p>မြင်သာကြက်ကင် — ဆက်လက်ဝင်ရောက်ရန် Admin Key ထည့်ပါ</p>
+    <div class="auth-error" id="authError"></div>
+    <input type="password" id="authKeyInput" placeholder="Admin Key" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn orange" onclick="doLogin()">ဝင်ရောက်မည် →</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <h3 id="productModalTitle">Add Product</h3>
+    <input type="hidden" id="pm-id">
+    <div class="field"><label>Product Name</label><input id="pm-name" placeholder="ကြက်ကင်"></div>
+    <div class="field-row">
+      <div class="field"><label>Price (Ks)</label><input id="pm-price" type="number"></div>
+      <div class="field"><label>Category</label><input id="pm-category" placeholder="အသား"></div>
+    </div>
+    <div class="field"><label>Image URL</label><input id="pm-image" placeholder="https://..."></div>
+    <div class="field-row">
+      <div class="field"><label>Stock Qty</label><input id="pm-stock" type="number"></div>
+      <div class="field"><label>Low-stock Threshold</label><input id="pm-threshold" type="number"></div>
+    </div>
+    <div class="field"><label>Availability</label>
+      <select id="pm-available"><option value="1">Available</option><option value="0">Unavailable / Hidden</option></select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn light" onclick="closeProductModal()">Cancel</button>
+      <button class="btn orange" onclick="saveProduct()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="app locked" id="appShell">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+  <div class="nav-title">MAIN MENU</div>
+  <nav class="nav">
+    <button class="active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+    <button data-page="orders"><i class="fa-solid fa-receipt"></i> Orders <span class="badge" id="orderBadge">4</span></button>
+    <button data-page="products"><i class="fa-solid fa-box"></i> Products</button>
+    <button data-page="inventory"><i class="fa-solid fa-warehouse"></i> Inventory</button>
+    <button data-page="customers"><i class="fa-solid fa-users"></i> Customers</button>
+    <div class="nav-title">INSIGHTS</div>
+    <button data-page="revenue"><i class="fa-solid fa-chart-line"></i> Revenue</button>
+    <button data-page="analytics"><i class="fa-solid fa-chart-column"></i> Analytics</button>
+    <button data-page="notifications"><i class="fa-solid fa-bell"></i> Notifications <span class="badge">3</span></button>
+    <div class="nav-title">SYSTEM</div>
+    <button data-page="settings"><i class="fa-solid fa-gear"></i> Settings</button>
+  </nav>
+  <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="icon-btn mobile-menu" id="mobileMenu"><i class="fa-solid fa-bars"></i></button>
+    <div><h1 id="pageTitle">Dashboard</h1><p id="pageSub">လုပ်ငန်းအခြေအနေကို တစ်နေရာတည်းက ကြည့်ရှုစီမံပါ</p></div>
+  </div>
+  <div class="actions"><button class="icon-btn"><i class="fa-regular fa-bell"></i></button><div class="avatar">YW</div></div>
+</header>
+
+<section class="page active" id="dashboard">
+  <div class="overview-card">
+  <div class="overview-head">
+    <div>
+      <div class="overview-title">Overview</div>
+      <div class="overview-subtitle">လုပ်ငန်းအခြေအနေကို တစ်နေရာတည်းက ကြည့်နိုင်ပါတယ်</div>
+    </div>
+    <button class="overview-filter" onclick="alert('Date filter ready')">
+      <i class="fa-regular fa-calendar"></i> This month
+    </button>
+  </div>
+
+  <div class="overview-metrics">
+    <div class="metric">
+      <span class="metric-icon revenue"><i class="fa-solid fa-wallet"></i></span>
+      <div><small>Total Revenue</small><strong id="kpi-revenue">—</strong><em id="kpi-revenue-chg">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon orders"><i class="fa-solid fa-receipt"></i></span>
+      <div><small>Total Orders</small><strong id="kpi-orders">—</strong><em id="kpi-orders-chg">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon" style="color:#e98a00;background:#fff7e8"><i class="fa-solid fa-bolt"></i></span>
+      <div><small>New Orders</small><strong id="kpi-neworders">—</strong><em id="kpi-neworders-chg">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon customers"><i class="fa-solid fa-users"></i></span>
+      <div><small>Customers</small><strong id="kpi-customers">—</strong><em id="kpi-customers-chg">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon pending"><i class="fa-solid fa-clock"></i></span>
+      <div><small>Pending Orders</small><strong id="kpi-pending">—</strong><em>Need action</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon completed"><i class="fa-solid fa-circle-check"></i></span>
+      <div><small>Completed</small><strong id="kpi-completed">—</strong><em id="kpi-completed-pct">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon cancelled"><i class="fa-solid fa-circle-xmark"></i></span>
+      <div><small>Cancelled</small><strong id="kpi-cancelled">—</strong><em id="kpi-cancelled-pct">—</em></div>
+    </div>
+    <div class="metric">
+      <span class="metric-icon stock"><i class="fa-solid fa-boxes-stacked"></i></span>
+      <div><small>Low Stock</small><strong id="kpi-lowstock">—</strong><em>Check inventory</em></div>
+    </div>
+  </div>
+</div>
+  <div class="dashboard-grid">
+    <div class="card panel"><div class="panel-head"><div><h2>Revenue Overview</h2><span>ပြီးခဲ့သည့် 7 ရက်</span></div></div>
+      <div class="chart">
+        <svg id="revenueChart" viewBox="0 0 800 245" preserveAspectRatio="none">
+          <defs><linearGradient id="g" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f59e0b" stop-opacity=".25"/><stop offset="1" stop-color="#f59e0b" stop-opacity="0"/></linearGradient></defs>
+          <g stroke="#edf0f4" stroke-width="1"><line x1="0" y1="35" x2="800" y2="35"/><line x1="0" y1="90" x2="800" y2="90"/><line x1="0" y1="145" x2="800" y2="145"/><line x1="0" y1="200" x2="800" y2="200"/></g>
+          <path id="revenueArea" d="" fill="url(#g)"/>
+          <path id="revenueLine" d="" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <g id="revenueLabels" fill="#8a95a6" font-size="11"></g>
+        </svg>
+      </div><div class="legend"><span><i class="dot"></i>Revenue</span></div>
+    </div>
+    <div class="card panel"><div class="panel-head"><div><h2>Order Status</h2><span>အားလုံးအော်ဒါများ</span></div></div>
+      <div class="status-list" id="orderStatusList"></div>
+    </div>
+  </div>
+  <div class="lower">
+    <div class="card panel"><div class="panel-head"><h2>Recent Orders</h2><button class="btn light" onclick="go('orders')">အားလုံးကြည့်မယ်</button></div>
+      <div class="table-wrap"><table class="table"><thead><tr><th>Order</th><th>Customer</th><th>Amount</th><th>Time</th><th>Status</th></tr></thead><tbody id="recentOrders"></tbody></table></div>
+    </div>
+    <div class="card panel"><div class="panel-head"><h2>Top Selling Products</h2><span>All time</span></div><div class="product-list" id="topProducts"></div></div>
+  </div>
+  <div class="lower">
+    <div class="card panel"><div class="panel-head"><h2>Payment Summary</h2></div><div class="status-list" id="paymentSummary"></div></div>
+    <div class="card panel"><div class="panel-head"><h2>Inventory Alert</h2><button class="btn light" onclick="go('inventory')">Inventory ကြည့်မယ်</button></div><div id="dashLowStock"></div></div>
+  </div>
+</section>
+
+<section class="page" id="orders">
+  <div class="stats-strip"><div class="card mini"><small>Total Orders</small><b id="ord-total">—</b></div><div class="card mini"><small>Pending / New</small><b id="ord-pending">—</b></div><div class="card mini"><small>Completed</small><b id="ord-completed">—</b></div></div>
+  <div class="card panel"><div class="toolbar"><div class="search"><i class="fa-solid fa-search"></i><input id="orderSearch" placeholder="Voucher / name / phone ရှာရန်" oninput="debouncedOrderFilter()"></div><select class="select" id="statusFilter" onchange="ordersPage=1;loadOrders()"><option value="">All status</option><option value="New">New</option><option value="Processing">Processing</option><option value="Completed">Completed</option><option value="Cancelled">Cancelled</option></select></div>
+  <div class="table-wrap"><table class="table"><thead><tr><th>Voucher</th><th>Customer</th><th>Phone</th><th>Total</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody id="ordersTable"><tr class="loading-row"><td colspan="7">Loading...</td></tr></tbody></table></div>
+  <div class="pagination"><span id="ordersRangeInfo"></span><button id="ordersPrev" onclick="changeOrdersPage(-1)"><i class="fa-solid fa-chevron-left"></i></button><button id="ordersNext" onclick="changeOrdersPage(1)"><i class="fa-solid fa-chevron-right"></i></button></div>
+  </div>
+</section>
+
+<section class="page" id="products"><div class="card panel"><div class="panel-head"><div><h2>Products</h2><span>Menu items စီမံရန်</span></div><button class="btn orange" onclick="openProductModal()">+ Add Product</button></div><div class="grid-cards" id="productsGrid"><div class="empty">Loading...</div></div></div></section>
+
+<section class="page" id="inventory"><div class="stats-strip"><div class="card mini"><small>Total Items</small><b id="inv-total">—</b></div><div class="card mini"><small>Low Stock</small><b style="color:var(--red)" id="inv-low">—</b></div><div class="card mini"><small>Healthy Stock</small><b style="color:var(--green)" id="inv-healthy">—</b></div></div><div class="card panel"><div class="panel-head"><h2>Inventory Alerts</h2></div><div id="alerts"></div></div></section>
+
+<section class="page" id="customers"><div class="card panel"><div class="panel-head"><div><h2>Customers</h2><span>Order history အခြေခံ ဖောက်သည်စာရင်း</span></div></div><div id="customersList"><div class="empty">Loading...</div></div></div></section>
+
+<section class="page" id="revenue"><div class="kpis"><div class="card kpi"><div class="label">Total Revenue (all time)</div><div class="value" id="rev-total">—</div><div class="trend" id="rev-today-chg">—</div></div><div class="card kpi"><div class="label">Average Order Value</div><div class="value" id="rev-aov">—</div></div><div class="card kpi"><div class="label">Gross Orders</div><div class="value" id="rev-orders">—</div></div><div class="card kpi"><div class="label">Cancelled Orders</div><div class="value" id="rev-cancelled">—</div></div></div><div class="card panel" style="margin-top:18px"><div class="panel-head"><h2>Revenue — Last 7 Days</h2></div><div class="chart"><svg id="revenueChart2" viewBox="0 0 800 245" preserveAspectRatio="none"><g stroke="#edf0f4"><line x1="0" y1="30" x2="800" y2="30"/><line x1="0" y1="90" x2="800" y2="90"/><line x1="0" y1="150" x2="800" y2="150"/><line x1="0" y1="210" x2="800" y2="210"/></g><polyline id="revenueChart2Line" points="" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></section>
+
+<section class="page" id="analytics"><div class="notice">📊 Category share နဲ့ Peak hours အတွက် order အရေအတွက် ပိုများလာတာနဲ့အမျှ ပိုတိကျလာပါမယ် — ယခုအချိန်မှာ illustrative ပုံစံပါ။</div><div class="dashboard-grid"><div class="card panel"><div class="panel-head"><h2>Sales by Category</h2></div><div class="status-list"><div class="status-row"><span>ကြက်ကင်</span><div class="bar"><div class="fill" style="width:86%"></div></div><b>42%</b></div><div class="status-row"><span>အစားအစာ</span><div class="bar"><div class="fill blue" style="width:62%"></div></div><b>29%</b></div><div class="status-row"><span>အချိုရည်</span><div class="bar"><div class="fill green" style="width:43%"></div></div><b>18%</b></div><div class="status-row"><span>အခြား</span><div class="bar"><div class="fill" style="width:20%"></div></div><b>11%</b></div></div></div><div class="card panel"><div class="panel-head"><h2>Peak Hours</h2></div><div class="product-list"><div class="product"><div class="product-img">🕛</div><div class="product-info"><b>11:00 - 13:00</b><small>Lunch peak</small></div><b>28%</b></div><div class="product"><div class="product-img">🌆</div><div class="product-info"><b>17:00 - 20:00</b><small>Dinner peak</small></div><b>46%</b></div><div class="product"><div class="product-img">🌙</div><div class="product-info"><b>20:00 - 22:00</b><small>Late orders</small></div><b>17%</b></div></div></div></div></section>
+
+<section class="page" id="notifications"><div class="card panel"><div class="panel-head"><h2>Notifications</h2><button class="btn light">Mark all read</button></div><div class="alert"><i class="fa-solid fa-triangle-exclamation"></i><div><b>Inventory နည်းနေပါပြီ</b><small>ကြက်တောင်ပံ • လက်ကျန် 8 ခု</small></div></div><div class="alert"><i class="fa-solid fa-bell"></i><div><b>Order #YM-1048 pending</b><small>Customer မှာယူမှုကို အတည်ပြုရန်လိုအပ်သည်</small></div></div><div class="alert"><i class="fa-solid fa-chart-line"></i><div><b>Daily sales target ပြည့်ပါပြီ</b><small>ယနေ့ target ထက် 12.8% ပိုရောင်းထားသည်</small></div></div></div></section>
+
+<section class="page" id="settings"><div class="card panel settings"><div class="panel-head"><div><h2>Settings</h2><span>Admin dashboard preferences</span></div></div><div class="setting-row"><div><b>Auto refresh</b><small>Dashboard data ကို 60 seconds တိုင်း အလိုအလျောက် refresh</small></div><div class="toggle on" id="autoRefreshToggle" onclick="toggleAutoRefresh()"></div></div><div class="setting-row"><div><b>Admin Key</b><small>ဒီ browser မှာ သိမ်းထားတဲ့ admin key — ပြောင်းလိုရင် logout လုပ်ပြီး အသစ်ထည့်ပါ</small></div><b style="font-size:12px" id="currentKeyMasked">••••••••</b></div><div class="setting-row"><div><b>API Base</b><small>Admin panel က ချိတ်ဆက်နေတဲ့ Worker endpoint</small></div><b style="font-size:12px" id="apiBaseLabel"></b></div></div></section>
+</main></div>
+
+<script>
+// =========================================================================
+// Config — leave API_BASE empty ("") when admin.html is deployed as a static
+// asset of the SAME Worker as worker.js (recommended). If hosting the admin
+// panel somewhere else, set API_BASE to your full Worker URL, e.g.
+// "https://yns.khinmarwin087.workers.dev"
+// =========================================================================
+const API_BASE = "";
+const ADMIN_KEY_STORAGE = "yns_admin_key";
+
+let ordersPage = 1, ordersTotal = 0, ordersPageSize = 10;
+let autoRefreshTimer = null;
+let lastStats = null;
+
+function money(n){ return (Number(n)||0).toLocaleString() + " Ks"; }
+function statusClass(s){ return s==="Completed"?"done":s==="Processing"?"confirmed":s==="Cancelled"?"cancelled":"pending"; }
+function fmtDate(iso){
+  if(!iso) return "-";
+  const d = new Date(iso.replace(" ","T")+"Z");
+  if(isNaN(d)) return iso;
+  return d.toLocaleString("en-GB",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+}
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+
+// ---------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------
+function getAdminKey(){ return localStorage.getItem(ADMIN_KEY_STORAGE) || ""; }
+
+async function apiFetch(path, opts={}){
+  const key = getAdminKey();
+  const res = await fetch(API_BASE + path, {
+    ...opts,
+    headers: { "Content-Type":"application/json", "X-Admin-Key": key, ...(opts.headers||{}) }
+  });
+  if(res.status === 401){ lockOut("Admin Key မှားနေပါသည်။ ပြန်လည်ဝင်ရောက်ပါ။"); throw new Error("Unauthorized"); }
+  return res.json();
+}
+
+function lockOut(message){
+  localStorage.removeItem(ADMIN_KEY_STORAGE);
+  document.getElementById("appShell").classList.add("locked");
+  document.getElementById("authGate").style.display = "flex";
+  if(message) document.getElementById("authError").textContent = message;
+  if(autoRefreshTimer) clearInterval(autoRefreshTimer);
+}
+
+function logout(){ lockOut(""); }
+
+async function doLogin(){
+  const val = document.getElementById("authKeyInput").value.trim();
+  const errEl = document.getElementById("authError");
+  errEl.textContent = "";
+  if(!val){ errEl.textContent = "Admin Key ထည့်ပါ"; return; }
+  localStorage.setItem(ADMIN_KEY_STORAGE, val);
+  try{
+    const res = await fetch(API_BASE + "/api/admin/ping", { headers:{ "X-Admin-Key": val } });
+    if(res.status === 401){ errEl.textContent = "Admin Key မှားနေပါသည်"; localStorage.removeItem(ADMIN_KEY_STORAGE); return; }
+    if(!res.ok){ errEl.textContent = "ချိတ်ဆက်မရပါ — Worker URL / API_BASE ကို စစ်ပါ"; return; }
+    document.getElementById("authGate").style.display = "none";
+    document.getElementById("appShell").classList.remove("locked");
+    document.getElementById("currentKeyMasked").textContent = "•".repeat(Math.max(6, val.length));
+    document.getElementById("apiBaseLabel").textContent = (API_BASE || window.location.origin);
+    initApp();
+  }catch(e){
+    errEl.textContent = "ချိတ်ဆက်မရပါ — network / API_BASE ကို စစ်ပါ";
+  }
+}
+
+// ---------------------------------------------------------------------
+// Dashboard
+// ---------------------------------------------------------------------
+function pctLabel(v){
+  if(v === null || v === undefined) return "—";
+  const sign = v > 0 ? "↑" : v < 0 ? "↓" : "→";
+  return `${sign} ${Math.abs(v)}%`;
+}
+function setPctColor(el, v){ el.style.color = v < 0 ? "var(--red)" : "var(--green)"; }
+
+async function loadStats(){
+  const s = await apiFetch("/api/admin/stats");
+  if(!s.ok) return;
+  lastStats = s;
+
+  document.getElementById("kpi-revenue").textContent = money(s.revenue.today);
+  document.getElementById("kpi-revenue-chg").textContent = pctLabel(s.revenue.changePct);
+  setPctColor(document.getElementById("kpi-revenue-chg"), s.revenue.changePct);
+
+  document.getElementById("kpi-orders").textContent = s.orders.today;
+  document.getElementById("kpi-orders-chg").textContent = pctLabel(s.orders.changePct);
+  setPctColor(document.getElementById("kpi-orders-chg"), s.orders.changePct);
+
+  document.getElementById("kpi-neworders").textContent = s.newOrders.today;
+  document.getElementById("kpi-neworders-chg").textContent = pctLabel(s.newOrders.changePct);
+  setPctColor(document.getElementById("kpi-neworders-chg"), s.newOrders.changePct);
+
+  document.getElementById("kpi-customers").textContent = s.customers.total;
+  document.getElementById("kpi-customers-chg").textContent = pctLabel(s.customers.changePct);
+  setPctColor(document.getElementById("kpi-customers-chg"), s.customers.changePct);
+
+  const sc = s.statusCounts;
+  document.getElementById("kpi-pending").textContent = (sc.New||0) + (sc.Processing||0);
+  document.getElementById("kpi-completed").textContent = sc.Completed || 0;
+  document.getElementById("kpi-cancelled").textContent = sc.Cancelled || 0;
+  const totalAll = (sc.New||0)+(sc.Processing||0)+(sc.Completed||0)+(sc.Cancelled||0) || 1;
+  document.getElementById("kpi-completed-pct").textContent = Math.round(((sc.Completed||0)/totalAll)*100)+"%";
+  document.getElementById("kpi-cancelled-pct").textContent = Math.round(((sc.Cancelled||0)/totalAll)*100)+"%";
+  document.getElementById("kpi-lowstock").textContent = s.lowStock.length;
+
+  // order status bars
+  const maxCount = Math.max(1, sc.New||0, sc.Processing||0, sc.Completed||0, sc.Cancelled||0);
+  const barColor = {New:"", Processing:"blue", Completed:"green", Cancelled:"red"};
+  document.getElementById("orderStatusList").innerHTML = ["New","Processing","Completed","Cancelled"].map(k=>
+    `<div class="status-row"><span>${k}</span><div class="bar"><div class="fill ${barColor[k]}" style="width:${Math.round((sc[k]||0)/maxCount*100)}%"></div></div><b>${sc[k]||0}</b></div>`
+  ).join("");
+
+  // payment summary
+  document.getElementById("paymentSummary").innerHTML = ["Paid","Pending","Failed"].map(k=>
+    `<div class="status-row"><span>${k}</span><div class="bar"><div class="fill ${k==="Paid"?"green":k==="Failed"?"red":""}" style="width:${s.paymentPct[k]}%"></div></div><b>${s.paymentPct[k]}%</b></div>`
+  ).join("");
+
+  // low stock (dashboard mini list)
+  document.getElementById("dashLowStock").innerHTML = s.lowStock.length
+    ? s.lowStock.map(p=>`<div class="alert"><i class="fa-solid fa-triangle-exclamation"></i><div><b>${p.name}</b><small>လက်ကျန် ${p.stock} • Reorder level ${p.low_stock_threshold}</small></div></div>`).join("")
+    : `<div class="empty">Low stock item မရှိပါ ✅</div>`;
+
+  // recent orders
+  document.getElementById("recentOrders").innerHTML = s.recentOrders.map(o=>
+    `<tr><td><b>${o.voucher_code||('#'+o.id)}</b></td><td>${o.customer_name||"-"}</td><td><b>${money(o.total)}</b></td><td>${fmtDate(o.created_at)}</td><td><span class="status ${statusClass(o.status)}">${o.status}</span></td></tr>`
+  ).join("") || `<tr><td colspan="5" class="empty">Order မရှိသေးပါ</td></tr>`;
+
+  document.getElementById("orderBadge").textContent = (sc.New||0);
+
+  // top products
+  document.getElementById("topProducts").innerHTML = s.topProducts.length
+    ? s.topProducts.map(p=>`<div class="product"><div class="product-img">🍗</div><div class="product-info"><b>${p.name||"-"}</b><small>${p.qty||0} sold</small></div><div class="price">${money(p.revenue)}</div></div>`).join("")
+    : `<div class="empty">အချက်အလက် မလုံလောက်သေးပါ</div>`;
+
+  // revenue chart (dashboard) — build a smooth path from last 7 days
+  drawRevenueChart(s.revenueSeries);
+
+  // revenue page cards (reuses same stats payload, no extra request)
+  document.getElementById("rev-total").textContent = money(s.revenue.allTime);
+  document.getElementById("rev-today-chg").textContent = "Today " + pctLabel(s.revenue.changePct);
+  document.getElementById("rev-orders").textContent = s.orders.allTime;
+  document.getElementById("rev-cancelled").textContent = sc.Cancelled || 0;
+  document.getElementById("rev-aov").textContent = s.orders.allTime ? money(Math.round(s.revenue.allTime / s.orders.allTime)) : "0 Ks";
+  drawRevenueChart2(s.revenueSeries);
+
+  // inventory page mini stats
+  document.getElementById("inv-low").textContent = s.lowStock.length;
+}
+
+function drawRevenueChart(series){
+  const w = 800, h = 245, padBottom = 40;
+  const svg = document.getElementById("revenueChart");
+  const labelsG = document.getElementById("revenueLabels");
+  if(!series || !series.length){
+    document.getElementById("revenueArea").setAttribute("d","");
+    document.getElementById("revenueLine").setAttribute("d","");
+    labelsG.innerHTML = `<text x="360" y="120" fill="#8a95a6">Order မရှိသေးပါ</text>`;
+    return;
+  }
+  const values = series.map(p=>p.revenue);
+  const max = Math.max(...values, 1);
+  const stepX = w / Math.max(1, series.length - 1 || 1);
+  const points = series.map((p,i)=>{
+    const x = series.length === 1 ? w/2 : i * stepX;
+    const y = (h - padBottom) - (p.revenue / max) * (h - padBottom - 20);
+    return [x,y];
+  });
+  let linePath = `M${points[0][0]} ${points[0][1]}`;
+  for(let i=1;i<points.length;i++) linePath += ` L${points[i][0]} ${points[i][1]}`;
+  const areaPath = linePath + ` L${points[points.length-1][0]} ${h} L0 ${h} Z`;
+  document.getElementById("revenueLine").setAttribute("d", linePath);
+  document.getElementById("revenueArea").setAttribute("d", areaPath);
+  labelsG.innerHTML = series.map((p,i)=>{
+    const d = new Date(p.day+"T00:00:00Z");
+    const label = d.toLocaleDateString("en-GB",{weekday:"short"});
+    return `<text x="${points[i][0]}" y="${h-5}" text-anchor="middle">${label}</text>`;
+  }).join("");
+}
+
+function drawRevenueChart2(series){
+  const el = document.getElementById("revenueChart2Line");
+  if(!el) return;
+  if(!series || !series.length){ el.setAttribute("points",""); return; }
+  const w = 800, h = 245;
+  const values = series.map(p=>p.revenue);
+  const max = Math.max(...values, 1);
+  const stepX = w / Math.max(1, series.length - 1 || 1);
+  const pts = series.map((p,i)=>{
+    const x = series.length === 1 ? w/2 : i*stepX;
+    const y = (h-20) - (p.revenue/max)*(h-40);
+    return `${x},${y}`;
+  }).join(" ");
+  el.setAttribute("points", pts);
+}
+
+// ---------------------------------------------------------------------
+// Orders page
+// ---------------------------------------------------------------------
+let orderFilterTimer = null;
+function debouncedOrderFilter(){
+  clearTimeout(orderFilterTimer);
+  orderFilterTimer = setTimeout(()=>{ ordersPage = 1; loadOrders(); }, 350);
+}
+
+async function loadOrders(){
+  const search = document.getElementById("orderSearch").value.trim();
+  const status = document.getElementById("statusFilter").value;
+  const params = new URLSearchParams({ page: ordersPage, pageSize: ordersPageSize });
+  if(search) params.set("search", search);
+  if(status) params.set("status", status);
+  document.getElementById("ordersTable").innerHTML = `<tr class="loading-row"><td colspan="7">Loading...</td></tr>`;
+  const res = await apiFetch("/api/admin/orders?" + params.toString());
+  if(!res.ok) return;
+  ordersTotal = res.total;
+  document.getElementById("ordersTable").innerHTML = res.orders.length ? res.orders.map(o=>`
+    <tr>
+      <td><b>${o.voucher_code||('#'+o.id)}</b></td>
+      <td>${o.customer_name||"-"}</td>
+      <td>${o.phone||"-"}</td>
+      <td><b>${money(o.total)}</b></td>
+      <td>${fmtDate(o.created_at)}</td>
+      <td><span class="status ${statusClass(o.status)}">${o.status}</span></td>
+      <td><button class="icon-btn" style="width:30px;height:30px" onclick="cycleStatus(${o.id},'${o.status}')" title="Change status"><i class="fa-solid fa-arrows-rotate"></i></button></td>
+    </tr>`).join("") : `<tr><td colspan="7" class="empty">Order မတွေ့ပါ</td></tr>`;
+
+  const start = ordersTotal ? (ordersPage-1)*ordersPageSize+1 : 0;
+  const end = Math.min(ordersPage*ordersPageSize, ordersTotal);
+  document.getElementById("ordersRangeInfo").textContent = `${start}-${end} of ${ordersTotal}`;
+  document.getElementById("ordersPrev").disabled = ordersPage <= 1;
+  document.getElementById("ordersNext").disabled = end >= ordersTotal;
+
+  // small stats strip on the orders page (derived from dashboard stats if loaded)
+  if(lastStats){
+    const sc = lastStats.statusCounts;
+    document.getElementById("ord-total").textContent = lastStats.orders.allTime;
+    document.getElementById("ord-pending").textContent = (sc.New||0)+(sc.Processing||0);
+    document.getElementById("ord-completed").textContent = sc.Completed||0;
+  }
+}
+function changeOrdersPage(delta){
+  const maxPage = Math.max(1, Math.ceil(ordersTotal/ordersPageSize));
+  ordersPage = Math.min(maxPage, Math.max(1, ordersPage+delta));
+  loadOrders();
+}
+async function cycleStatus(id, current){
+  const states = ["New","Processing","Completed","Cancelled"];
+  const next = states[(states.indexOf(current)+1) % states.length];
+  await apiFetch(`/api/admin/orders/${id}`, { method:"PATCH", body: JSON.stringify({ status: next }) });
+  showToast(`Order #${id} → ${next}`);
+  loadOrders(); loadStats();
+}
+
+// ---------------------------------------------------------------------
+// Products page
+// ---------------------------------------------------------------------
+let productsCache = [];
+async function loadProducts(){
+  const res = await apiFetch("/api/admin/products");
+  if(!res.ok) return;
+  productsCache = res.products;
+  renderProducts();
+  document.getElementById("inv-total").textContent = productsCache.length;
+  document.getElementById("inv-healthy").textContent = productsCache.filter(p=>p.stock > p.low_stock_threshold).length;
+}
+function renderProducts(){
+  const grid = document.getElementById("productsGrid");
+  grid.innerHTML = productsCache.length ? productsCache.map(p=>`
+    <div class="card item-card">
+      <div class="emoji">${p.image ? `<img src="${p.image}" style="width:40px;height:40px;object-fit:cover;border-radius:10px">` : "🍽️"}</div>
+      <h3>${p.name}</h3>
+      <p>${p.category||"-"} • ${money(p.price)}</p>
+      <p><span class="stock-tag ${p.stock<=p.low_stock_threshold ? 'low':''}">Stock: ${p.stock}</span></p>
+      <div class="row"><b style="font-size:11px">${p.available ? "Available" : "Hidden"}</b><div class="toggle ${p.available ? "on":""}" onclick="toggleAvailable(${p.id}, ${p.available?0:1})"></div></div>
+      <div class="actions"><button class="btn light" onclick="openProductModal(${p.id})">Edit</button><button class="btn" style="background:var(--red);color:#fff" onclick="deleteProduct(${p.id})">Delete</button></div>
+    </div>`).join("") : `<div class="empty">Product မရှိသေးပါ — "+ Add Product" ကနေ စတင်ပါ</div>`;
+}
+function openProductModal(id){
+  const modal = document.getElementById("productModal");
+  const p = id ? productsCache.find(x=>x.id===id) : null;
+  document.getElementById("productModalTitle").textContent = p ? "Edit Product" : "Add Product";
+  document.getElementById("pm-id").value = p ? p.id : "";
+  document.getElementById("pm-name").value = p ? p.name : "";
+  document.getElementById("pm-price").value = p ? p.price : "";
+  document.getElementById("pm-category").value = p ? p.category : "";
+  document.getElementById("pm-image").value = p ? p.image : "";
+  document.getElementById("pm-stock").value = p ? p.stock : 0;
+  document.getElementById("pm-threshold").value = p ? p.low_stock_threshold : 10;
+  document.getElementById("pm-available").value = p ? (p.available ? "1":"0") : "1";
+  modal.classList.add("open");
+}
+function closeProductModal(){ document.getElementById("productModal").classList.remove("open"); }
+async function saveProduct(){
+  const id = document.getElementById("pm-id").value;
+  const body = {
+    name: document.getElementById("pm-name").value.trim(),
+    price: Number(document.getElementById("pm-price").value)||0,
+    category: document.getElementById("pm-category").value.trim(),
+    image: document.getElementById("pm-image").value.trim(),
+    stock: Number(document.getElementById("pm-stock").value)||0,
+    low_stock_threshold: Number(document.getElementById("pm-threshold").value)||0,
+    available: document.getElementById("pm-available").value === "1"
+  };
+  if(!body.name){ showToast("Product name လိုအပ်ပါသည်"); return; }
+  if(id){ await apiFetch(`/api/admin/products/${id}`, { method:"PUT", body: JSON.stringify(body) }); }
+  else{ await apiFetch(`/api/admin/products`, { method:"POST", body: JSON.stringify(body) }); }
+  closeProductModal();
+  showToast("Product သိမ်းပြီးပါပြီ");
+  loadProducts(); renderInventoryAlerts();
+}
+async function toggleAvailable(id, newVal){
+  await apiFetch(`/api/admin/products/${id}`, { method:"PUT", body: JSON.stringify({ available: !!newVal }) });
+  loadProducts();
+}
+async function deleteProduct(id){
+  if(!confirm("ဒီ Product ကို ဖျက်မှာ သေချာပါသလား?")) return;
+  await apiFetch(`/api/admin/products/${id}`, { method:"DELETE" });
+  showToast("Product ဖျက်ပြီးပါပြီ");
+  loadProducts();
+}
+
+// ---------------------------------------------------------------------
+// Inventory alerts (full list, uses stats.lowStock already fetched)
+// ---------------------------------------------------------------------
+function renderInventoryAlerts(){
+  if(!lastStats) return;
+  document.getElementById("alerts").innerHTML = lastStats.lowStock.length
+    ? lastStats.lowStock.map(p=>`<div class="alert"><i class="fa-solid fa-triangle-exclamation"></i><div><b>${p.name}</b><small>လက်ကျန် ${p.stock} • Reorder level: ${p.low_stock_threshold}</small></div><button class="btn light" style="margin-left:auto" onclick="openProductModal(${p.id})">Restock</button></div>`).join("")
+    : `<div class="empty">Low stock item မရှိပါ ✅</div>`;
+}
+
+// ---------------------------------------------------------------------
+// Customers page
+// ---------------------------------------------------------------------
+async function loadCustomers(){
+  const res = await apiFetch("/api/admin/customers");
+  if(!res.ok) return;
+  const list = res.customers;
+  document.getElementById("customersList").innerHTML = list.length ? list.map(c=>{
+    const initials = (c.name||c.phone||"?").trim().split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+    return `<div class="customer"><div class="avatar2">${initials}</div><div class="product-info"><b>${c.name||"-"}</b><small>${c.phone} • ${c.orders} orders</small></div><b style="font-size:12px">${money(c.spent)}</b></div>`;
+  }).join("") : `<div class="empty">Customer data မရှိသေးပါ</div>`;
+}
+
+// ---------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------
+const titles={dashboard:["Dashboard","လုပ်ငန်းအခြေအနေကို တစ်နေရာတည်းက ကြည့်ရှုစီမံပါ"],orders:["Orders","အော်ဒါများကို ရှာဖွေ၊ စစ်ထုတ်၊ အခြေအနေပြောင်းပါ"],products:["Products","Menu item များကို စီမံပါ"],inventory:["Inventory","Stock နှင့် low-stock alert များကို စီမံပါ"],customers:["Customers","Customer များနှင့် ဝယ်ယူမှုအချက်အလက်များ"],revenue:["Revenue","ရောင်းအားနှင့် ဝင်ငွေကို ခွဲခြမ်းကြည့်ပါ"],analytics:["Analytics","လုပ်ငန်းအချက်အလက်များကို နက်နက်ရှိုင်းရှိုင်းကြည့်ပါ"],notifications:["Notifications","အရေးကြီးသတိပေးချက်များ"],settings:["Settings","Admin system preferences"]};
+function go(page){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  document.getElementById(page).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+  document.getElementById("pageTitle").textContent=titles[page][0];
+  document.getElementById("pageSub").textContent=titles[page][1];
+  document.getElementById("sidebar").classList.remove("open");
+  window.scrollTo(0,0);
+  if(page==="orders") loadOrders();
+  if(page==="products") loadProducts();
+  if(page==="customers") loadCustomers();
+  if(page==="inventory") renderInventoryAlerts();
+}
+document.querySelectorAll(".nav button[data-page]").forEach(b=>b.onclick=()=>go(b.dataset.page));
+document.getElementById("mobileMenu").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
+
+// ---------------------------------------------------------------------
+// Auto refresh
+// ---------------------------------------------------------------------
+function toggleAutoRefresh(){
+  const t = document.getElementById("autoRefreshToggle");
+  t.classList.toggle("on");
+  if(t.classList.contains("on")){
+    autoRefreshTimer = setInterval(()=>{ loadStats(); }, 60000);
+  } else if(autoRefreshTimer){
+    clearInterval(autoRefreshTimer);
+  }
+}
+
+// ---------------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------------
+async function initApp(){
+  try{
+    await loadStats();
+    renderInventoryAlerts();
+    autoRefreshTimer = setInterval(()=>{ loadStats(); }, 60000);
+  }catch(e){ console.log(e); }
+}
+
+window.addEventListener("load", ()=>{
+  const key = getAdminKey();
+  document.getElementById("apiBaseLabel").textContent = (API_BASE || window.location.origin);
+  if(key){
+    document.getElementById("authGate").style.display = "none";
+    document.getElementById("appShell").classList.remove("locked");
+    document.getElementById("currentKeyMasked").textContent = "•".repeat(Math.max(6, key.length));
+    initApp();
+  }
+});
+</script>
+</body>
+</html>

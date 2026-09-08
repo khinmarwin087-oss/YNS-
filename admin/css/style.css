@@ -41,7 +41,6 @@ button { cursor: pointer; border: 0; }
 
 .main { margin-left: 260px; width: calc(100% - 260px); padding: 24px 28px 40px; }
 
-/* Overlay & Mobile Controls */
 .overlay { display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); z-index: 90; }
 .overlay.show { display: block; }
 
@@ -51,7 +50,7 @@ button { cursor: pointer; border: 0; }
   .main { margin-left: 0; width: 100%; padding: 16px 16px 80px; }
 }
 
-/* Header & Mobile Toggle */
+/* Header Bar */
 .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .header-left { display: flex; align-items: center; gap: 12px; }
 .menu-btn {
@@ -61,7 +60,6 @@ button { cursor: pointer; border: 0; }
 .greeting small { color: var(--muted); font-size: 12px; font-weight: 500; }
 .greeting h1 { font-size: 20px; margin: 0; font-weight: 800; letter-spacing: -0.5px; }
 
-/* Live Clock Badge */
 .live-clock-badge {
   background: #1e293b; color: #38bdf8; padding: 6px 14px; border-radius: 30px;
   font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm);
@@ -69,7 +67,7 @@ button { cursor: pointer; border: 0; }
 .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 1.5s infinite; }
 @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 
-/* Modern Today Blue Box (Hero Container) */
+/* Today Blue Box */
 .hero-card {
   background: var(--primary-gradient); color: #fff; border-radius: 24px; padding: 20px;
   position: relative; overflow: hidden; box-shadow: 0 12px 30px rgba(2, 132, 199, 0.3); margin-bottom: 20px;
@@ -92,38 +90,30 @@ button { cursor: pointer; border: 0; }
 .sub-stat-card span { font-size: 10px; text-transform: uppercase; color: var(--muted); font-weight: 700; }
 .sub-stat-card b { display: block; font-size: 16px; font-weight: 800; margin-top: 4px; color: var(--ink); }
 
-/* Section Title */
-.section-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; margin: 20px 0 12px; }
-
-/* Management Apps Grid */
-.management-grid { display: grid; grid-template-columns: repeat( auto-fit, minmax(130px, 1fr) ); gap: 12px; margin-bottom: 24px; }
-.menu-card {
-  background: var(--card); border-radius: 18px; padding: 16px; border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm); text-decoration: none; color: inherit; transition: .2s;
+/* Orders List & Card Buttons */
+.order-card {
+  background: var(--card); border-radius: 18px; border: 1px solid var(--line);
+  padding: 18px; margin-bottom: 16px; box-shadow: var(--shadow-sm);
 }
-.menu-card:active { transform: scale(0.96); }
-.icon-box { width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; font-size: 16px; margin-bottom: 10px; }
-.menu-card h4 { margin: 0; font-size: 14px; font-weight: 700; }
-.menu-card p { margin: 2px 0 0; font-size: 11px; color: var(--muted); }
+.order-header { display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--line); }
+.order-items-list { margin: 12px 0; font-size: 14px; }
+.order-item-row { display: flex; justify-content: space-between; padding: 4px 0; }
+.order-actions { display: flex; gap: 8px; margin-top: 14px; }
 
-/* Recent Orders Section */
-.orders-card { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid var(--line); box-shadow: var(--shadow-sm); }
-.orders-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-.orders-head h3 { font-size: 15px; margin: 0; font-weight: 800; }
-.orders-head a { font-size: 12px; color: #0284c7; font-weight: 700; text-decoration: none; }
+/* Accept, Cooking, Ready, Cancel Buttons */
+.btn-action {
+  flex: 1; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;
+}
+.btn-accept { background: #0284c7; color: #fff; }
+.btn-cooking { background: #f59e0b; color: #fff; }
+.btn-ready { background: #16a34a; color: #fff; }
+.btn-cancel { background: #fecaca; color: #dc2626; }
+.btn-action:hover { opacity: 0.9; }
 
-.order-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed var(--line); }
-.order-item:last-child { border-bottom: 0; }
-.order-item-info b { font-size: 14px; display: block; }
-.order-item-info small { color: var(--muted); font-size: 11px; }
-.order-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-.badge-pending { background: #fef3c7; color: #d97706; }
-.badge-completed { background: #dcfce7; color: #15803d; }
-
-/* Live Order Alert Popup Banner */
+/* Alert Banner */
 .live-alert {
   display: none; background: #f59e0b; color: #fff; padding: 12px 16px; border-radius: 16px;
   margin-bottom: 16px; align-items: center; justify-content: space-between; font-weight: 700; font-size: 13px;
-  animation: slideDown 0.3s ease; box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
 }
-@keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

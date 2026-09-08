@@ -16,4 +16,4 @@ ADMIN_KEY = "yns_admin_k8x2m9p4v7w1z5q3j6L0N8R2t4Y7u"
 [[d1_databases]]
 binding = "DB"
 database_name = "yns-orders-db"
-database_id = "PASTE-YOUR-D1-DATABASE-ID-HERE"
+database_id = "4f38c54d-92fe-49e7-aef3-d247f8b2bd96"

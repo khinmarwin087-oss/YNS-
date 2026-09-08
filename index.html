@@ -414,29 +414,30 @@ input:focus { border-color: var(--accent); background: white; outline: none; }
 
 let menuData = [];
 
-// Database (Worker) ထဲမှ Products များ လှမ်းဆွဲယူသည့် Function
-// Database (Worker) ထဲမှ Products များ လှမ်းဆွဲယူသည့် Function
 async function loadProductsFromDB() {
   try {
     const response = await fetch('https://yns.khinmarwin087.workers.dev/api/products');
     const data = await response.json();
     
     if (data.ok && data.products && data.products.length > 0) {
-      // Database မှ ရလာသော Products များကို မူလ JavaScript Array သို့ အစားထိုးခြင်း
-      products = data.products.map(p => ({
+      // Database မှ Products များကို မူလ Format အတိုင်း သေချာ ပြင်ဆင်ခြင်း
+      menuData = data.products.map(p => ({
         id: p.id,
         name: p.name,
-        price: p.price,
+        price: Number(p.price) || 0,
         category: p.category || 'အခြား',
         image: p.image || '',
-        available: p.available === 1
+        available: p.available == 1 || p.available === true || p.available === undefined
       }));
 
-      // မူလ HTML ထဲရှိ Menu ရေးဆွဲပေးသော Function များကို ပြန်ခေါ်ခြင်း
+      console.log("Loaded products:", menuData);
+
+      // Category ရော Menu Item များကိုပါ Render ပြန်လုပ်ပေးခြင်း
       if (typeof renderCategories === 'function') renderCategories();
-      if (typeof renderItems === 'function') renderItems();
-      if (typeof renderProducts === 'function') renderProducts();
       if (typeof renderMenu === 'function') renderMenu();
+      if (typeof renderProducts === 'function') renderProducts();
+    } else {
+      console.warn("Database ထဲတွင် Products များ မရှိသေးပါ သို့မဟုတ် ရလဒ် မထွက်ပါ။");
     }
   } catch (error) {
     console.error("Products load မရပါ:", error);

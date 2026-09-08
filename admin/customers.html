@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Customers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .tbl-wrap { overflow-x: auto; margin-top: 14px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+    th { background: #f8f9fb; color: var(--muted); font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Customers</h1><p>ဝယ်ယူသူဖောက်သည်များ စာရင်း</p></div>
+    </header>
+
+    <div class="card panel">
+      <h2>Recent Customers</h2>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Phone</th>
+              <th>Total Orders</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="customerTableBody">
+            <tr><td colspan="4" style="text-align:center; color:gray;">Loading customers...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  async function loadCustomers() {
+    const tbody = document.getElementById("customerTableBody");
+    try {
+      const res = await apiFetch("/api/admin/orders?pageSize=200");
+      if (res.ok && res.orders) {
+        // Group by phone
+        const custMap = {};
+        res.orders.forEach(o => {
+          const ph = o.phone || "Unknown";
+          if (!custMap[ph]) {
+            custMap[ph] = { name: o.customer_name || "Guest", phone: ph, count: 0 };
+          }
+          custMap[ph].count += 1;
+        });
+
+        const list = Object.values(custMap);
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">ဖောက်သည် စာရင်းမရှိသေးပါ</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = list.map(c => `
+          <tr>
+            <td><b>${c.name}</b></td>
+            <td><a href="tel:${c.phone}" style="color:var(--blue); font-weight:bold;">${c.phone}</a></td>
+            <td><span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${c.count} Orders</span></td>
+            <td><button onclick="alert('Phone: ${c.phone}')" style="background:var(--navy); color:#fff; padding:6px 12px; border-radius:8px; font-size:12px;">View Detail</button></td>
+          </tr>
+        `).join('');
+      }
+    } catch(e) {
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Data ရယူ၍ မရပါ</td></tr>`;
+    }
+  }
+
+  window.onload = () => {
+    renderAdminLayout("customers");
+    loadCustomers();
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Revenue</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .rev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
+    .rev-card { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .rev-card h3 { margin: 0; font-size: 13px; color: var(--muted); text-transform: uppercase; }
+    .rev-card .val { font-size: 24px; font-weight: 800; color: var(--navy); margin-top: 10px; display: block; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Revenue Insights</h1><p>ဝင်ငွေနှင့် စာရင်းဇယား အင်းအားစုများ</p></div>
+    </header>
+
+    <div class="rev-grid">
+      <div class="rev-card">
+        <h3>Today Revenue</h3>
+        <span class="val" id="revToday">0 Ks</span>
+      </div>
+      <div class="rev-card">
+        <h3>This Month Revenue</h3>
+        <span class="val" id="revMonth">0 Ks</span>
+      </div>
+      <div class="rev-card">
+        <h3>Total Revenue</h3>
+        <span class="val" id="revTotal">0 Ks</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  async function loadRevenue() {
+    try {
+      const res = await apiFetch("/api/admin/stats");
+      if (res.ok && res.revenue) {
+        document.getElementById("revToday").innerText = money(res.revenue.today || 0);
+        document.getElementById("revMonth").innerText = money(res.revenue.month || 0);
+        document.getElementById("revTotal").innerText = money(res.revenue.total || 0);
+      }
+    } catch(e) { console.error(e); }
+  }
+
+  window.onload = () => {
+    renderAdminLayout("revenue");
+    loadRevenue();
+  };
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Analytics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Sales Analytics</h1><p>အရောင်းဆိုင်ရာ လေ့လာဆန်းစစ်ချက်များ</p></div>
+    </header>
+
+    <div class="card panel">
+      <h2>Performance Summary</h2>
+      <p style="color:var(--muted); margin-top:10px;">Analytics ဇယားများနှင့် Graph များကို ဤနေရာတွင် ကြည့်ရှုနိုင်ပါသည်။</p>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  window.onload = () => { renderAdminLayout("analytics"); };
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .order-tab-bar { display: flex; gap: 8px; margin-bottom: 18px; background: #e8edf3; padding: 4px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; background: transparent; cursor: pointer; color: #64748b; }
+    .tab-btn.active { background: #ffffff; color: var(--ink); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+    
+    .order-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 15px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .order-card-top { display: flex; justify-content: space-between; border-bottom: 1px solid #f2f2f7; padding-bottom: 8px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+    .cust-name { font-size: 16px; font-weight: 700; display: block; color: var(--ink); }
+    .cust-phone { font-size: 13px; color: var(--blue); font-weight: 600; text-decoration: none; display: inline-block; margin-top: 4px; }
+    
+    .items-box { background: #f8f9fb; border-radius: 10px; padding: 10px 12px; margin: 12px 0; }
+    .item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #e5e5ea; }
+    .item-row:last-child { border-bottom: none; }
+    
+    .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f2f2f7; }
+    .total-val { font-size: 16px; font-weight: 800; color: var(--ink); }
+    
+    .btn-act { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--blue); }
+    .btn-cancel { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--red); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Orders</h1><p>အော်ဒါများကို စစ်ဆေးပါ သို့မဟုတ် Status ပြောင်းပါ</p></div>
+    </header>
+
+    <!-- Orders Filter Sub-tabs -->
+    <div class="order-tab-bar">
+      <button class="tab-btn active" onclick="switchTab('New', this)">New</button>
+      <button class="tab-btn" onclick="switchTab('Processing', this)">Cooking</button>
+      <button class="tab-btn" onclick="switchTab('Completed', this)">Ready</button>
+    </div>
+
+    <!-- Order Cards List Container -->
+    <div id="ordersCardsContainer">
+      <div style="text-align:center; padding:30px; color:gray;">Loading orders...</div>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  let currentTab = 'New';
+  let allOrders = [];
+
+  function switchTab(status, el) {
+    currentTab = status;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderOrders();
+  }
+
+  async function fetchOrders() {
+    try {
+      const res = await apiFetch("/api/admin/orders?pageSize=100");
+      if (res.ok && res.orders) {
+        allOrders = res.orders;
+        renderOrders();
+      }
+    } catch(e) {
+      document.getElementById("ordersCardsContainer").innerHTML = `<div style="text-align:center; color:red; padding:20px;">Data ရယူ၍ မရပါ</div>`;
+    }
+  }
+
+  function renderOrders() {
+    const container = document.getElementById("ordersCardsContainer");
+    
+    const filtered = allOrders.filter(o => {
+      if (currentTab === 'New') return o.status === 'New' || o.status === 'Pending';
+      return o.status === currentTab;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:40px; color:gray;">${currentTab} တွင် အော်ဒါ မရှိသေးပါ</div>`;
+      return;
+    }
+
+    container.innerHTML = filtered.map(o => {
+      let itemsHtml = "";
+      if (o.items_json) {
+        try {
+          const parsed = typeof o.items_json === 'string' ? JSON.parse(o.items_json) : o.items_json;
+          if (Array.isArray(parsed)) {
+            itemsHtml = parsed.map(i => `
+              <div class="item-row">
+                <span><b>${i.name}</b></span>
+                <span style="color:gray;">x${i.qty || i.quantity || 1}</span>
+                <span><b>${money((i.price || 0) * (i.qty || i.quantity || 1))}</b></span>
+              </div>
+            `).join('');
+          } else {
+            itemsHtml = `<div class="item-row"><span>${parsed}</span></div>`;
+          }
+        } catch(e) {
+          itemsHtml = `<div class="item-row"><span>${o.items_json}</span></div>`;
+        }
+      }
+
+      const phoneLink = o.phone ? `href="tel:${o.phone}"` : 'style="color:gray;"';
+
+      let actionBtn = "";
+      if (o.status === 'New' || o.status === 'Pending') {
+        actionBtn = `
+          <button class="btn-cancel" onclick="updateStatus(${o.id}, 'Cancelled')">Cancel</button>
+          <button class="btn-act" onclick="updateStatus(${o.id}, 'Processing')">Accept</button>
+        `;
+      } else if (o.status === 'Processing') {
+        actionBtn = `<button class="btn-act" style="background:var(--green)" onclick="updateStatus(${o.id}, 'Completed')">Ready</button>`;
+      } else {
+        actionBtn = `<b style="color:gray; font-size:12px;">Completed</b>`;
+      }
+
+      return `
+        <div class="order-card">
+          <div class="order-card-top">
+            <span><b>Voucher:</b> ${o.voucher_code || ('#' + o.id)}</span>
+            <span>${fmtDate(o.created_at)}</span>
+          </div>
+          <div>
+            <span class="cust-name">${o.customer_name || 'Guest'}</span>
+            <a ${phoneLink} class="cust-phone"><i class="fa-solid fa-phone"></i> ${o.phone || 'ဖုန်းမပါပါ'}</a>
+          </div>
+          <div class="items-box">
+            ${itemsHtml || '<div class="item-row">ပစ္စည်းစာရင်း မရှိပါ</div>'}
+          </div>
+          <div class="card-footer">
+            <div class="total-val">Total: ${money(o.total)}</div>
+            <div style="display:flex; gap:8px;">${actionBtn}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function updateStatus(id, newStatus) {
+    if (!confirm(`Status ကို ${newStatus} ပြောင်းမှာ သေချာပါသလား?`)) return;
+    const res = await apiFetch(`/api/admin/orders/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: newStatus })
+    });
+    if (res.ok) {
+      showToast("Status ပြောင်းလဲပြီးပါပြီ");
+      fetchOrders();
+    }
+  }
+
+  window.onload = () => {
+    renderAdminLayout("orders");
+    fetchOrders();
+    setInterval(fetchOrders, 10000); // 10s auto refresh
+  };
+</script>
+</body>
+</html>

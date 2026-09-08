@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Inventory</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 18px; }
+    .inv-card { background: #fff; padding: 18px; border-radius: 16px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .inv-status { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+    .status-ok { background: #e6f4ea; color: var(--green); }
+    .status-low { background: #fef3c7; color: #d97706; }
+    .status-out { background: #fee2e2; color: var(--red); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Inventory Management</h1><p>ကုန်ကြမ်းနှင့် ပစ္စည်းလက်ကျန် အခြေအနေများ</p></div>
+    </header>
+
+    <div class="card panel">
+      <div class="panel-head">
+        <h2>Stock Status</h2>
+        <button class="btn-act" style="padding:8px 14px; background:var(--navy); color:#fff; border-radius:10px;" onclick="loadInventory()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+
+      <div class="inv-grid" id="inventoryGrid">
+        <div style="color:gray;">Loading inventory...</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  async function loadInventory() {
+    const container = document.getElementById("inventoryGrid");
+    try {
+      const res = await apiFetch("/api/admin/products");
+      if (res.ok && res.products) {
+        container.innerHTML = res.products.map(p => {
+          const stock = p.stock ?? 0;
+          let badgeClass = "status-ok";
+          let badgeText = "In Stock";
+          
+          if (stock === 0) {
+            badgeClass = "status-out"; badgeText = "Out of Stock";
+          } else if (stock < 10) {
+            badgeClass = "status-low"; badgeText = "Low Stock";
+          }
+
+          return `
+            <div class="inv-card">
+              <span class="inv-status ${badgeClass}">${badgeText}</span>
+              <h3 style="margin:0 0 6px; font-size:16px;">${p.name}</h3>
+              <p style="margin:0; color:var(--muted); font-size:13px;">Remaining: <b>${stock}</b> Pcs</p>
+            </div>
+          `;
+        }).join('');
+      }
+    } catch(e) {
+      container.innerHTML = `<p style="color:red;">Inventory ရယူ၍ မရပါ</p>`;
+    }
+  }
+
+  window.onload = () => {
+    renderAdminLayout("inventory");
+    loadInventory();
+  };
+</script>
+</body>
+</html>

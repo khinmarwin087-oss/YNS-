@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--ink); }
+    .form-group input { width: 100%; max-width: 400px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 10px; outline: none; }
+    .btn-save { padding: 10px 20px; background: var(--navy); color: #fff; border-radius: 10px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1>Settings</h1><p>စနစ် ဆက်တင်များ ပြင်ဆင်ရန်</p></div>
+    </header>
+
+    <div class="card panel">
+      <h2>Admin Key Credentials</h2>
+      <div class="form-group" style="margin-top:15px;">
+        <label>Admin Secret Key</label>
+        <input type="password" id="adminKeyInput" placeholder="Enter new secret key">
+      </div>
+      <button class="btn-save" onclick="saveKey()">Save Key</button>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  window.onload = () => {
+    renderAdminLayout("settings");
+    document.getElementById("adminKeyInput").value = getAdminKey();
+  };
+
+  function saveKey() {
+    const val = document.getElementById("adminKeyInput").value.trim();
+    if (!val) {
+      showToast("Key ဖြည့်စွက်ပါ");
+      return;
+    }
+    localStorage.setItem(ADMIN_KEY_STORAGE, val);
+    showToast("Admin Key သိမ်းဆည်းပြီးပါပြီ");
+  }
+</script>
+</body>
+</html>

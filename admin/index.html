@@ -11,7 +11,6 @@
 <body>
 
 <div class="app">
-  <!-- Sidebar Navigation -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-icon">🍗</div>
@@ -21,33 +20,26 @@
     <nav class="nav" id="sidebarNav"></nav>
   </aside>
 
-  <!-- Main Content View -->
   <main class="main">
-    
-    <!-- Live New Order Alert Notification -->
     <div class="live-alert" id="newOrderAlert">
       <span><i class="fa-solid fa-bell fa-bounce"></i> အော်ဒါအသစ် ရောက်ရှိလာပါသည်။</span>
       <button onclick="dismissAlert()" style="background:rgba(255,255,255,0.2); color:#fff; border-radius:8px; padding:4px 8px; font-size:11px;">ပိတ်မည်</button>
     </div>
 
-    <!-- Top Header Bar -->
     <header class="dash-header">
       <div class="header-left">
-        <!-- Menu Toggle Button (Left Side) -->
         <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
         <div class="greeting">
           <small>Mingalaba!</small>
           <h1>YNS Kitchen</h1>
         </div>
       </div>
-      <!-- Live Clock & Date Badge -->
       <div class="live-clock-badge">
         <span class="live-dot"></span>
         <span id="liveClockDisplay">--:--:--</span>
       </div>
     </header>
 
-    <!-- 1. Top Blue Gradient Box (Today Data Only) -->
     <div class="hero-card">
       <div class="hero-title"><i class="fa-solid fa-calendar-day"></i> Today's Sales (ယနေ့ ဝင်ငွေ)</div>
       <div class="hero-main-amount" id="todayRevenue">0 Ks</div>
@@ -64,7 +56,6 @@
       </div>
     </div>
 
-    <!-- 2. Lower Stats Row (Total Revenue, Total Orders, Customers) -->
     <div class="stats-row">
       <div class="sub-stat-card">
         <span>Total Rev</span>
@@ -80,50 +71,22 @@
       </div>
     </div>
 
-    <!-- 3. Management Quick Navigation -->
-    <div class="section-title">Management</div>
-    <div class="management-grid">
-      <a href="orders.html" class="menu-card">
-        <div class="icon-box" style="background:#eff6ff; color:#2563eb;"><i class="fa-solid fa-basket-shopping"></i></div>
-        <h4>Orders</h4>
-        <p>Live Orders</p>
-      </a>
-      <a href="products.html" class="menu-card">
-        <div class="icon-box" style="background:#faf5ff; color:#9333ea;"><i class="fa-solid fa-utensils"></i></div>
-        <h4>Menus</h4>
-        <p>Edit Dishes</p>
-      </a>
-      <a href="inventory.html" class="menu-card">
-        <div class="icon-box" style="background:#f0fdf4; color:#16a34a;"><i class="fa-solid fa-rotate-left"></i></div>
-        <h4>History</h4>
-        <p>Past Sales</p>
-      </a>
-      <a href="settings.html" class="menu-card">
-        <div class="icon-box" style="background:#fef2f2; color:#dc2626;"><i class="fa-solid fa-gear"></i></div>
-        <h4>Settings</h4>
-        <p>App Config</p>
-      </a>
-    </div>
-
-    <!-- 4. Recent Orders Box -->
-    <div class="orders-card">
-      <div class="orders-head">
-        <h3>လတ်တလော Orders များ</h3>
-        <a href="orders.html">အားလုံးကြည့်ရန် →</a>
+    <div class="orders-card" style="background:#fff; border-radius:20px; padding:18px; border:1px solid #e2e8f0;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="margin:0;">လတ်တလော Orders များ</h3>
+        <a href="orders.html" style="font-size:12px; color:#0284c7; text-decoration:none; font-weight:700;">အားလုံးကြည့်ရန် →</a>
       </div>
       <div id="recentOrdersContainer">
         <p style="color:gray; font-size:12px;">အော်ဒါများကို ရယူနေသည်...</p>
       </div>
     </div>
-
   </main>
 </div>
 
 <script src="js/main.js"></script>
 <script>
-  let lastOrderCount = 0;
+  let previousOrderCount = -1;
 
-  // Real-time Digital Live Clock Function
   function startLiveClock() {
     function update() {
       const now = new Date();
@@ -135,51 +98,53 @@
     setInterval(update, 1000);
   }
 
-  // Fetch Dashboard Stats & Recent Orders Data
   async function fetchDashboardMetrics() {
     try {
-      // Fetch Stats
       const res = await apiFetch("/api/admin/stats");
-      if (res.ok) {
-        document.getElementById("todayRevenue").innerText = money(res.revenue.today || 0);
-        document.getElementById("todayOrders").innerText = res.orders.today || 0;
-        document.getElementById("todayTotalCount").innerText = res.orders.today || 0;
+      if (res) {
+        // Safe Number Extract ([object Object] အမှားရှင်းရန်)
+        const custCount = typeof res.customers === 'object' ? (res.customers.total || res.customers.count || 0) : (res.customers || 0);
+        const todayRev = res.revenue?.today || res.today_revenue || 0;
+        const totalRev = res.revenue?.total || res.total_revenue || 0;
+        const todayOrd = res.orders?.today || res.today_orders || 0;
+        const totalOrd = res.orders?.total || res.total_orders || 0;
 
-        document.getElementById("totalRevenue").innerText = money(res.revenue.total || 0);
-        document.getElementById("totalOrders").innerText = res.orders.total || 0;
-        document.getElementById("totalCustomers").innerText = res.customers || res.orders.total || 0;
+        document.getElementById("todayRevenue").innerText = money(todayRev);
+        document.getElementById("todayOrders").innerText = todayOrd;
+        document.getElementById("todayTotalCount").innerText = todayOrd;
 
-        // Auto Detection for New Orders
-        if (lastOrderCount > 0 && res.orders.total > lastOrderCount) {
-          triggerNewOrderAlert();
+        document.getElementById("totalRevenue").innerText = money(totalRev);
+        document.getElementById("totalOrders").innerText = totalOrd;
+        document.getElementById("totalCustomers").innerText = custCount;
+
+        // Order အသစ်ဝင်လာပါက Notification တက်ရန်
+        if (previousOrderCount !== -1 && totalOrd > previousOrderCount) {
+          document.getElementById("newOrderAlert").style.display = "flex";
         }
-        lastOrderCount = res.orders.total;
+        previousOrderCount = totalOrd;
       }
 
-      // Fetch Recent Orders List
-      const ordersRes = await apiFetch("/api/admin/orders?pageSize=5");
+      // Recent Orders ယူရန်
+      const ordersRes = await apiFetch("/api/admin/orders");
       const listEl = document.getElementById("recentOrdersContainer");
-      if (ordersRes.ok && ordersRes.orders && ordersRes.orders.length > 0) {
-        listEl.innerHTML = ordersRes.orders.slice(0, 5).map(o => `
-          <div class="order-item">
-            <div class="order-item-info">
-              <b>${o.customer_name || 'Guest User'}</b>
-              <small>${fmtDate(o.created_at)} • ${money(o.total)}</small>
+      const ordersList = ordersRes.orders || ordersRes || [];
+
+      if (Array.isArray(ordersList) && ordersList.length > 0) {
+        listEl.innerHTML = ordersList.slice(0, 5).map(o => `
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px dashed #e2e8f0;">
+            <div>
+              <b style="font-size:14px; display:block;">${o.customer_name || o.name || 'Guest'}</b>
+              <small style="color:#64748b; font-size:11px;">${fmtDate(o.created_at)} • ${money(o.total)}</small>
             </div>
-            <span class="order-badge ${o.status === 'completed' ? 'badge-completed' : 'badge-pending'}">${o.status}</span>
+            <span style="padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; background:#fef3c7; color:#d97706;">${o.status || 'New'}</span>
           </div>
         `).join('');
       } else {
-        listEl.innerHTML = `<p style="color:gray; font-size:12px; text-align:center;">ယနေ့ အော်ဒါများ မရှိသေးပါ</p>`;
+        listEl.innerHTML = `<p style="color:gray; font-size:12px; text-align:center;">အော်ဒါများ မရှိသေးပါ</p>`;
       }
     } catch(err) {
       console.error("Dashboard Load Error:", err);
     }
-  }
-
-  function triggerNewOrderAlert() {
-    const alertBox = document.getElementById("newOrderAlert");
-    alertBox.style.display = "flex";
   }
 
   function dismissAlert() {
@@ -190,8 +155,7 @@
     renderAdminLayout("dashboard");
     startLiveClock();
     fetchDashboardMetrics();
-    // Auto Poll standard check every 15 seconds for new orders
-    setInterval(fetchDashboardMetrics, 15000);
+    setInterval(fetchDashboardMetrics, 10000); // ၁၀ စက္ကန့်တစ်ခါ အော်ဒါအသစ်စစ်မည်
   };
 </script>
 </body>

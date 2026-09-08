@@ -7,6 +7,44 @@
   <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Search & Filter Compact Bar */
+    .search-filter-wrapper {
+      display: flex; gap: 10px; margin-bottom: 16px; position: relative;
+    }
+    .search-input-box {
+      flex: 1; display: flex; align-items: center; background: #fff; border: 1px solid var(--line);
+      border-radius: 16px; padding: 0 16px; gap: 10px; box-shadow: var(--shadow-sm);
+    }
+    .search-input-box i { color: var(--muted); font-size: 15px; }
+    .search-input-box input {
+      width: 100%; border: 0; outline: none; padding: 12px 0; background: transparent; font-size: 14px;
+    }
+    .icon-filter-btn {
+      width: 46px; height: 46px; border-radius: 16px; background: #fff; border: 1px solid var(--line);
+      display: grid; place-items: center; font-size: 16px; color: var(--navy); box-shadow: var(--shadow-sm); transition: 0.2s;
+    }
+    .icon-filter-btn.active { background: var(--navy); color: #fff; }
+
+    /* Date Filter Popup Container */
+    .date-popup {
+      display: none; position: absolute; top: 54px; right: 0; background: #fff; border: 1px solid var(--line);
+      border-radius: 18px; padding: 16px; box-shadow: var(--shadow-md); z-index: 50; width: 280px; flex-direction: column; gap: 10px;
+    }
+    .date-popup.show { display: flex; }
+    .date-popup label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+    .date-popup input {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; margin-top: 4px;
+    }
+
+    /* Red Grand Total Box */
+    .order-grand-total {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px 16px; background: #fef2f2; border-radius: 14px; border: 1px solid #fecaca; margin-top: 14px;
+    }
+    .order-grand-total span { font-size: 13px; font-weight: 700; color: #991b1b; }
+    .red-total { font-size: 18px; font-weight: 800; color: #dc2626; }
+  </style>
 </head>
 <body>
 
@@ -31,34 +69,37 @@
       </div>
     </header>
 
-    <!-- Search Bar & Date Filter Controls -->
-    <div class="filter-card">
-      <div class="search-box">
+    <!-- Compact Search & Icon Filter Bar -->
+    <div class="search-filter-wrapper">
+      <div class="search-input-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Voucher, Customer Name, Phone စသည်ဖြင့် ရှာရန်...">
       </div>
-      <div class="date-filter-group">
-        <div class="date-field">
-          <label>From:</label>
+      <button class="icon-filter-btn" id="filterToggleBtn" onclick="toggleDatePopup()"><i class="fa-solid fa-sliders"></i></button>
+
+      <!-- Date Popup Box -->
+      <div class="date-popup" id="datePopup">
+        <div>
+          <label>From Date</label>
           <input type="date" id="fromDate" onchange="applyFilters()">
         </div>
-        <div class="date-field">
-          <label>To:</label>
+        <div>
+          <label>To Date</label>
           <input type="date" id="toDate" onchange="applyFilters()">
         </div>
-        <button class="btn-reset" onclick="resetFilters()"><i class="fa-solid fa-rotate-right"></i> Clear</button>
+        <button onclick="resetDateFilter()" style="background:#f1f5f9; color:var(--ink); border-radius:10px; padding:8px; font-size:12px; font-weight:700; margin-top:4px;"><i class="fa-solid fa-rotate-right"></i> Reset Dates</button>
       </div>
     </div>
 
-    <!-- Status Tabs (New, Cooking, Ready, All) -->
+    <!-- Status Navigation Tabs -->
     <div class="status-tabs">
       <button class="tab-btn active" onclick="filterStatus('all', this)">All</button>
-      <button class="tab-btn" onclick="filterStatus('New', this)">New</button>
-      <button class="tab-btn" onclick="filterStatus('Cooking', this)">Cooking</button>
-      <button class="tab-btn" onclick="filterStatus('Ready', this)">Ready</button>
+      <button class="tab-btn" onclick="filterStatus('new', this)">New</button>
+      <button class="tab-btn" onclick="filterStatus('cooking', this)">Cooking</button>
+      <button class="tab-btn" onclick="filterStatus('ready', this)">Ready</button>
     </div>
 
-    <!-- Orders Container -->
+    <!-- Orders Cards List Container -->
     <div id="ordersListContainer">
       <p style="color:gray;">အော်ဒါများကို ရယူနေသည်...</p>
     </div>
@@ -81,22 +122,24 @@
     }
   }
 
-  function filterStatus(status, btn) {
-    currentStatus = status;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyFilters();
+  function toggleDatePopup() {
+    const popup = document.getElementById("datePopup");
+    const btn = document.getElementById("filterToggleBtn");
+    popup.classList.toggle("show");
+    btn.classList.toggle("active");
   }
 
-  function resetFilters() {
-    document.getElementById("searchInput").value = "";
+  function resetDateFilter() {
     document.getElementById("fromDate").value = "";
     document.getElementById("toDate").value = "";
-    currentStatus = 'all';
-    document.querySelectorAll('.tab-btn').forEach((b, idx) => {
-      if(idx === 0) b.classList.add('active');
-      else b.classList.remove('active');
-    });
+    applyFilters();
+    toggleDatePopup();
+  }
+
+  function filterStatus(status, btn) {
+    currentStatus = status.toLowerCase();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
     applyFilters();
   }
 
@@ -106,13 +149,16 @@
     const toDateVal = document.getElementById("toDate").value;
 
     let filtered = rawOrders.filter(o => {
-      // 1. Status Filter
+      const oStatus = (o.status || 'new').toLowerCase();
+
+      // 1. Status Filter Flexibly
       if (currentStatus !== 'all') {
-        const oStatus = (o.status || 'New').toLowerCase();
-        if (oStatus !== currentStatus.toLowerCase()) return false;
+        if (currentStatus === 'new' && !(oStatus === 'new' || oStatus === 'pending')) return false;
+        if (currentStatus === 'cooking' && !(oStatus === 'cooking' || oStatus === 'processing')) return false;
+        if (currentStatus === 'ready' && oStatus !== 'ready') return false;
       }
 
-      // 2. Search Query Filter
+      // 2. Search Query Matching
       const voucher = (o.id || o.voucher_id || '').toString().toLowerCase();
       const name = (o.customer_name || o.name || '').toLowerCase();
       const phone = (o.phone || '').toString().toLowerCase();
@@ -120,7 +166,7 @@
       const matchesSearch = !query || voucher.includes(query) || name.includes(query) || phone.includes(query);
       if (!matchesSearch) return false;
 
-      // 3. Date Range Filter
+      // 3. Date Filters
       if (fromDateVal || toDateVal) {
         if (!o.created_at) return false;
         const orderDate = new Date(o.created_at.replace(" ", "T")).setHours(0,0,0,0);
@@ -145,13 +191,14 @@
     const container = document.getElementById("ordersListContainer");
 
     if (!Array.isArray(orders) || orders.length === 0) {
-      container.innerHTML = "<div style='text-align:center; padding:30px; color:gray;'>အော်ဒါများ မရှိပါ။</div>";
+      container.innerHTML = "<div style='text-align:center; padding:40px; color:gray;'>အော်ဒါများ မရှိပါ။</div>";
       return;
     }
 
     container.innerHTML = orders.map(o => {
       const items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
-      
+      const st = (o.status || 'Pending').toLowerCase();
+
       return `
         <div class="order-card">
           <div class="order-header">
@@ -162,11 +209,11 @@
             </div>
             <div style="text-align:right;">
               <span class="order-time">${fmtDate(o.created_at)}</span>
-              <span class="order-badge badge-${(o.status || 'Pending').toLowerCase()}">${o.status || 'New'}</span>
+              <span class="order-badge badge-${st}">${o.status || 'New'}</span>
             </div>
           </div>
 
-          <!-- Items Table (Name, Price, Quantity, Total Row) -->
+          <!-- Items Table (Name, Price, Quantity, Total) -->
           <div class="table-responsive">
             <table class="items-table">
               <thead>
@@ -195,24 +242,24 @@
             </table>
           </div>
 
-          <!-- Total Amount Displayed in RED -->
+          <!-- Red Total Display -->
           <div class="order-grand-total">
             <span>Grand Total:</span>
             <b class="red-total">${money(o.total)}</b>
           </div>
 
-          <!-- Action Buttons Logic -->
+          <!-- Action Buttons -->
           <div class="order-actions">
-            ${(!o.status || o.status === 'Pending' || o.status === 'New') ? `
+            ${(st === 'pending' || st === 'new') ? `
               <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Cooking')"><i class="fa-solid fa-fire"></i> Accept & Cook</button>
               <button class="btn-action btn-cancel" onclick="updateOrderStatus('${o.id}', 'Cancelled')"><i class="fa-solid fa-xmark"></i> Cancel</button>
             ` : ''}
 
-            ${o.status === 'Cooking' ? `
+            ${(st === 'cooking' || st === 'processing') ? `
               <button class="btn-action btn-ready" onclick="updateOrderStatus('${o.id}', 'Ready')"><i class="fa-solid fa-check"></i> Mark Ready</button>
             ` : ''}
 
-            ${o.status === 'Ready' ? `
+            ${st === 'ready' ? `
               <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Completed')"><i class="fa-solid fa-circle-check"></i> Complete</button>
             ` : ''}
           </div>

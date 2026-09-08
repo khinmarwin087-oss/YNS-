@@ -2,170 +2,241 @@
 <html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>မြင်သာကြက်ကင် • Orders</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Orders Management • YNS Kitchen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
-  <style>
-    .order-tab-bar { display: flex; gap: 8px; margin-bottom: 18px; background: #e8edf3; padding: 4px; border-radius: 12px; }
-    .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; background: transparent; cursor: pointer; color: #64748b; }
-    .tab-btn.active { background: #ffffff; color: var(--ink); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
-    
-    .order-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 15px; border: 1px solid var(--line); box-shadow: var(--shadow); }
-    .order-card-top { display: flex; justify-content: space-between; border-bottom: 1px solid #f2f2f7; padding-bottom: 8px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
-    .cust-name { font-size: 16px; font-weight: 700; display: block; color: var(--ink); }
-    .cust-phone { font-size: 13px; color: var(--blue); font-weight: 600; text-decoration: none; display: inline-block; margin-top: 4px; }
-    
-    .items-box { background: #f8f9fb; border-radius: 10px; padding: 10px 12px; margin: 12px 0; }
-    .item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px dashed #e5e5ea; }
-    .item-row:last-child { border-bottom: none; }
-    
-    .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f2f2f7; }
-    .total-val { font-size: 16px; font-weight: 800; color: var(--ink); }
-    
-    .btn-act { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--blue); }
-    .btn-cancel { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--red); }
-  </style>
 </head>
 <body>
+
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
+    </div>
     <div class="nav-title">MAIN MENU</div>
     <nav class="nav" id="sidebarNav"></nav>
-    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
   </aside>
 
   <main class="main">
-    <header class="topbar">
-      <div><h1>Orders</h1><p>အော်ဒါများကို စစ်ဆေးပါ သို့မဟုတ် Status ပြောင်းပါ</p></div>
+    <header class="dash-header">
+      <div class="header-left">
+        <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div class="greeting">
+          <h1>Orders Management</h1>
+          <small>အော်ဒါများကို စစ်ဆေးပါ သို့မဟုတ် Status ပြောင်းပါ</small>
+        </div>
+      </div>
     </header>
 
-    <!-- Orders Filter Sub-tabs -->
-    <div class="order-tab-bar">
-      <button class="tab-btn active" onclick="switchTab('New', this)">New</button>
-      <button class="tab-btn" onclick="switchTab('Processing', this)">Cooking</button>
-      <button class="tab-btn" onclick="switchTab('Completed', this)">Ready</button>
+    <!-- Search Bar & Date Filter Controls -->
+    <div class="filter-card">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Voucher, Customer Name, Phone စသည်ဖြင့် ရှာရန်...">
+      </div>
+      <div class="date-filter-group">
+        <div class="date-field">
+          <label>From:</label>
+          <input type="date" id="fromDate" onchange="applyFilters()">
+        </div>
+        <div class="date-field">
+          <label>To:</label>
+          <input type="date" id="toDate" onchange="applyFilters()">
+        </div>
+        <button class="btn-reset" onclick="resetFilters()"><i class="fa-solid fa-rotate-right"></i> Clear</button>
+      </div>
     </div>
 
-    <!-- Order Cards List Container -->
-    <div id="ordersCardsContainer">
-      <div style="text-align:center; padding:30px; color:gray;">Loading orders...</div>
+    <!-- Status Tabs (New, Cooking, Ready, All) -->
+    <div class="status-tabs">
+      <button class="tab-btn active" onclick="filterStatus('all', this)">All</button>
+      <button class="tab-btn" onclick="filterStatus('New', this)">New</button>
+      <button class="tab-btn" onclick="filterStatus('Cooking', this)">Cooking</button>
+      <button class="tab-btn" onclick="filterStatus('Ready', this)">Ready</button>
+    </div>
+
+    <!-- Orders Container -->
+    <div id="ordersListContainer">
+      <p style="color:gray;">အော်ဒါများကို ရယူနေသည်...</p>
     </div>
   </main>
 </div>
 
 <script src="js/main.js"></script>
 <script>
-  let currentTab = 'New';
-  let allOrders = [];
+  let rawOrders = [];
+  let currentStatus = 'all';
 
-  function switchTab(status, el) {
-    currentTab = status;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    renderOrders();
-  }
-
-  async function fetchOrders() {
+  async function loadOrders() {
+    const container = document.getElementById("ordersListContainer");
     try {
-      const res = await apiFetch("/api/admin/orders?pageSize=100");
-      if (res.ok && res.orders) {
-        allOrders = res.orders;
-        renderOrders();
-      }
-    } catch(e) {
-      document.getElementById("ordersCardsContainer").innerHTML = `<div style="text-align:center; color:red; padding:20px;">Data ရယူ၍ မရပါ</div>`;
+      const res = await apiFetch("/api/admin/orders");
+      rawOrders = res.orders || res || [];
+      applyFilters();
+    } catch (err) {
+      container.innerHTML = "<p style='color:red;'>Orders ဒေတာ ရယူ၍ မရပါ။</p>";
     }
   }
 
-  function renderOrders() {
-    const container = document.getElementById("ordersCardsContainer");
-    
-    const filtered = allOrders.filter(o => {
-      if (currentTab === 'New') return o.status === 'New' || o.status === 'Pending';
-      return o.status === currentTab;
+  function filterStatus(status, btn) {
+    currentStatus = status;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+  }
+
+  function resetFilters() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+    currentStatus = 'all';
+    document.querySelectorAll('.tab-btn').forEach((b, idx) => {
+      if(idx === 0) b.classList.add('active');
+      else b.classList.remove('active');
     });
+    applyFilters();
+  }
 
-    if (filtered.length === 0) {
-      container.innerHTML = `<div style="text-align:center; padding:40px; color:gray;">${currentTab} တွင် အော်ဒါ မရှိသေးပါ</div>`;
-      return;
-    }
+  function applyFilters() {
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
+    const fromDateVal = document.getElementById("fromDate").value;
+    const toDateVal = document.getElementById("toDate").value;
 
-    container.innerHTML = filtered.map(o => {
-      let itemsHtml = "";
-      if (o.items_json) {
-        try {
-          const parsed = typeof o.items_json === 'string' ? JSON.parse(o.items_json) : o.items_json;
-          if (Array.isArray(parsed)) {
-            itemsHtml = parsed.map(i => `
-              <div class="item-row">
-                <span><b>${i.name}</b></span>
-                <span style="color:gray;">x${i.qty || i.quantity || 1}</span>
-                <span><b>${money((i.price || 0) * (i.qty || i.quantity || 1))}</b></span>
-              </div>
-            `).join('');
-          } else {
-            itemsHtml = `<div class="item-row"><span>${parsed}</span></div>`;
-          }
-        } catch(e) {
-          itemsHtml = `<div class="item-row"><span>${o.items_json}</span></div>`;
+    let filtered = rawOrders.filter(o => {
+      // 1. Status Filter
+      if (currentStatus !== 'all') {
+        const oStatus = (o.status || 'New').toLowerCase();
+        if (oStatus !== currentStatus.toLowerCase()) return false;
+      }
+
+      // 2. Search Query Filter
+      const voucher = (o.id || o.voucher_id || '').toString().toLowerCase();
+      const name = (o.customer_name || o.name || '').toLowerCase();
+      const phone = (o.phone || '').toString().toLowerCase();
+      
+      const matchesSearch = !query || voucher.includes(query) || name.includes(query) || phone.includes(query);
+      if (!matchesSearch) return false;
+
+      // 3. Date Range Filter
+      if (fromDateVal || toDateVal) {
+        if (!o.created_at) return false;
+        const orderDate = new Date(o.created_at.replace(" ", "T")).setHours(0,0,0,0);
+        
+        if (fromDateVal) {
+          const fromD = new Date(fromDateVal).setHours(0,0,0,0);
+          if (orderDate < fromD) return false;
+        }
+        if (toDateVal) {
+          const toD = new Date(toDateVal).setHours(0,0,0,0);
+          if (orderDate > toD) return false;
         }
       }
 
-      const phoneLink = o.phone ? `href="tel:${o.phone}"` : 'style="color:gray;"';
+      return true;
+    });
 
-      let actionBtn = "";
-      if (o.status === 'New' || o.status === 'Pending') {
-        actionBtn = `
-          <button class="btn-cancel" onclick="updateStatus(${o.id}, 'Cancelled')">Cancel</button>
-          <button class="btn-act" onclick="updateStatus(${o.id}, 'Processing')">Accept</button>
-        `;
-      } else if (o.status === 'Processing') {
-        actionBtn = `<button class="btn-act" style="background:var(--green)" onclick="updateStatus(${o.id}, 'Completed')">Ready</button>`;
-      } else {
-        actionBtn = `<b style="color:gray; font-size:12px;">Completed</b>`;
-      }
+    renderOrders(filtered);
+  }
 
+  function renderOrders(orders) {
+    const container = document.getElementById("ordersListContainer");
+
+    if (!Array.isArray(orders) || orders.length === 0) {
+      container.innerHTML = "<div style='text-align:center; padding:30px; color:gray;'>အော်ဒါများ မရှိပါ။</div>";
+      return;
+    }
+
+    container.innerHTML = orders.map(o => {
+      const items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
+      
       return `
         <div class="order-card">
-          <div class="order-card-top">
-            <span><b>Voucher:</b> ${o.voucher_code || ('#' + o.id)}</span>
-            <span>${fmtDate(o.created_at)}</span>
+          <div class="order-header">
+            <div>
+              <span class="voucher-tag">Voucher: #${o.id || o.voucher_id || 'N/A'}</span>
+              <h3 class="cust-name">${o.customer_name || o.name || 'Guest'}</h3>
+              <small class="cust-phone">📞 ${o.phone || '-'}</small>
+            </div>
+            <div style="text-align:right;">
+              <span class="order-time">${fmtDate(o.created_at)}</span>
+              <span class="order-badge badge-${(o.status || 'Pending').toLowerCase()}">${o.status || 'New'}</span>
+            </div>
           </div>
-          <div>
-            <span class="cust-name">${o.customer_name || 'Guest'}</span>
-            <a ${phoneLink} class="cust-phone"><i class="fa-solid fa-phone"></i> ${o.phone || 'ဖုန်းမပါပါ'}</a>
+
+          <!-- Items Table (Name, Price, Quantity, Total Row) -->
+          <div class="table-responsive">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th style="text-align:left;">Name</th>
+                  <th style="text-align:right;">Price</th>
+                  <th style="text-align:center;">Qty</th>
+                  <th style="text-align:right;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${items.map(i => {
+                  const price = Number(i.price) || 0;
+                  const qty = Number(i.qty || i.quantity) || 1;
+                  const rowTotal = price * qty;
+                  return `
+                    <tr>
+                      <td style="text-align:left; font-weight:600;">${i.name || i.title}</td>
+                      <td style="text-align:right;">${money(price)}</td>
+                      <td style="text-align:center;">x${qty}</td>
+                      <td style="text-align:right; font-weight:700;">${money(rowTotal)}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
           </div>
-          <div class="items-box">
-            ${itemsHtml || '<div class="item-row">ပစ္စည်းစာရင်း မရှိပါ</div>'}
+
+          <!-- Total Amount Displayed in RED -->
+          <div class="order-grand-total">
+            <span>Grand Total:</span>
+            <b class="red-total">${money(o.total)}</b>
           </div>
-          <div class="card-footer">
-            <div class="total-val">Total: ${money(o.total)}</div>
-            <div style="display:flex; gap:8px;">${actionBtn}</div>
+
+          <!-- Action Buttons Logic -->
+          <div class="order-actions">
+            ${(!o.status || o.status === 'Pending' || o.status === 'New') ? `
+              <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Cooking')"><i class="fa-solid fa-fire"></i> Accept & Cook</button>
+              <button class="btn-action btn-cancel" onclick="updateOrderStatus('${o.id}', 'Cancelled')"><i class="fa-solid fa-xmark"></i> Cancel</button>
+            ` : ''}
+
+            ${o.status === 'Cooking' ? `
+              <button class="btn-action btn-ready" onclick="updateOrderStatus('${o.id}', 'Ready')"><i class="fa-solid fa-check"></i> Mark Ready</button>
+            ` : ''}
+
+            ${o.status === 'Ready' ? `
+              <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Completed')"><i class="fa-solid fa-circle-check"></i> Complete</button>
+            ` : ''}
           </div>
         </div>
       `;
     }).join('');
   }
 
-  async function updateStatus(id, newStatus) {
-    if (!confirm(`Status ကို ${newStatus} ပြောင်းမှာ သေချာပါသလား?`)) return;
-    const res = await apiFetch(`/api/admin/orders/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status: newStatus })
-    });
-    if (res.ok) {
-      showToast("Status ပြောင်းလဲပြီးပါပြီ");
-      fetchOrders();
+  async function updateOrderStatus(orderId, status) {
+    try {
+      await apiFetch(`/api/admin/orders/${orderId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status })
+      });
+      showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
+      loadOrders();
+    } catch(e) {
+      showToast("ပြင်ဆင်မှု မအောင်မြင်ပါ");
     }
   }
 
   window.onload = () => {
     renderAdminLayout("orders");
-    fetchOrders();
-    setInterval(fetchOrders, 10000); // 10s auto refresh
+    loadOrders();
   };
 </script>
 </body>

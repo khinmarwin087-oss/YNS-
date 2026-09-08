@@ -568,7 +568,7 @@ async function sendOrder() {
     const ownerMsg = `🍗 *မြင်သာကြက်ကင် - အော်ဒါအသစ်*\n🧾 *ဘောက်ချာနံပါတ်:* \`${vCode}\`\n👤 *အမည်:* ${name}\n📞 *ဖုန်း/ID:* ${phone}\n📅 *နေ့ရက်:* ${dayStr}\n🕒 *အချိန်:* ${time}\n━━━━━━━━━━━━━━\n${itemsText.join('\n')}\n━━━━━━━━━━━━━━\n💰 *စုစုပေါင်း:* *${formattedTotal} MMK*`;
 
     try {
-        await fetch('https://yns.khinmarwin087.workers.dev/api/send-order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: ownerMsg }) });
+        await fetch('https://yns.khinmarwin087.workers.dev/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: ownerMsg }) });
 
         let orderHistory = JSON.parse(localStorage.getItem('order_history') || '[]');
         orderHistory.unshift({ vCode, name, phone, date: dayStr, time, total: formattedTotal, tableRowsHtml: receiptTableRowsHtml, canvasItems });

@@ -2,127 +2,112 @@
 <html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Orders Management • YNS Kitchen</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>မြင်သာကြက်ကင် • Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <style>
-    /* Search & Filter Compact Bar */
-    .search-filter-wrapper {
-      display: flex; gap: 10px; margin-bottom: 16px; position: relative;
-    }
-    .search-input-box {
-      flex: 1; display: flex; align-items: center; background: #fff; border: 1px solid var(--line);
-      border-radius: 16px; padding: 0 16px; gap: 10px; box-shadow: var(--shadow-sm);
-    }
-    .search-input-box i { color: var(--muted); font-size: 15px; }
-    .search-input-box input {
-      width: 100%; border: 0; outline: none; padding: 12px 0; background: transparent; font-size: 14px;
-    }
-    .icon-filter-btn {
-      width: 46px; height: 46px; border-radius: 16px; background: #fff; border: 1px solid var(--line);
-      display: grid; place-items: center; font-size: 16px; color: var(--navy); box-shadow: var(--shadow-sm); transition: 0.2s;
-    }
-    .icon-filter-btn.active { background: var(--navy); color: #fff; }
-
-    /* Date Filter Popup Container */
-    .date-popup {
-      display: none; position: absolute; top: 54px; right: 0; background: #fff; border: 1px solid var(--line);
-      border-radius: 18px; padding: 16px; box-shadow: var(--shadow-md); z-index: 50; width: 280px; flex-direction: column; gap: 10px;
-    }
+    .order-tab-bar { display: flex; gap: 8px; margin-bottom: 18px; background: #e8edf3; padding: 4px; border-radius: 12px; }
+    .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: bold; background: transparent; cursor: pointer; color: #64748b; }
+    .tab-btn.active { background: #ffffff; color: var(--ink); box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+    
+    .order-card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 15px; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .order-card-top { display: flex; justify-content: space-between; border-bottom: 1px solid #f2f2f7; padding-bottom: 8px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+    .cust-name { font-size: 16px; font-weight: 700; display: block; color: var(--ink); }
+    .cust-phone { font-size: 13px; color: var(--blue); font-weight: 600; text-decoration: none; display: inline-block; margin-top: 4px; }
+    
+    /* Search & Date Filter UI */
+    .search-filter-wrapper { display: flex; gap: 10px; margin-bottom: 16px; position: relative; }
+    .search-box { flex: 1; display: flex; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 0 14px; gap: 10px; }
+    .search-box i { color: var(--muted); }
+    .search-box input { width: 100%; border: none; outline: none; padding: 10px 0; background: transparent; font-size: 14px; }
+    .icon-filter-btn { width: 42px; height: 42px; border-radius: 12px; background: #fff; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--ink); cursor: pointer; transition: 0.2s; }
+    .icon-filter-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+    
+    .date-popup { display: none; position: absolute; top: 48px; right: 0; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; box-shadow: var(--shadow); z-index: 50; width: 280px; flex-direction: column; gap: 10px; }
     .date-popup.show { display: flex; }
-    .date-popup label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
-    .date-popup input {
-      width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; font-size: 13px; outline: none; margin-top: 4px;
-    }
+    .date-popup label { font-size: 11px; font-weight: bold; color: var(--muted); }
+    .date-popup input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; font-size: 12px; outline: none; margin-top: 2px; }
 
-    /* Red Grand Total Box */
-    .order-grand-total {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 16px; background: #fef2f2; border-radius: 14px; border: 1px solid #fecaca; margin-top: 14px;
-    }
-    .order-grand-total span { font-size: 13px; font-weight: 700; color: #991b1b; }
-    .red-total { font-size: 18px; font-weight: 800; color: #dc2626; }
+    /* Table Styling for Name, Price, Quantity, Total */
+    .table-responsive { overflow-x: auto; margin: 12px 0; border: 1px solid #f2f2f7; border-radius: 10px; }
+    .order-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    .order-table th { background: #f8f9fb; padding: 8px 10px; color: var(--muted); font-size: 11px; border-bottom: 1px solid #f2f2f7; }
+    .order-table td { padding: 8px 10px; border-bottom: 1px dashed #e5e5ea; }
+    .order-table tr:last-child td { border-bottom: none; }
+
+    /* Red Total Styling */
+    .card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #f2f2f7; }
+    .total-val { font-size: 18px; font-weight: 800; color: #dc2626; } /* RED TOTAL COLOR */
+    
+    .btn-act { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--blue); cursor: pointer; border: none; }
+    .btn-cancel { padding: 8px 16px; border-radius: 10px; font-weight: bold; color: #fff; background: var(--red); cursor: pointer; border: none; }
   </style>
 </head>
 <body>
-
 <div class="app">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <div class="brand-icon">🍗</div>
-      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
-    </div>
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
     <div class="nav-title">MAIN MENU</div>
     <nav class="nav" id="sidebarNav"></nav>
+    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
   </aside>
 
   <main class="main">
-    <header class="dash-header">
-      <div class="header-left">
-        <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <div class="greeting">
-          <h1>Orders Management</h1>
-          <small>အော်ဒါများကို စစ်ဆေးပါ သို့မဟုတ် Status ပြောင်းပါ</small>
-        </div>
-      </div>
+    <header class="topbar">
+      <div><h1>Orders</h1><p>အော်ဒါများကို စစ်ဆေးပါ သို့မဟုတ် Status ပြောင်းပါ</p></div>
     </header>
 
-    <!-- Compact Search & Icon Filter Bar -->
+    <!-- Search Bar & Icon Filter -->
     <div class="search-filter-wrapper">
-      <div class="search-input-box">
+      <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Voucher, Customer Name, Phone စသည်ဖြင့် ရှာရန်...">
+        <input type="text" id="searchInput" onkeyup="renderOrders()" placeholder="Voucher, Customer, Phone ရှာရန်...">
       </div>
-      <button class="icon-filter-btn" id="filterToggleBtn" onclick="toggleDatePopup()"><i class="fa-solid fa-sliders"></i></button>
+      <button class="icon-filter-btn" id="filterToggleBtn" onclick="toggleDateFilter()"><i class="fa-solid fa-sliders"></i></button>
 
-      <!-- Date Popup Box -->
+      <!-- Date Time Filter Popup -->
       <div class="date-popup" id="datePopup">
         <div>
-          <label>From Date</label>
-          <input type="date" id="fromDate" onchange="applyFilters()">
+          <label>From Date/Time</label>
+          <input type="datetime-local" id="fromDateTime" onchange="renderOrders()">
         </div>
         <div>
-          <label>To Date</label>
-          <input type="date" id="toDate" onchange="applyFilters()">
+          <label>To Date/Time</label>
+          <input type="datetime-local" id="toDateTime" onchange="renderOrders()">
         </div>
-        <button onclick="resetDateFilter()" style="background:#f1f5f9; color:var(--ink); border-radius:10px; padding:8px; font-size:12px; font-weight:700; margin-top:4px;"><i class="fa-solid fa-rotate-right"></i> Reset Dates</button>
+        <button onclick="resetDateFilter()" style="background:#f1f5f9; border:none; border-radius:6px; padding:6px; font-size:12px; font-weight:bold; cursor:pointer;"><i class="fa-solid fa-rotate-right"></i> Reset Filter</button>
       </div>
     </div>
 
-    <!-- Status Navigation Tabs -->
-    <div class="status-tabs">
-      <button class="tab-btn active" onclick="filterStatus('all', this)">All</button>
-      <button class="tab-btn" onclick="filterStatus('new', this)">New</button>
-      <button class="tab-btn" onclick="filterStatus('cooking', this)">Cooking</button>
-      <button class="tab-btn" onclick="filterStatus('ready', this)">Ready</button>
+    <!-- Orders Filter Sub-tabs -->
+    <div class="order-tab-bar">
+      <button class="tab-btn active" onclick="switchTab('New', this)">New</button>
+      <button class="tab-btn" onclick="switchTab('Processing', this)">Cooking</button>
+      <button class="tab-btn" onclick="switchTab('Completed', this)">Ready</button>
     </div>
 
-    <!-- Orders Cards List Container -->
-    <div id="ordersListContainer">
-      <p style="color:gray;">အော်ဒါများကို ရယူနေသည်...</p>
+    <!-- Order Cards List Container -->
+    <div id="ordersCardsContainer">
+      <div style="text-align:center; padding:30px; color:gray;">Loading orders...</div>
     </div>
   </main>
 </div>
 
 <script src="js/main.js"></script>
 <script>
-  let rawOrders = [];
-  let currentStatus = 'all';
+  let currentTab = 'New';
+  let allOrders = [];
 
-  async function loadOrders() {
-    const container = document.getElementById("ordersListContainer");
-    try {
-      const res = await apiFetch("/api/admin/orders");
-      rawOrders = res.orders || res || [];
-      applyFilters();
-    } catch (err) {
-      container.innerHTML = "<p style='color:red;'>Orders ဒေတာ ရယူ၍ မရပါ။</p>";
-    }
+  function switchTab(status, el) {
+    currentTab = status;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    renderOrders();
   }
 
-  function toggleDatePopup() {
+  function toggleDateFilter() {
     const popup = document.getElementById("datePopup");
     const btn = document.getElementById("filterToggleBtn");
     popup.classList.toggle("show");
@@ -130,160 +115,153 @@
   }
 
   function resetDateFilter() {
-    document.getElementById("fromDate").value = "";
-    document.getElementById("toDate").value = "";
-    applyFilters();
-    toggleDatePopup();
+    document.getElementById("fromDateTime").value = "";
+    document.getElementById("toDateTime").value = "";
+    renderOrders();
+    toggleDateFilter();
   }
 
-  function filterStatus(status, btn) {
-    currentStatus = status.toLowerCase();
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyFilters();
+  async function fetchOrders() {
+    try {
+      const res = await apiFetch("/api/admin/orders?pageSize=100");
+      if (res.ok && res.orders) {
+        allOrders = res.orders;
+        renderOrders();
+      }
+    } catch(e) {
+      document.getElementById("ordersCardsContainer").innerHTML = `<div style="text-align:center; color:red; padding:20px;">Data ရယူ၍ မရပါ</div>`;
+    }
   }
 
-  function applyFilters() {
-    const query = document.getElementById("searchInput").value.toLowerCase().trim();
-    const fromDateVal = document.getElementById("fromDate").value;
-    const toDateVal = document.getElementById("toDate").value;
+  function renderOrders() {
+    const container = document.getElementById("ordersCardsContainer");
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase().trim();
+    const fromVal = document.getElementById("fromDateTime").value;
+    const toVal = document.getElementById("toDateTime").value;
 
-    let filtered = rawOrders.filter(o => {
-      const oStatus = (o.status || 'new').toLowerCase();
+    const filtered = allOrders.filter(o => {
+      // 1. Tab Status Filter
+      if (currentTab === 'New' && !(o.status === 'New' || o.status === 'Pending')) return false;
+      if (currentTab !== 'New' && o.status !== currentTab) return false;
 
-      // 1. Status Filter Flexibly
-      if (currentStatus !== 'all') {
-        if (currentStatus === 'new' && !(oStatus === 'new' || oStatus === 'pending')) return false;
-        if (currentStatus === 'cooking' && !(oStatus === 'cooking' || oStatus === 'processing')) return false;
-        if (currentStatus === 'ready' && oStatus !== 'ready') return false;
+      // 2. Search Query Filter
+      const voucher = (o.voucher_code || '#' + o.id).toLowerCase();
+      const name = (o.customer_name || '').toLowerCase();
+      const phone = (o.phone || '').toLowerCase();
+      if (searchQuery && !voucher.includes(searchQuery) && !name.includes(searchQuery) && !phone.includes(searchQuery)) {
+        return false;
       }
 
-      // 2. Search Query Matching
-      const voucher = (o.id || o.voucher_id || '').toString().toLowerCase();
-      const name = (o.customer_name || o.name || '').toLowerCase();
-      const phone = (o.phone || '').toString().toLowerCase();
-      
-      const matchesSearch = !query || voucher.includes(query) || name.includes(query) || phone.includes(query);
-      if (!matchesSearch) return false;
-
-      // 3. Date Filters
-      if (fromDateVal || toDateVal) {
+      // 3. Date Time Filter
+      if (fromVal || toVal) {
         if (!o.created_at) return false;
-        const orderDate = new Date(o.created_at.replace(" ", "T")).setHours(0,0,0,0);
-        
-        if (fromDateVal) {
-          const fromD = new Date(fromDateVal).setHours(0,0,0,0);
-          if (orderDate < fromD) return false;
-        }
-        if (toDateVal) {
-          const toD = new Date(toDateVal).setHours(0,0,0,0);
-          if (orderDate > toD) return false;
-        }
+        const oTime = new Date(o.created_at.replace(" ", "T")).getTime();
+        if (fromVal && oTime < new Date(fromVal).getTime()) return false;
+        if (toVal && oTime > new Date(toVal).getTime()) return false;
       }
 
       return true;
     });
 
-    renderOrders(filtered);
-  }
-
-  function renderOrders(orders) {
-    const container = document.getElementById("ordersListContainer");
-
-    if (!Array.isArray(orders) || orders.length === 0) {
-      container.innerHTML = "<div style='text-align:center; padding:40px; color:gray;'>အော်ဒါများ မရှိပါ။</div>";
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:40px; color:gray;">အော်ဒါ မရှိသေးပါ</div>`;
       return;
     }
 
-    container.innerHTML = orders.map(o => {
-      const items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
-      const st = (o.status || 'Pending').toLowerCase();
+    container.innerHTML = filtered.map(o => {
+      let itemsTableHtml = "";
+      if (o.items_json) {
+        try {
+          const parsed = typeof o.items_json === 'string' ? JSON.parse(o.items_json) : o.items_json;
+          if (Array.isArray(parsed)) {
+            itemsTableHtml = `
+              <div class="table-responsive">
+                <table class="order-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th style="text-align:right;">Price</th>
+                      <th style="text-align:center;">Qty</th>
+                      <th style="text-align:right;">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${parsed.map(i => {
+                      const price = Number(i.price) || 0;
+                      const qty = Number(i.qty || i.quantity) || 1;
+                      return `
+                        <tr>
+                          <td><b>${i.name || i.title || '-'}</b></td>
+                          <td style="text-align:right;">${money(price)}</td>
+                          <td style="text-align:center;">x${qty}</td>
+                          <td style="text-align:right;"><b>${money(price * qty)}</b></td>
+                        </tr>
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `;
+          } else {
+            itemsTableHtml = `<div style="padding:10px; font-size:13px;">${parsed}</div>`;
+          }
+        } catch(e) {
+          itemsTableHtml = `<div style="padding:10px; font-size:13px;">${o.items_json}</div>`;
+        }
+      }
+
+      const phoneLink = o.phone ? `href="tel:${o.phone}"` : 'style="color:gray;"';
+
+      let actionBtn = "";
+      if (o.status === 'New' || o.status === 'Pending') {
+        actionBtn = `
+          <button class="btn-cancel" onclick="updateStatus(${o.id}, 'Cancelled')">Cancel</button>
+          <button class="btn-act" onclick="updateStatus(${o.id}, 'Processing')">Accept</button>
+        `;
+      } else if (o.status === 'Processing') {
+        actionBtn = `<button class="btn-act" style="background:var(--green)" onclick="updateStatus(${o.id}, 'Completed')">Ready</button>`;
+      } else {
+        actionBtn = `<b style="color:gray; font-size:12px;">Completed</b>`;
+      }
 
       return `
         <div class="order-card">
-          <div class="order-header">
-            <div>
-              <span class="voucher-tag">Voucher: #${o.id || o.voucher_id || 'N/A'}</span>
-              <h3 class="cust-name">${o.customer_name || o.name || 'Guest'}</h3>
-              <small class="cust-phone">📞 ${o.phone || '-'}</small>
-            </div>
-            <div style="text-align:right;">
-              <span class="order-time">${fmtDate(o.created_at)}</span>
-              <span class="order-badge badge-${st}">${o.status || 'New'}</span>
-            </div>
+          <div class="order-card-top">
+            <span><b>Voucher:</b> ${o.voucher_code || ('#' + o.id)}</span>
+            <span>${fmtDate(o.created_at)}</span>
           </div>
-
-          <!-- Items Table (Name, Price, Quantity, Total) -->
-          <div class="table-responsive">
-            <table class="items-table">
-              <thead>
-                <tr>
-                  <th style="text-align:left;">Name</th>
-                  <th style="text-align:right;">Price</th>
-                  <th style="text-align:center;">Qty</th>
-                  <th style="text-align:right;">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${items.map(i => {
-                  const price = Number(i.price) || 0;
-                  const qty = Number(i.qty || i.quantity) || 1;
-                  const rowTotal = price * qty;
-                  return `
-                    <tr>
-                      <td style="text-align:left; font-weight:600;">${i.name || i.title}</td>
-                      <td style="text-align:right;">${money(price)}</td>
-                      <td style="text-align:center;">x${qty}</td>
-                      <td style="text-align:right; font-weight:700;">${money(rowTotal)}</td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
+          <div>
+            <span class="cust-name">${o.customer_name || 'Guest'}</span>
+            <a ${phoneLink} class="cust-phone"><i class="fa-solid fa-phone"></i> ${o.phone || 'ဖုန်းမပါပါ'}</a>
           </div>
+          
+          ${itemsTableHtml || '<div style="padding:10px; font-size:13px; color:gray;">ပစ္စည်းစာရင်း မရှိပါ</div>'}
 
-          <!-- Red Total Display -->
-          <div class="order-grand-total">
-            <span>Grand Total:</span>
-            <b class="red-total">${money(o.total)}</b>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="order-actions">
-            ${(st === 'pending' || st === 'new') ? `
-              <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Cooking')"><i class="fa-solid fa-fire"></i> Accept & Cook</button>
-              <button class="btn-action btn-cancel" onclick="updateOrderStatus('${o.id}', 'Cancelled')"><i class="fa-solid fa-xmark"></i> Cancel</button>
-            ` : ''}
-
-            ${(st === 'cooking' || st === 'processing') ? `
-              <button class="btn-action btn-ready" onclick="updateOrderStatus('${o.id}', 'Ready')"><i class="fa-solid fa-check"></i> Mark Ready</button>
-            ` : ''}
-
-            ${st === 'ready' ? `
-              <button class="btn-action btn-accept" onclick="updateOrderStatus('${o.id}', 'Completed')"><i class="fa-solid fa-circle-check"></i> Complete</button>
-            ` : ''}
+          <div class="card-footer">
+            <div class="total-val">Total: ${money(o.total)}</div>
+            <div style="display:flex; gap:8px;">${actionBtn}</div>
           </div>
         </div>
       `;
     }).join('');
   }
 
-  async function updateOrderStatus(orderId, status) {
-    try {
-      await apiFetch(`/api/admin/orders/${orderId}`, {
-        method: "PATCH",
-        body: JSON.stringify({ status })
-      });
-      showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
-      loadOrders();
-    } catch(e) {
-      showToast("ပြင်ဆင်မှု မအောင်မြင်ပါ");
+  async function updateStatus(id, newStatus) {
+    if (!confirm(`Status ကို ${newStatus} ပြောင်းမှာ သေချာပါသလား?`)) return;
+    const res = await apiFetch(`/api/admin/orders/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: newStatus })
+    });
+    if (res.ok) {
+      showToast("Status ပြောင်းလဲပြီးပါပြီ");
+      fetchOrders();
     }
   }
 
   window.onload = () => {
     renderAdminLayout("orders");
-    loadOrders();
+    fetchOrders();
+    setInterval(fetchOrders, 10000); // 10s auto refresh
   };
 </script>
 </body>

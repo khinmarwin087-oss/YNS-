@@ -1,17 +1,17 @@
 // admin/js/main.js
+
 const API_BASE = "https://yns.khinmarwin087.workers.dev";
 const ADMIN_KEY_STORAGE = "yns_admin_key";
 
+// 1. Get Stored Admin Key
 function getAdminKey() {
   return localStorage.getItem(ADMIN_KEY_STORAGE) || "";
 }
 
-// admin/js/main.js
-
+// 2. Fetch API with Key Verification
 async function apiFetch(path, opts = {}) {
   const key = getAdminKey();
   
-  // LocalStorage ထဲမှာ Key လုံးဝမရှိသေးပါက တန်းပြီး သတိပေးမည်
   if (!key) {
     showToast("Admin Key မရှိသေးပါ။ Settings တွင် Key သွားရောက်ထည့်သွင်းပါ/ပြင်ပါ။");
     throw new Error("Missing Admin Key");
@@ -39,16 +39,17 @@ async function apiFetch(path, opts = {}) {
   }
 }
 
+// 3. Authentication & Logout
 function lockOut(message) {
   localStorage.removeItem(ADMIN_KEY_STORAGE);
-  // Redirect လှမ်းမလုပ်ဘေ Toast အနေနဲ့ပဲ အသိပေးမည်
   showToast(message || "Session သက်တမ်းကုန်သွားပါပြီ");
 }
 
 function logout() {
-  lockOut("");
+  lockOut("Logout ပြုလုပ်ပြီးပါပြီ");
 }
 
+// 4. Utility Helper Functions
 function money(n) {
   return (Number(n) || 0).toLocaleString() + " Ks";
 }
@@ -64,6 +65,7 @@ function fmtDate(iso) {
   return d.toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
+// 5. Toast Notification System
 function showToast(msg) {
   let t = document.getElementById("toast");
   if (!t) {
@@ -77,7 +79,24 @@ function showToast(msg) {
   t._timer = setTimeout(() => t.classList.remove("show"), 2600);
 }
 
-// Side Navigation Bar Component Render Logic
+// 6. Mobile Sidebar Toggle Function
+function toggleSidebar() {
+  const sidebar = document.getElementById("sidebar");
+  let overlay = document.getElementById("sidebarOverlay");
+  
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "sidebarOverlay";
+    overlay.className = "overlay";
+    overlay.onclick = toggleSidebar;
+    document.body.appendChild(overlay);
+  }
+
+  if (sidebar) sidebar.classList.toggle("open");
+  overlay.classList.toggle("show");
+}
+
+// 7. Render Admin Dynamic Navigation Links
 function renderAdminLayout(activePage) {
   const navContainer = document.getElementById("sidebarNav");
   if (!navContainer) return;
@@ -98,5 +117,9 @@ function renderAdminLayout(activePage) {
     <button onclick="window.location.href='${p.href}'" class="${activePage === p.id ? 'active' : ''}">
       <i class="fa-solid ${p.icon}"></i> ${p.label}
     </button>
-  `).join('');
+  `).join('') + `
+    <button onclick="logout()" style="margin-top: auto; color: #ef4444;">
+      <i class="fa-solid fa-right-from-bracket"></i> Logout
+    </button>
+  `;
 }

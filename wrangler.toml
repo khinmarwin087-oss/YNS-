@@ -15,5 +15,5 @@ CHAT_ID = "8116152317"
 # ရလာတဲ့ database_id ကို အောက်မှာ အစားထိုးထည့်ပါ
 [[d1_databases]]
 binding = "DB"
-database_name = "yns-orders-db"
+database_name = "yns_orders"
 database_id = "4f38c54d-92fe-49e7-aef3-d247f8b2bd96"

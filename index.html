@@ -567,23 +567,26 @@ async function sendOrder() {
     const formattedTotal = totalAmount.toLocaleString();
     const ownerMsg = `🍗 *မြင်သာကြက်ကင် - အော်ဒါအသစ်*\n🧾 *ဘောက်ချာနံပါတ်:* \`${vCode}\`\n👤 *အမည်:* ${name}\n📞 *ဖုန်း/ID:* ${phone}\n📅 *နေ့ရက်:* ${dayStr}\n🕒 *အချိန်:* ${time}\n━━━━━━━━━━━━━━\n${itemsText.join('\n')}\n━━━━━━━━━━━━━━\n💰 *စုစုပေါင်း:* *${formattedTotal} MMK*`;
 
-   try {
-    const response = await fetch('https://yns.khinmarwin087.workers.dev/api/orders', {
+ try {
+    const response = await fetch('https://yns.khinmarwin087.workers.dev/api/send-order', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        voucher_code: vCode,
-        customer_name: name,
+        text: ownerMsg,
+        vCode: vCode,
+        name: name,
         phone: phone,
-        items: canvasItems, // ပစ္စည်းစာရင်း Array
+        items: canvasItems,
         total: totalAmount
       })
     });
 
-    if (!response.ok) {
-      throw new Error('Order submission failed');
+    const resData = await response.json();
+
+    if (!response.ok || !resData.ok) {
+      throw new Error(resData.error || 'Order submission failed');
     }
 
     let orderHistory = JSON.parse(localStorage.getItem('order_history') || '[]');
@@ -601,7 +604,7 @@ async function sendOrder() {
     submitBtn.disabled = false;
     submitBtn.innerHTML = "<i class='fa-solid fa-circle-check'></i> အော်ဒါအတည်ပြုမည် ➔";
   }
-
+    
 function showReceipt(vCode, name, phone, date, time, tableRowsHtml, total, canvasItems) {
     document.getElementById('cart-content-wrapper').style.display = 'none';
     document.getElementById('modal-title').innerText = "🎉 အော်ဒါတင်ပြီးပါပြီ";

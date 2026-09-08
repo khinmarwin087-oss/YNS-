@@ -8,8 +8,13 @@ binding = "ASSETS"
 
 [vars]
 CHAT_ID = "8116152317"
+# ⚠️ Deploy လုပ်ပြီးရင် ADMIN_KEY ကို "wrangler secret put ADMIN_KEY" နဲ့ လျှို့ဝှက်ကုဒ်တစ်ခုအနေနဲ့ ပြောင်းထားပါ
+# (ဒီမှာ vars အနေနဲ့ ချန်ထားတာက quick-start အတွက်ပဲ ဖြစ်ပြီး public repo ထဲမှာ မထားသင့်ပါ)
+ADMIN_KEY = "change-this-admin-key-now"
 
+# D1 Database binding — "wrangler d1 create yns-orders-db" ကို run ပြီး
+# ရလာတဲ့ database_id ကို အောက်မှာ အစားထိုးထည့်ပါ
 [[d1_databases]]
 binding = "DB"
-database_name = "yns_orders"
-database_id = "4f38c54d-92fe-49e7-aef3-d247f8b2bd96"
+database_name = "yns-orders-db"
+database_id = "PASTE-YOUR-D1-DATABASE-ID-HERE"

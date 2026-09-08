@@ -383,6 +383,11 @@ export default {
       return handleSendOrder(request, env);
     }
 
+    // Customer App မှ Products များ ကြည့်နိုင်ရန် Public API ဖွင့်ပေးခြင်း
+    if (path === "/api/products" && request.method === "GET") {
+      return handleProductsList(env);
+    }
+
     if (path.startsWith("/api/admin/")) {
       if (!requireAdmin(request, env)) {
         return json({ ok: false, error: "Unauthorized" }, 401);

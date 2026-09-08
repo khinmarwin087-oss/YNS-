@@ -596,11 +596,11 @@ async function sendOrder() {
     updateFloatingBar();
 
   } catch (e) {
+    console.error("Order error:", e);
     myPop("Error! ပြန်လည်ကြိုးစားပေးပါ။");
     submitBtn.disabled = false;
     submitBtn.innerHTML = "<i class='fa-solid fa-circle-check'></i> အော်ဒါအတည်ပြုမည် ➔";
-    }
-}
+  }
 
 function showReceipt(vCode, name, phone, date, time, tableRowsHtml, total, canvasItems) {
     document.getElementById('cart-content-wrapper').style.display = 'none';

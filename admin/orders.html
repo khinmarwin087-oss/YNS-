@@ -270,7 +270,6 @@
       font-size:12px;
     }
 
-    /* TOTAL LEFT + STATUS BUTTONS RIGHT */
     .total-status-row {
       display:flex;
       align-items:center;
@@ -341,24 +340,19 @@
 
     @media (max-width:620px) {
       .order-card { padding:14px; }
-
       .total-status-row { align-items:stretch; }
-
       .order-grand-total {
         flex-direction:column;
         align-items:flex-start;
         justify-content:center;
         min-height:66px;
       }
-
       .red-total { font-size:17px; }
-
       .order-actions {
         flex-direction:column;
         align-items:stretch;
         justify-content:center;
       }
-
       .order-actions .btn-action {
         width:100%;
         min-width:0;
@@ -389,15 +383,14 @@
         <small>Admin Panel</small>
       </div>
     </div>
-
     <div class="nav-title">MAIN MENU</div>
     <nav class="nav" id="sidebarNav"></nav>
   </aside>
 
   <main class="main">
 
+    <!-- Header: Left Menu Button, Center Orders Title, Right Icons -->
     <header class="dash-header-custom">
-
       <button class="icon-circle-btn" onclick="toggleSidebar()" aria-label="Menu">
         <i class="fa-solid fa-bars"></i>
       </button>
@@ -405,7 +398,6 @@
       <h1 class="header-center-title">Orders</h1>
 
       <div class="top-actions-right">
-
         <button class="icon-circle-btn" id="searchBtn" onclick="toggleSearch()" aria-label="Search">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
@@ -416,61 +408,31 @@
 
         <div class="date-popover" id="datePopover">
           <label>Filter By Date</label>
-
-          <input
-            type="date"
-            id="filterDate"
-            onchange="applyFilters()"
-          >
-
+          <input type="date" id="filterDate" onchange="applyFilters()">
           <button class="date-reset-btn" onclick="clearDateFilter()">
-            <i class="fa-solid fa-rotate-right"></i>
-            Reset
+            <i class="fa-solid fa-rotate-right"></i> Reset
           </button>
         </div>
-
       </div>
     </header>
 
+    <!-- Search Popover -->
     <div class="search-popover" id="searchPopover">
-
       <i class="fa-solid fa-magnifying-glass" style="color:#94a3b8;"></i>
-
-      <input
-        type="text"
-        id="searchInput"
-        oninput="applyFilters()"
-        placeholder="Voucher, Name, Phone ရှာရန်..."
-      >
-
-      <i
-        class="fa-solid fa-xmark"
-        onclick="toggleSearch()"
-        style="cursor:pointer;color:#94a3b8;"
-      ></i>
-
+      <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Voucher, Name, Phone ရှာရန်...">
+      <i class="fa-solid fa-xmark" onclick="toggleSearch()" style="cursor:pointer;color:#94a3b8;"></i>
     </div>
 
+    <!-- Status Tabs -->
     <div class="status-tabs">
-
-      <button class="tab-btn active" onclick="filterStatus('new', this)">
-        New
-      </button>
-
-      <button class="tab-btn" onclick="filterStatus('cooking', this)">
-        Cooking
-      </button>
-
-      <button class="tab-btn" onclick="filterStatus('ready', this)">
-        Ready
-      </button>
-
+      <button class="tab-btn active" onclick="filterStatus('new', this)">New</button>
+      <button class="tab-btn" onclick="filterStatus('cooking', this)">Cooking</button>
+      <button class="tab-btn" onclick="filterStatus('ready', this)">Ready</button>
+      <button class="tab-btn" onclick="filterStatus('all', this)">All</button>
     </div>
 
     <div id="ordersListContainer">
-      <p style="color:gray;text-align:center;">
-        အော်ဒါများကို ရယူနေသည်...
-      </p>
+      <p style="color:gray;text-align:center;">အော်ဒါများကို ရယူနေသည်...</p>
     </div>
 
   </main>
@@ -482,156 +444,69 @@
   let rawOrders = [];
   let currentStatus = "new";
 
+  // Today Date set as default when clicking date filter
   function setDefaultDate() {
     const input = document.getElementById("filterDate");
-    if (input) input.value = "";
+    if (input) {
+      const today = new Date().toISOString().split('T')[0];
+      input.value = today;
+    }
   }
 
   function safeJsonParse(value) {
     if (typeof value !== "string") return value;
-
     try {
       return JSON.parse(value);
     } catch (error) {
-      console.warn("JSON parse failed:", value);
       return [];
     }
   }
 
   function parseOrderItems(order) {
-    let raw =
-      order.items ??
-      order.order_items ??
-      order.orderItems ??
-      order.products ??
-      order.details ??
-      [];
-
+    let raw = order.items ?? order.order_items ?? order.orderItems ?? order.products ?? order.details ?? [];
     raw = safeJsonParse(raw);
-
-    if (
-      raw &&
-      !Array.isArray(raw) &&
-      Array.isArray(raw.items)
-    ) {
-      raw = raw.items;
-    }
-
-    if (
-      raw &&
-      !Array.isArray(raw) &&
-      raw.data &&
-      Array.isArray(raw.data.items)
-    ) {
-      raw = raw.data.items;
-    }
-
+    if (raw && !Array.isArray(raw) && Array.isArray(raw.items)) raw = raw.items;
+    if (raw && !Array.isArray(raw) && raw.data && Array.isArray(raw.data.items)) raw = raw.data.items;
     return Array.isArray(raw) ? raw : [];
   }
 
   function getItemName(item) {
-    return (
-      item.name ??
-      item.title ??
-      item.product_name ??
-      item.productName ??
-      item.menu_name ??
-      item.menuName ??
-      item.food_name ??
-      item.foodName ??
-      "Unknown Item"
-    );
+    return item.name ?? item.title ?? item.product_name ?? item.productName ?? item.menu_name ?? item.food_name ?? "Unknown Item";
   }
 
   function getItemPrice(item) {
-    return Number(
-      item.price ??
-      item.unit_price ??
-      item.unitPrice ??
-      item.amount ??
-      item.sale_price ??
-      item.salePrice ??
-      0
-    ) || 0;
+    return Number(item.price ?? item.unit_price ?? item.unitPrice ?? item.amount ?? 0) || 0;
   }
 
   function getItemQty(item) {
-    return Number(
-      item.qty ??
-      item.quantity ??
-      item.count ??
-      1
-    ) || 1;
+    return Number(item.qty ?? item.quantity ?? item.count ?? 1) || 1;
   }
 
   function getOrderId(order) {
-    return (
-      order.id ??
-      order.order_id ??
-      order.orderId ??
-      order.voucher_id ??
-      order.voucherId ??
-      "N/A"
-    );
+    return order.id ?? order.order_id ?? order.voucher_id ?? "N/A";
   }
 
   function getCustomerName(order) {
-    return (
-      order.customer_name ??
-      order.customerName ??
-      order.name ??
-      order.customer ??
-      "Guest"
-    );
+    return order.customer_name ?? order.customerName ?? order.name ?? "Guest";
   }
 
   function getPhone(order) {
-    return (
-      order.phone ??
-      order.customer_phone ??
-      order.customerPhone ??
-      "-"
-    );
+    return order.phone ?? order.customer_phone ?? "-";
   }
 
   function getOrderTotal(order, items) {
-    let total = Number(
-      order.total ??
-      order.grand_total ??
-      order.grandTotal ??
-      order.total_amount ??
-      order.totalAmount ??
-      order.amount ??
-      0
-    ) || 0;
-
+    let total = Number(order.total ?? order.grand_total ?? order.total_amount ?? 0) || 0;
     if (!total && items.length) {
-      total = items.reduce((sum, item) => {
-        return sum + getItemPrice(item) * getItemQty(item);
-      }, 0);
+      total = items.reduce((sum, item) => sum + getItemPrice(item) * getItemQty(item), 0);
     }
-
     return total;
   }
 
   async function loadOrders() {
     const container = document.getElementById("ordersListContainer");
-    const query = document.getElementById("searchInput").value.trim();
-    const filterDateVal = document.getElementById("filterDate").value;
-
     try {
-      const params = new URLSearchParams();
-      params.set("status", currentStatus);
-      params.set("page", "1");
-      params.set("pageSize", "50");
-      if (query) params.set("search", query);
-      if (filterDateVal) params.set("date", filterDateVal);
-
-      const res = await apiFetch("/api/admin/orders?" + params.toString());
+      const res = await apiFetch("/api/admin/orders");
       rawOrders = Array.isArray(res) ? res : ((res && res.orders) || []);
-
-      // Worker already filters by status/search/date. applyFilters is kept as a
-      // client-side safety net for any older Worker response format.
       applyFilters();
     } catch (error) {
       console.error("Load orders error:", error);
@@ -642,10 +517,8 @@
   function toggleSearch() {
     const box = document.getElementById("searchPopover");
     const btn = document.getElementById("searchBtn");
-
     box.classList.toggle("show");
     btn.classList.toggle("active");
-
     if (box.classList.contains("show")) {
       document.getElementById("searchInput").focus();
     }
@@ -654,53 +527,35 @@
   function toggleDate() {
     const box = document.getElementById("datePopover");
     const btn = document.getElementById("dateBtn");
-
     box.classList.toggle("show");
     btn.classList.toggle("active");
   }
 
   function clearDateFilter() {
     document.getElementById("filterDate").value = "";
-
     applyFilters();
-
     document.getElementById("datePopover").classList.remove("show");
     document.getElementById("dateBtn").classList.remove("active");
   }
 
   function filterStatus(status, btn) {
     currentStatus = String(status).toLowerCase();
-
-    document.querySelectorAll(".tab-btn").forEach(button => {
-      button.classList.remove("active");
-    });
-
+    document.querySelectorAll(".tab-btn").forEach(button => button.classList.remove("active"));
     btn.classList.add("active");
-
     applyFilters();
   }
 
   function normalizeStatus(status) {
     const value = String(status || "new").trim().toLowerCase();
-
     if (value === "pending") return "pending";
     if (value === "processing") return "processing";
     if (value === "cancelled" || value === "canceled") return "cancelled";
-
     return value;
   }
 
   function getOrderDate(order) {
-    const value =
-      order.created_at ??
-      order.createdAt ??
-      order.order_date ??
-      order.orderDate ??
-      order.date ??
-      "";
-
+    const value = order.created_at ?? order.createdAt ?? order.order_date ?? order.date ?? "";
     if (!value) return "";
-
     return String(value).split("T")[0].split(" ")[0];
   }
 
@@ -708,62 +563,34 @@
     const searchInput = document.getElementById("searchInput");
     const dateInput = document.getElementById("filterDate");
 
-    const query = searchInput
-      ? searchInput.value.toLowerCase().trim()
-      : "";
-
-    const filterDateVal = dateInput
-      ? dateInput.value
-      : "";
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    const filterDateVal = dateInput ? dateInput.value : "";
 
     const filtered = rawOrders.filter(order => {
       const status = normalizeStatus(order.status);
 
-      if (currentStatus !== "all") {
-        if (
-          currentStatus === "new" &&
-          status !== "new" &&
-          status !== "pending"
-        ) {
-          return false;
-        }
-
-        if (
-          currentStatus === "cooking" &&
-          status !== "cooking" &&
-          status !== "processing"
-        ) {
-          return false;
-        }
-
-        if (
-          currentStatus === "ready" &&
-          status !== "ready"
-        ) {
-          return false;
-        }
+      // Search ရိုက်ထားလျှင် Tab စစ်ထုတ်မှုကို ကျော်ပြီး မည်သည့် Status မှမဆို ရှာပေးမည်
+      if (!query && currentStatus !== "all") {
+        if (currentStatus === "new" && status !== "new" && status !== "pending") return false;
+        if (currentStatus === "cooking" && status !== "cooking" && status !== "processing") return false;
+        if (currentStatus === "ready" && status !== "ready") return false;
       }
 
+      // 1. Search Matching Logic (Voucher, Name, Phone)
       if (query) {
         const voucher = String(getOrderId(order)).toLowerCase();
         const name = String(getCustomerName(order)).toLowerCase();
         const phone = String(getPhone(order)).toLowerCase();
 
-        if (
-          !voucher.includes(query) &&
-          !name.includes(query) &&
-          !phone.includes(query)
-        ) {
+        if (!voucher.includes(query) && !name.includes(query) && !phone.includes(query)) {
           return false;
         }
       }
 
+      // 2. Date Matching Logic
       if (filterDateVal) {
         const orderDate = getOrderDate(order);
-
-        if (orderDate !== filterDateVal) {
-          return false;
-        }
+        if (orderDate !== filterDateVal) return false;
       }
 
       return true;
@@ -776,15 +603,7 @@
     const container = document.getElementById("ordersListContainer");
 
     if (!Array.isArray(orders) || orders.length === 0) {
-      container.innerHTML = `
-        <div style="
-          text-align:center;
-          padding:40px;
-          color:#64748b;
-        ">
-          အော်ဒါများ မရှိသေးပါ။
-        </div>
-      `;
+      container.innerHTML = `<div style="text-align:center;padding:40px;color:#64748b;">အော်ဒါများ မရှိသေးပါ။</div>`;
       return;
     }
 
@@ -808,128 +627,58 @@
 
           return `
             <tr>
-              <td class="item-name">
-                ${escapeHtml(name)}
-              </td>
-
-              <td class="item-price">
-                ${money(price)}
-              </td>
-
-              <td class="item-qty">
-                x${qty}
-              </td>
-
-              <td class="item-total">
-                ${money(itemTotal)}
-              </td>
+              <td class="item-name">${escapeHtml(name)}</td>
+              <td class="item-price">${money(price)}</td>
+              <td class="item-qty">x${qty}</td>
+              <td class="item-total">${money(itemTotal)}</td>
             </tr>
           `;
         }).join("");
       } else {
-        itemsHTML = `
-          <tr>
-            <td colspan="4" class="no-items">
-              ဒီအော်ဒါမှာ Item Data မပါလာပါ။
-            </td>
-          </tr>
-        `;
+        itemsHTML = `<tr><td colspan="4" class="no-items">ဒီအော်ဒါမှာ Item Data မပါလာပါ။</td></tr>`;
       }
 
       let actionHTML = "";
 
       if (status === "new" || status === "pending") {
         actionHTML = `
-          <button
-            class="btn-action btn-accept"
-            onclick="updateOrderStatus('${escapeJs(orderId)}','Cooking')"
-          >
-            <i class="fa-solid fa-fire"></i>
-            Accept
+          <button class="btn-action btn-accept" onclick="updateOrderStatus('${escapeJs(orderId)}','Cooking')">
+            <i class="fa-solid fa-fire"></i> Accept
           </button>
-
-          <button
-            class="btn-action btn-cancel"
-            onclick="updateOrderStatus('${escapeJs(orderId)}','Cancelled')"
-          >
-            <i class="fa-solid fa-xmark"></i>
-            Cancel
+          <button class="btn-action btn-cancel" onclick="updateOrderStatus('${escapeJs(orderId)}','Cancelled')">
+            <i class="fa-solid fa-xmark"></i> Cancel
           </button>
         `;
-      }
-
-      else if (
-        status === "cooking" ||
-        status === "processing"
-      ) {
+      } else if (status === "cooking" || status === "processing") {
         actionHTML = `
-          <button
-            class="btn-action btn-ready"
-            onclick="updateOrderStatus('${escapeJs(orderId)}','Ready')"
-          >
-            <i class="fa-solid fa-check"></i>
-            Ready
+          <button class="btn-action btn-ready" onclick="updateOrderStatus('${escapeJs(orderId)}','Ready')">
+            <i class="fa-solid fa-check"></i> Ready
           </button>
         `;
-      }
-
-      else if (status === "ready") {
+      } else if (status === "ready") {
         actionHTML = `
-          <button
-            class="btn-action btn-complete"
-            onclick="updateOrderStatus('${escapeJs(orderId)}','Completed')"
-          >
-            <i class="fa-solid fa-circle-check"></i>
-            Complete
+          <button class="btn-action btn-complete" onclick="updateOrderStatus('${escapeJs(orderId)}','Completed')">
+            <i class="fa-solid fa-circle-check"></i> Complete
           </button>
         `;
       }
 
       return `
         <div class="order-card">
-
           <div class="order-header">
-
             <div class="order-header-left">
-
-              <span class="voucher-label">
-                Voucher: #${escapeHtml(orderId)}
-              </span>
-
-              <h3 class="customer-name">
-                ${escapeHtml(customerName)}
-              </h3>
-
-              <small class="customer-phone">
-                <i class="fa-solid fa-phone"></i>
-                ${escapeHtml(phone)}
-              </small>
-
+              <span class="voucher-label">Voucher: #${escapeHtml(orderId)}</span>
+              <h3 class="customer-name">${escapeHtml(customerName)}</h3>
+              <small class="customer-phone"><i class="fa-solid fa-phone"></i> ${escapeHtml(phone)}</small>
             </div>
-
             <div class="order-header-right">
-
-              <span class="order-date">
-                ${fmtDate(
-                  order.created_at ??
-                  order.createdAt ??
-                  order.order_date ??
-                  order.date
-                )}
-              </span>
-
-              <span class="order-badge badge-${status}">
-                ${escapeHtml(displayStatus)}
-              </span>
-
+              <span class="order-date">${fmtDate(order.created_at ?? order.createdAt ?? order.order_date ?? order.date)}</span>
+              <span class="order-badge badge-${status}">${escapeHtml(displayStatus)}</span>
             </div>
-
           </div>
 
           <div class="items-table-wrap">
-
             <table class="items-table">
-
               <thead>
                 <tr>
                   <th style="text-align:left;">Name</th>
@@ -938,82 +687,44 @@
                   <th style="text-align:right;">Total</th>
                 </tr>
               </thead>
-
-              <tbody>
-                ${itemsHTML}
-              </tbody>
-
+              <tbody>${itemsHTML}</tbody>
             </table>
-
           </div>
 
           <div class="total-status-row">
-
             <div class="order-grand-total">
-
-              <span class="order-grand-total-label">
-                Grand Total:
-              </span>
-
-              <b class="red-total">
-                ${money(total)}
-              </b>
-
+              <span class="order-grand-total-label">Grand Total:</span>
+              <b class="red-total">${money(total)}</b>
             </div>
-
-            <div class="order-actions">
-              ${actionHTML}
-            </div>
-
+            <div class="order-actions">${actionHTML}</div>
           </div>
-
         </div>
       `;
     }).join("");
   }
 
   function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+    return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 
   function escapeJs(value) {
-    return String(value ?? "")
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'")
-      .replace(/"/g, '\\"')
-      .replace(/\n/g, "\\n")
-      .replace(/\r/g, "\\r");
+    return String(value ?? "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, "\\n").replace(/\r/g, "\\r");
   }
 
   async function updateOrderStatus(orderId, status) {
     try {
-      await apiFetch(
-        `/api/admin/orders/${encodeURIComponent(orderId)}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            status: status
-          })
-        }
-      );
+      await apiFetch(`/api/admin/orders/${encodeURIComponent(orderId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: status })
+      });
 
       if (typeof showToast === "function") {
         showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
       }
-
       await loadOrders();
-
     } catch (error) {
       console.error("Update status error:", error);
-
       if (typeof showToast === "function") {
         showToast("ပြင်ဆင်မှု မအောင်မြင်ပါ");
       } else {
@@ -1026,7 +737,6 @@
     if (typeof renderAdminLayout === "function") {
       renderAdminLayout("orders");
     }
-
     setDefaultDate();
     loadOrders();
   };

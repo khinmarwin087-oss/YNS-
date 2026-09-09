@@ -1,37 +1,272 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="my">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>မြင်သာကြက်ကင် • Products</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Management - မြင်သာကြက်ကင်</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
-    <div class="nav-title">MAIN MENU</div>
-    <nav class="nav" id="sidebarNav"></nav>
-    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
-  </aside>
+<body class="bg-gray-100 text-gray-800">
 
-  <main class="main">
-    <header class="topbar">
-      <div><h1>Products</h1><p>Menu items စီမံရန်</p></div>
-    </header>
+  <div class="flex h-screen overflow-hidden">
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto p-8">
+      
+      <!-- Header Section -->
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">Products</h1>
+          <p class="text-gray-500">Menu items စီမံရန်နှင့် စာရင်းကြည့်ရန်</p>
+        </div>
+        <button onclick="openProductModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 shadow">
+          <i class="fas fa-plus"></i> Product အသစ်ထည့်ရန်
+        </button>
+      </div>
 
-    <div class="card panel">
-      <h2>Products List</h2>
-      <p style="color:gray;">Products များ ပြသ/ပြင်ဆင်မည့် ကဏ္ဍဖြစ်သည်</p>
+      <!-- Products Table Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="p-4 border-b flex justify-between items-center bg-gray-50">
+          <h2 class="font-semibold text-lg text-gray-700">Products List</h2>
+          <button onclick="loadProducts()" class="text-gray-600 hover:text-amber-600">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 text-sm font-semibold border-b">
+                <th class="p-4">ID</th>
+                <th class="p-4">ဓာတ်ပုံ</th>
+                <th class="p-4">အမည်</th>
+                <th class="p-4">အမျိုးအစား</th>
+                <th class="p-4">စျေးနှုန်း</th>
+                <th class="p-4">လက်ကျန် (Stock)</th>
+                <th class="p-4">အခြေအနေ</th>
+                <th class="p-4 text-center">လုပ်ဆောင်ချက်</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody" class="divide-y divide-gray-200 text-sm">
+              <tr>
+                <td colspan="8" class="text-center p-6 text-gray-400">Data ရယူနေသည်...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
-  </main>
-</div>
+  </div>
 
-<script src="js/main.js"></script>
-<script>
-  window.onload = () => { renderAdminLayout("products"); };
-</script>
+  <!-- Add/Edit Product Modal -->
+  <div id="productModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl relative">
+      <h3 id="modalTitle" class="text-xl font-bold mb-4">Product အသစ်ထည့်ရန်</h3>
+      
+      <form id="productForm" onsubmit="saveProduct(event)">
+        <input type="hidden" id="productId">
+        
+        <div class="mb-3">
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">အမည်</label>
+          <input type="text" id="pName" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">စျေးနှုန်း (Ks)</label>
+            <input type="number" id="pPrice" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">အမျိုးအစား (Category)</label>
+            <input type="text" id="pCategory" placeholder="e.g. Chicken" class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Stock အရေအတွက်</label>
+            <input type="number" id="pStock" value="0" class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Low Stock သတိပေးချက်</label>
+            <input type="number" id="pLowStock" value="10" class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-xs font-semibold text-gray-600 uppercase mb-1">Image URL</label>
+          <input type="url" id="pImage" placeholder="https://..." class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-amber-500">
+        </div>
+
+        <div class="mb-5 flex items-center gap-2">
+          <input type="checkbox" id="pAvailable" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500" checked>
+          <label for="pAvailable" class="text-sm text-gray-700">ဝယ်ယူနိုင်သည် (Available)</label>
+        </div>
+
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeProductModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-100">မလုပ်တော့ပါ</button>
+          <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700">သိမ်းဆည်းမည်</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // LocalStorage သို့မဟုတ် Environment မှ Admin Key ကို ယူမည်
+    const ADMIN_KEY = localStorage.getItem("ADMIN_KEY") || ""; 
+    let productsList = [];
+
+    async function loadProducts() {
+      const tbody = document.getElementById("productsTableBody");
+      tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-gray-400">Data ရယူနေသည်...</td></tr>`;
+
+      try {
+        const res = await fetch("/api/admin/products", {
+          headers: { "X-Admin-Key": ADMIN_KEY }
+        });
+        const data = await res.json();
+
+        if (!data.ok) {
+          tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-red-500">Error: ${data.error}</td></tr>`;
+          return;
+        }
+
+        productsList = data.products || [];
+        renderTable(productsList);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-red-500">API ချိတ်ဆက်၍ မရပါ</td></tr>`;
+      }
+    }
+
+    function renderTable(products) {
+      const tbody = document.getElementById("productsTableBody");
+      if (products.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-gray-400">Product မရှိသေးပါ</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => `
+        <tr class="hover:bg-gray-50 border-b">
+          <td class="p-4 font-mono font-medium">#${p.id}</td>
+          <td class="p-4">
+            <img src="${p.image || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-lg object-cover border" alt="${p.name}">
+          </td>
+          <td class="p-4 font-semibold text-gray-800">${p.name}</td>
+          <td class="p-4 text-gray-600">${p.category || '-'}</td>
+          <td class="p-4 font-semibold text-amber-600">${p.price.toLocaleString()} Ks</td>
+          <td class="p-4">
+            <span class="${p.stock <= p.low_stock_threshold ? 'text-red-600 font-bold' : 'text-gray-700'}">
+              ${p.stock}
+            </span>
+          </td>
+          <td class="p-4">
+            <span class="px-2.5 py-1 text-xs rounded-full ${p.available ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}">
+              ${p.available ? 'Available' : 'Out of Stock'}
+            </span>
+          </td>
+          <td class="p-4 text-center">
+            <button onclick="editProduct(${p.id})" class="text-blue-600 hover:text-blue-800 mr-3">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button onclick="deleteProduct(${p.id})" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openProductModal(isEdit = false) {
+      document.getElementById("modalTitle").innerText = isEdit ? "Product ပြင်ဆင်ရန်" : "Product အသစ်ထည့်ရန်";
+      document.getElementById("productModal").classList.remove("hidden");
+      document.getElementById("productModal").classList.add("flex");
+    }
+
+    function closeProductModal() {
+      document.getElementById("productModal").classList.add("hidden");
+      document.getElementById("productModal").classList.remove("flex");
+      document.getElementById("productForm").reset();
+      document.getElementById("productId").value = "";
+    }
+
+    function editProduct(id) {
+      const p = productsList.find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById("productId").value = p.id;
+      document.getElementById("pName").value = p.name;
+      document.getElementById("pPrice").value = p.price;
+      document.getElementById("pCategory").value = p.category || '';
+      document.getElementById("pStock").value = p.stock || 0;
+      document.getElementById("pLowStock").value = p.low_stock_threshold || 10;
+      document.getElementById("pImage").value = p.image || '';
+      document.getElementById("pAvailable").checked = p.available === 1;
+
+      openProductModal(true);
+    }
+
+    async function saveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById("productId").value;
+      const isEdit = !!id;
+
+      const payload = {
+        name: document.getElementById("pName").value,
+        price: Number(document.getElementById("pPrice").value),
+        category: document.getElementById("pCategory").value,
+        stock: Number(document.getElementById("pStock").value),
+        low_stock_threshold: Number(document.getElementById("pLowStock").value),
+        image: document.getElementById("pImage").value,
+        available: document.getElementById("pAvailable").checked
+      };
+
+      const url = isEdit ? `/api/admin/products/${id}` : `/api/admin/products`;
+      const method = isEdit ? "PUT" : "POST";
+
+      try {
+        const res = await fetch(url, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+            "X-Admin-Key": ADMIN_KEY
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.ok) {
+          closeProductModal();
+          loadProducts();
+        } else {
+          alert("Error: " + data.error);
+        }
+      } catch (err) {
+        alert("Product သိမ်းဆည်းရာတွင် အမှားအယွင်းရှိနေပါသည်");
+      }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm("ဤ Product ကို ဖျက်ရန် သေချာပါသလား?")) return;
+
+      try {
+        const res = await fetch(`/api/admin/products/${id}`, {
+          method: "DELETE",
+          headers: { "X-Admin-Key": ADMIN_KEY }
+        });
+        const data = await res.json();
+        if (data.ok) {
+          loadProducts();
+        } else {
+          alert("Error: " + data.error);
+        }
+      } catch (err) {
+        alert("Product ဖျက်ရာတွင် အမှားအယွင်းရှိနေပါသည်");
+      }
+    }
+
+    // စတင်ချိန်တွင် Product စာရင်းကို ရယူမည်
+    loadProducts();
+  </script>
 </body>
 </html>

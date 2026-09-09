@@ -113,10 +113,40 @@
   </div>
 
   <script>
-    // LocalStorage သို့မဟုတ် Environment မှ Admin Key ကို ယူမည်
-    const ADMIN_KEY = localStorage.getItem("ADMIN_KEY") || ""; 
-    let productsList = [];
+   // LocalStorage ထဲမှ Admin Key ကို ရယူမည်
+  let ADMIN_KEY = localStorage.getItem("ADMIN_KEY");
 
+  // Admin Key မရှိသေးပါက Prompt ဖြင့် တောင်းယူမည်
+  if (!ADMIN_KEY) {
+    ADMIN_KEY = prompt("Admin Key ရိုက်ထည့်ပါ:");
+    if (ADMIN_KEY) {
+      localStorage.setItem("ADMIN_KEY", ADMIN_KEY);
+    } else {
+      alert("Admin Key မရှိဘဲ ဝင်ရောက်၍ မရပါ!");
+    }
+  }
+
+  // Admin Key မှားနေ၍ Unauthorized Error ပြပါက Key အသစ် ပြန်တောင်းပေးမည့် logic
+  async function checkAdminAuth() {
+    if (!ADMIN_KEY) return;
+    try {
+      const res = await fetch("/api/admin/ping", {
+        headers: { "X-Admin-Key": ADMIN_KEY }
+      });
+      if (res.status === 401) {
+        alert("ရိုက်ထည့်ထားသော Admin Key မှားယွင်းနေပါသည်။ ပြန်လည် ထည့်သွင်းပေးပါ။");
+        localStorage.removeItem("ADMIN_KEY");
+        location.reload();
+      }
+    } catch (e) {
+      console.error("Auth check error:", e);
+    }
+  }
+
+  checkAdminAuth();
+
+  let productsList = [];
+    
     async function loadProducts() {
       const tbody = document.getElementById("productsTableBody");
       tbody.innerHTML = `<tr><td colspan="8" class="text-center p-6 text-gray-400">Data ရယူနေသည်...</td></tr>`;

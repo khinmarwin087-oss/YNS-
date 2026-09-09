@@ -464,30 +464,35 @@
 
 function parseOrderItems(order) {
     let raw =
+      order.items_json ??  // Cloudflare D1 Column Name
       order.items ??
       order.order_items ??
       order.orderItems ??
       order.cart ??
-      order.cart_items ??
-      order.cartItems ??
       order.products ??
       order.details ??
-      order.item_list ??
       [];
 
-    // String (JSON) ဖြစ်နေလျှင် JSON.parse လုပ်မည်
+    // JSON String ဖြစ်နေပါက JS Array/Object ဖြစ်အောင် ပြောင်းမည်
     raw = safeJsonParse(raw);
 
-    // Array မဟုတ်ဘဲ Object ဖြစ်နေပါက အထဲက Array ကို ပြန်ဆွဲထုတ်မည်
     if (raw && !Array.isArray(raw)) {
       if (Array.isArray(raw.items)) raw = raw.items;
-      else if (Array.isArray(raw.cart)) raw = raw.cart;
-      else if (Array.isArray(raw.products)) raw = raw.products;
       else if (raw.data && Array.isArray(raw.data.items)) raw = raw.data.items;
-      else if (typeof raw === 'object') raw = Object.values(raw); // Object ဖြစ်နေပါက Array သို့ ပြောင်းမည်
+      else if (typeof raw === 'object') raw = Object.values(raw);
     }
 
     return Array.isArray(raw) ? raw : [];
+  }
+
+  function getOrderId(order) {
+    return (
+      order.voucher_code ?? // Cloudflare D1 Column Name
+      order.id ??
+      order.order_id ??
+      order.orderId ??
+      "N/A"
+    );
   }
 
   function getItemName(item) {

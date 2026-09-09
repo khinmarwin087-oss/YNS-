@@ -2,7 +2,7 @@
 <html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Products Management • YNS Kitchen</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    /* Mobile Responsive Layout Styles */
+    .app { display: flex; width: 100%; min-height: 100vh; position: relative; }
+    
     .dash-header-custom {
       display: flex;
       align-items: center;
@@ -20,60 +23,54 @@
     }
 
     .header-center-title {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 22px;
+      font-size: 18px;
       font-weight: 800;
       color: var(--navy,#0f172a);
       margin: 0;
-      white-space: nowrap;
     }
 
     .icon-circle-btn {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       background: #fff;
       border: 1px solid var(--line,#e2e8f0);
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 16px;
       color: var(--navy,#0f172a);
       box-shadow: 0 2px 4px rgba(0,0,0,.04);
       cursor: pointer;
-      transition: .2s;
+      z-index: 10;
     }
-
-    .icon-circle-btn:active { transform: scale(.96); }
 
     .btn-add-product {
       background: #2563eb;
       color: #fff;
       border: none;
-      padding: 10px 16px;
-      border-radius: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
       font-weight: 700;
       font-size: 13px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(37,99,235,.2);
     }
-
-    .btn-add-product:active { transform: scale(.97); }
 
     .card-wrap {
       background: #fff;
-      border-radius: 16px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 12px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 2px 5px rgba(15,23,42,.03);
     }
 
     .table-responsive {
+      width: 100%;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       margin-top: 10px;
     }
 
@@ -81,34 +78,34 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      min-width: 600px;
+      white-space: nowrap;
     }
 
     .custom-table th {
       background: #f8fafc;
       color: #64748b;
-      padding: 10px;
+      padding: 8px 10px;
       text-align: left;
       font-weight: 700;
       border-bottom: 1px solid #e2e8f0;
     }
 
     .custom-table td {
-      padding: 12px 10px;
+      padding: 10px;
       border-bottom: 1px solid #f1f5f9;
       vertical-align: middle;
     }
 
     .product-img {
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
       object-fit: cover;
       border: 1px solid #e2e8f0;
     }
 
     .badge-status {
-      padding: 4px 8px;
+      padding: 3px 8px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 700;
@@ -123,23 +120,26 @@
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.5);
-      z-index: 999;
-      place-items: center;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
       padding: 16px;
     }
 
-    .modal-overlay.show { display: grid; }
+    .modal-overlay.show { display: flex; }
 
     .modal-box {
       background: #fff;
       border-radius: 16px;
-      padding: 20px;
+      padding: 16px;
       width: 100%;
       max-width: 450px;
+      max-height: 90vh;
+      overflow-y: auto;
       box-shadow: 0 10px 25px rgba(0,0,0,.15);
     }
 
-    .form-group { margin-bottom: 12px; }
+    .form-group { margin-bottom: 10px; }
     .form-group label {
       display: block;
       font-size: 12px;
@@ -150,7 +150,7 @@
 
     .form-control {
       width: 100%;
-      padding: 9px 12px;
+      padding: 8px 10px;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
       outline: none;
@@ -169,27 +169,24 @@
       display: flex;
       justify-content: flex-end;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
-    .btn-sec {
-      background: #f1f5f9;
-      color: #475569;
-      border: 0;
+    .btn-sec, .btn-pri {
       padding: 8px 14px;
       border-radius: 8px;
       font-weight: 700;
+      border: 0;
       cursor: pointer;
     }
 
-    .btn-pri {
-      background: #2563eb;
-      color: #fff;
-      border: 0;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: 700;
-      cursor: pointer;
+    .btn-sec { background: #f1f5f9; color: #475569; }
+    .btn-pri { background: #2563eb; color: #fff; }
+
+    @media (max-width: 640px) {
+      .hide-mobile { display: none; }
+      .header-center-title { font-size: 16px; }
+      .card-wrap { padding: 8px; }
     }
   </style>
 </head>
@@ -211,27 +208,30 @@
     <nav class="nav" id="sidebarNav"></nav>
   </aside>
 
+  <!-- Overlay for Mobile Sidebar Toggle -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
   <!-- Main Content Area -->
-  <main class="main">
+  <main class="main" style="width: 100%; overflow-x: hidden;">
 
     <!-- Header Navigation Bar -->
     <header class="dash-header-custom">
-      <button class="icon-circle-btn" onclick="toggleSidebar()" aria-label="Menu">
+      <button class="icon-circle-btn" onclick="toggleSidebar()" type="button" aria-label="Menu">
         <i class="fa-solid fa-bars"></i>
       </button>
 
       <h1 class="header-center-title">Products</h1>
 
-      <button class="btn-add-product" onclick="openProductModal()">
+      <button class="btn-add-product" onclick="openProductModal()" type="button">
         <i class="fa-solid fa-plus"></i> <span class="hide-mobile">အသစ်ထည့်ရန်</span>
       </button>
     </header>
 
     <!-- Table Card Container -->
     <div class="card-wrap">
-      <div style="display:flex; justify-between; align-items:center; margin-bottom: 10px;">
-        <b style="color:#0f172a; font-size: 15px;">Products စာရင်း</b>
-        <button class="icon-circle-btn" onclick="loadProducts()" style="width:34px; height:34px; font-size:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; padding: 0 4px;">
+        <b style="color:#0f172a; font-size: 14px;">Products စာရင်း</b>
+        <button class="icon-circle-btn" onclick="loadProducts()" type="button" style="width:32px; height:32px; font-size:12px;">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
       </div>
@@ -240,8 +240,8 @@
         <table class="custom-table">
           <thead>
             <tr>
-              <th style="width: 50px;">ID</th>
-              <th style="width: 60px;">ပုံ</th>
+              <th>ID</th>
+              <th>ပုံ</th>
               <th>အမည်</th>
               <th>အမျိုးအစား</th>
               <th>စျေးနှုန်း</th>
@@ -252,7 +252,7 @@
           </thead>
           <tbody id="productsTableBody">
             <tr>
-              <td colspan="8" style="text-align:center; padding: 30px; color:#94a3b8;">
+              <td colspan="8" style="text-align:center; padding: 25px; color:#94a3b8;">
                 Data ရယူနေသည်...
               </td>
             </tr>
@@ -267,7 +267,7 @@
 <!-- Product Add/Edit Modal -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-box">
-    <h3 id="modalTitle" style="margin-top:0; margin-bottom:14px; font-size:16px;">Product အသစ်ထည့်ရန်</h3>
+    <h3 id="modalTitle" style="margin-top:0; margin-bottom:12px; font-size:16px;">Product အသစ်ထည့်ရန်</h3>
     
     <form id="productForm" onsubmit="saveProduct(event)">
       <input type="hidden" id="productId">
@@ -322,7 +322,6 @@
 <script>
   let ADMIN_KEY = localStorage.getItem("ADMIN_KEY");
 
-  // Admin Key စစ်ဆေးခြင်း
   if (!ADMIN_KEY) {
     ADMIN_KEY = prompt("Admin Key ရိုက်ထည့်ပါ:");
     if (ADMIN_KEY) {
@@ -350,7 +349,7 @@
 
   async function loadProducts() {
     const tbody = document.getElementById("productsTableBody");
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color:#94a3b8;">Data ရယူနေသည်...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 25px; color:#94a3b8;">Data ရယူနေသည်...</td></tr>`;
 
     try {
       const res = await apiFetch("/api/admin/products");
@@ -358,14 +357,14 @@
       renderTable(productsList);
     } catch (err) {
       console.error("Load products error:", err);
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color:#ef4444;">Products Data ရယူ၍ မရပါ။</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 25px; color:#ef4444;">Products Data ရယူ၍ မရပါ။</td></tr>`;
     }
   }
 
   function renderTable(products) {
     const tbody = document.getElementById("productsTableBody");
     if (!products || products.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color:#94a3b8;">Product မရှိသေးပါ။</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 25px; color:#94a3b8;">Product မရှိသေးပါ။</td></tr>`;
       return;
     }
 
@@ -389,10 +388,10 @@
           </span>
         </td>
         <td style="text-align:right;">
-          <button onclick="editProduct(${p.id})" style="border:0; background:transparent; color:#2563eb; cursor:pointer; padding:4px 8px; font-size:14px;">
+          <button onclick="editProduct(${p.id})" style="border:0; background:transparent; color:#2563eb; cursor:pointer; padding:4px 6px; font-size:14px;">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
-          <button onclick="deleteProduct(${p.id})" style="border:0; background:transparent; color:#dc2626; cursor:pointer; padding:4px 8px; font-size:14px;">
+          <button onclick="deleteProduct(${p.id})" style="border:0; background:transparent; color:#dc2626; cursor:pointer; padding:4px 6px; font-size:14px;">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         </td>

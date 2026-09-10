@@ -69,16 +69,25 @@ async function handleSendOrder(request, env) {
   const customerName = body.name || null;
   const phone = body.phone || null;
   const items = Array.isArray(body.items) ? body.items : null;
-  const total = Number.isFinite(body.total) ? body.total : null;
+  
+  // Total မပါလာရင် Item တန်ဖိုးများမှ auto ပြန်တွက်ထုတ်ပေးခြင်း
+  let total = Number.isFinite(body.total) && body.total > 0 ? body.total : 0;
+  if (!total && items && items.length > 0) {
+    total = items.reduce((sum, item) => {
+      const p = Number(item.price ?? item.unit_price ?? item.unitPrice ?? item.amount ?? 0) || 0;
+      const q = Number(item.qty ?? item.quantity ?? 1) || 1;
+      return sum + (p * q);
+    }, 0);
+  }
 
   let orderId = null;
-  if (items && total !== null && env.DB) {
+  if (env.DB) {
     try {
       const result = await env.DB.prepare(
         `INSERT INTO orders (voucher_code, customer_name, phone, items_json, total, status, payment_status)
          VALUES (?, ?, ?, ?, ?, 'New', 'Pending')`
       )
-        .bind(voucherCode, customerName, phone, JSON.stringify(items), total)
+        .bind(voucherCode, customerName, phone, JSON.stringify(items || []), total)
         .run();
       orderId = result.meta ? result.meta.last_row_id : null;
     } catch (e) {

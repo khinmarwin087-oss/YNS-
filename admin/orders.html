@@ -2,7 +2,7 @@
 <html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Orders Management • YNS Kitchen</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -10,363 +10,137 @@
   <link rel="stylesheet" href="css/style.css">
 
   <style>
+    .app { display: flex; width: 100%; min-height: 100vh; background-color: #f8fafc; }
+
     .dash-header-custom {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      position:relative;
-      padding:12px 4px;
-      margin-bottom:12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      padding: 12px 4px;
+      margin-bottom: 12px;
     }
 
     .header-center-title {
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:22px;
-      font-weight:800;
-      color:var(--navy,#0f172a);
-      margin:0;
-      white-space:nowrap;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+      white-space: nowrap;
     }
 
     .top-actions-right {
-      display:flex;
-      gap:8px;
-      align-items:center;
-      margin-left:auto;
-      position:relative;
-      z-index:20;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+      position: relative;
+      z-index: 20;
     }
 
     .icon-circle-btn {
-      width:42px;
-      height:42px;
-      border-radius:12px;
-      background:#fff;
-      border:1px solid var(--line,#e2e8f0);
-      display:grid;
-      place-items:center;
-      font-size:16px;
-      color:var(--navy,#0f172a);
-      box-shadow:0 2px 4px rgba(0,0,0,.04);
-      cursor:pointer;
-      transition:.2s;
+      width: 40px; height: 40px; border-radius: 10px; background: #fff;
+      border: 1px solid #e2e8f0; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; color: #0f172a;
+      box-shadow: 0 2px 4px rgba(0,0,0,.04); cursor: pointer; transition: .2s;
     }
+    .icon-circle-btn:active { transform: scale(.96); }
+    .icon-circle-btn.active { background: #0f172a; color: #fff; }
 
-    .icon-circle-btn:active { transform:scale(.96); }
-    .icon-circle-btn.active { background:var(--navy,#0f172a); color:#fff; }
-
+    /* Search & Date Popovers */
     .search-popover {
-      display:none;
-      margin-bottom:12px;
-      background:#fff;
-      padding:8px 14px;
-      border-radius:14px;
-      border:1px solid var(--line,#e2e8f0);
-      box-shadow:0 4px 12px rgba(0,0,0,.05);
-      align-items:center;
-      gap:10px;
+      display: none; margin-bottom: 12px; background: #fff; padding: 8px 14px;
+      border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 12px rgba(0,0,0,.05);
+      align-items: center; gap: 10px;
     }
-
-    .search-popover.show { display:flex; }
-
-    .search-popover input {
-      width:100%;
-      border:0;
-      outline:none;
-      font-size:14px;
-      background:transparent;
-    }
+    .search-popover.show { display: flex; }
+    .search-popover input { width: 100%; border: 0; outline: none; font-size: 14px; background: transparent; }
 
     .date-popover {
-      display:none;
-      position:absolute;
-      top:50px;
-      right:0;
-      background:#fff;
-      border:1px solid var(--line,#e2e8f0);
-      border-radius:16px;
-      padding:14px;
-      box-shadow:0 8px 20px rgba(0,0,0,.1);
-      z-index:100;
-      width:240px;
-      flex-direction:column;
-      gap:8px;
+      display: none; position: absolute; top: 50px; right: 0; background: #fff;
+      border: 1px solid #e2e8f0; border-radius: 14px; padding: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.1); z-index: 100; width: 230px;
+      flex-direction: column; gap: 8px;
     }
+    .date-popover.show { display: flex; }
+    .date-popover label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; }
+    .date-popover input { width: 100%; box-sizing: border-box; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px; font-size: 13px; outline: none; }
+    .date-reset-btn { background: #f1f5f9; border: 0; padding: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #334155; cursor: pointer; }
 
-    .date-popover.show { display:flex; }
-
-    .date-popover label {
-      font-size:11px;
-      font-weight:700;
-      color:var(--muted,#64748b);
-      text-transform:uppercase;
+    /* Status Tabs Filter */
+    .status-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+    .tab-btn {
+      padding: 8px 16px; border-radius: 999px; border: 1px solid #e2e8f0; background: #fff;
+      font-size: 12px; font-weight: 700; color: #64748b; cursor: pointer; white-space: nowrap; transition: .2s;
     }
+    .tab-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; }
 
-    .date-popover input {
-      width:100%;
-      box-sizing:border-box;
-      border:1px solid var(--line,#e2e8f0);
-      border-radius:8px;
-      padding:8px;
-      font-size:13px;
-      outline:none;
-    }
-
-    .date-reset-btn {
-      background:#f1f5f9;
-      border:0;
-      padding:8px;
-      border-radius:8px;
-      font-size:12px;
-      font-weight:700;
-      color:#334155;
-      cursor:pointer;
-    }
-
+    /* Order Cards List */
     .order-card {
-      background:#fff;
-      border-radius:16px;
-      padding:16px;
-      margin-bottom:14px;
-      border:1px solid #e2e8f0;
-      box-shadow:0 2px 5px rgba(15,23,42,.03);
+      background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 14px;
+      border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(15,23,42,.03);
     }
+    .order-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .voucher-label { display: inline-block; font-size: 11px; background: #f1f5f9; padding: 4px 9px; border-radius: 6px; color: #64748b; font-weight: 700; }
+    .customer-name { margin: 6px 0 2px; font-size: 16px; font-weight: 800; color: #0f172a; word-break: break-word; }
+    .customer-phone { color: #64748b; font-size: 12px; }
 
-    .order-header {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-    }
+    .order-header-right { text-align: right; flex-shrink: 0; }
+    .order-date { font-size: 11px; color: #64748b; display: block; margin-bottom: 4px; white-space: nowrap; }
 
-    .order-header-left { min-width:0; }
+    /* Status Badges */
+    .order-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800; }
+    .badge-new, .badge-pending { background: #eff6ff; color: #2563eb; }
+    .badge-cooking, .badge-processing { background: #fff7ed; color: #ea580c; }
+    .badge-ready { background: #f0fdf4; color: #16a34a; }
+    .badge-completed { background: #f1f5f9; color: #475569; }
+    .badge-cancelled { background: #fef2f2; color: #dc2626; }
 
-    .voucher-label {
-      display:inline-block;
-      font-size:11px;
-      background:#f1f5f9;
-      padding:4px 9px;
-      border-radius:6px;
-      color:#64748b;
-      font-weight:700;
-    }
+    /* Payment Badges */
+    .pay-badge { font-size: 10px; padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-left: 6px; display: inline-block; }
+    .pay-paid { background: #dcfce7; color: #15803d; }
+    .pay-pending { background: #fef9c3; color: #a16207; }
 
-    .customer-name {
-      margin:7px 0 2px;
-      font-size:17px;
-      font-weight:800;
-      color:#0f172a;
-      word-break:break-word;
-    }
+    /* Table Setup */
+    .items-table-wrap { overflow-x: auto; margin: 12px 0; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
+    .items-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .items-table thead tr { background: #f8fafc; color: #64748b; font-size: 11px; border-bottom: 1px solid #e2e8f0; }
+    .items-table th { padding: 8px 10px; font-weight: 700; }
+    .items-table td { padding: 10px; border-bottom: 1px solid #f1f5f9; }
+    .items-table tbody tr:last-child td { border-bottom: 0; }
 
-    .customer-phone {
-      color:#64748b;
-      font-size:12px;
-    }
+    .item-name { text-align: left; font-weight: 700; color: #0f172a; }
+    .item-price, .item-total { text-align: right; white-space: nowrap; }
+    .item-qty { text-align: center; font-weight: 700; white-space: nowrap; }
 
-    .order-header-right {
-      text-align:right;
-      flex-shrink:0;
-    }
-
-    .order-date {
-      font-size:11px;
-      color:#64748b;
-      display:block;
-      margin-bottom:4px;
-      white-space:nowrap;
-    }
-
-    .order-badge {
-      display:inline-block;
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:800;
-    }
-
-    .badge-new,.badge-pending {
-      background:#eff6ff;
-      color:#2563eb;
-    }
-
-    .badge-cooking,.badge-processing {
-      background:#fff7ed;
-      color:#ea580c;
-    }
-
-    .badge-ready {
-      background:#f0fdf4;
-      color:#16a34a;
-    }
-
-    .badge-completed {
-      background:#f1f5f9;
-      color:#475569;
-    }
-
-    .badge-cancelled {
-      background:#fef2f2;
-      color:#dc2626;
-    }
-
-    .items-table-wrap {
-      overflow-x:auto;
-      margin:14px 0;
-      border:1px solid #e2e8f0;
-      border-radius:10px;
-      background:#fff;
-    }
-
-    .items-table {
-      width:100%;
-      min-width:430px;
-      border-collapse:collapse;
-      font-size:13px;
-    }
-
-    .items-table thead tr {
-      background:#f8fafc;
-      color:#64748b;
-      font-size:11px;
-      border-bottom:1px solid #e2e8f0;
-    }
-
-    .items-table th {
-      padding:9px 10px;
-      font-weight:700;
-    }
-
-    .items-table td {
-      padding:10px;
-      border-bottom:1px solid #f1f5f9;
-    }
-
-    .items-table tbody tr:last-child td { border-bottom:0; }
-
-    .item-name {
-      text-align:left;
-      font-weight:700;
-      color:#0f172a;
-    }
-
-    .item-price,.item-total {
-      text-align:right;
-      white-space:nowrap;
-    }
-
-    .item-qty {
-      text-align:center;
-      font-weight:700;
-      white-space:nowrap;
-    }
-
-    .no-items {
-      padding:16px !important;
-      text-align:center;
-      color:#94a3b8;
-      font-size:12px;
-    }
-
-    .total-status-row {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:12px;
-    }
-
+    /* Card Bottom Controls */
+    .total-status-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
     .order-grand-total {
-      flex:1;
-      min-width:0;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      padding:12px 14px;
-      background:#fef2f2;
-      border-radius:12px;
-      border:1px solid #fecaca;
-      box-sizing:border-box;
+      flex: 1; display: flex; align-items: center; justify-content: space-between;
+      gap: 8px; padding: 10px 14px; background: #fef2f2; border-radius: 12px; border: 1px solid #fecaca;
     }
+    .order-grand-total-label { font-size: 12px; font-weight: 700; color: #991b1b; white-space: nowrap; }
+    .red-total { font-size: 16px; font-weight: 800; color: #dc2626; white-space: nowrap; }
 
-    .order-grand-total-label {
-      font-size:13px;
-      font-weight:700;
-      color:#991b1b;
-      white-space:nowrap;
-    }
-
-    .red-total {
-      font-size:18px;
-      font-weight:800;
-      color:#dc2626;
-      white-space:nowrap;
-    }
-
-    .order-actions {
-      display:flex;
-      align-items:center;
-      justify-content:flex-end;
-      gap:7px;
-      flex-shrink:0;
-    }
-
+    .order-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; flex-shrink: 0; }
     .btn-action {
-      min-height:44px;
-      padding:9px 13px;
-      border-radius:10px;
-      border:none;
-      font-size:12px;
-      font-weight:800;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:6px;
-      cursor:pointer;
-      color:#fff;
-      box-shadow:0 2px 5px rgba(0,0,0,.10);
-      transition:.15s;
-      white-space:nowrap;
+      min-height: 38px; padding: 8px 12px; border-radius: 8px; border: none;
+      font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; cursor: pointer; color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.08); transition: .15s; white-space: nowrap;
     }
+    .btn-action:active { transform: scale(.97); }
+    .btn-accept { background: #2563eb; }
+    .btn-ready { background: #16a34a; }
+    .btn-cancel { background: #dc2626; }
+    .btn-complete { background: #0f172a; }
 
-    .btn-action:active { transform:scale(.97); }
-    .btn-accept { background:#2563eb; }
-    .btn-ready { background:#16a34a; }
-    .btn-cancel { background:#dc2626; }
-    .btn-complete { background:#2563eb; }
-
-    @media (max-width:620px) {
-      .order-card { padding:14px; }
-      .total-status-row { align-items:stretch; }
-      .order-grand-total {
-        flex-direction:column;
-        align-items:flex-start;
-        justify-content:center;
-        min-height:66px;
-      }
-      .red-total { font-size:17px; }
-      .order-actions {
-        flex-direction:column;
-        align-items:stretch;
-        justify-content:center;
-      }
-      .order-actions .btn-action {
-        width:100%;
-        min-width:0;
-        padding-left:10px;
-        padding-right:10px;
-      }
-    }
-
-    @media (max-width:420px) {
-      .total-status-row { gap:8px; }
-      .order-grand-total { padding:10px; }
-      .order-grand-total-label { font-size:11px; }
-      .red-total { font-size:15px; }
-      .btn-action { font-size:11px; padding:8px 9px; }
+    @media (max-width: 620px) {
+      .total-status-row { flex-direction: column; align-items: stretch; }
+      .order-actions { flex-direction: row; width: 100%; }
+      .order-actions .btn-action { flex: 1; }
     }
   </style>
 </head>
@@ -375,64 +149,71 @@
 
 <div class="app">
 
+  <!-- Sidebar Nav -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-icon">🍗</div>
-      <div>
-        <b>YNS Kitchen</b>
-        <small>Admin Panel</small>
-      </div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
     </div>
     <div class="nav-title">MAIN MENU</div>
     <nav class="nav" id="sidebarNav"></nav>
   </aside>
 
-  <main class="main">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
-    <!-- Header: Left Menu Button, Center Orders Title, Right Icons -->
+  <!-- Main Content -->
+  <main class="main" style="width: 100%; overflow-x: hidden; padding: 12px;">
+
+    <!-- Top Navigation Header -->
     <header class="dash-header-custom">
-      <button class="icon-circle-btn" onclick="toggleSidebar()" aria-label="Menu">
+      <button class="icon-circle-btn" onclick="toggleSidebar()" aria-label="Menu" type="button">
         <i class="fa-solid fa-bars"></i>
       </button>
 
       <h1 class="header-center-title">Orders</h1>
 
       <div class="top-actions-right">
-        <button class="icon-circle-btn" id="searchBtn" onclick="toggleSearch()" aria-label="Search">
+        <button class="icon-circle-btn" id="searchBtn" onclick="toggleSearch()" aria-label="Search" type="button">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
 
-        <button class="icon-circle-btn" id="dateBtn" onclick="toggleDate()" aria-label="Date">
+        <button class="icon-circle-btn" id="dateBtn" onclick="toggleDate()" aria-label="Date" type="button">
           <i class="fa-solid fa-calendar-days"></i>
         </button>
 
+        <button class="icon-circle-btn" onclick="loadOrders()" aria-label="Refresh" type="button">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+
+        <!-- Date Popover -->
         <div class="date-popover" id="datePopover">
           <label>Filter By Date</label>
           <input type="date" id="filterDate" onchange="applyFilters()">
-          <button class="date-reset-btn" onclick="clearDateFilter()">
+          <button class="date-reset-btn" onclick="clearDateFilter()" type="button">
             <i class="fa-solid fa-rotate-right"></i> Reset
           </button>
         </div>
       </div>
     </header>
 
-    <!-- Search Popover -->
+    <!-- Search Input Popover -->
     <div class="search-popover" id="searchPopover">
       <i class="fa-solid fa-magnifying-glass" style="color:#94a3b8;"></i>
       <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Voucher, Name, Phone ရှာရန်...">
-      <i class="fa-solid fa-xmark" onclick="toggleSearch()" style="cursor:pointer;color:#94a3b8;"></i>
+      <i class="fa-solid fa-xmark" onclick="toggleSearch()" style="cursor:pointer; color:#94a3b8;"></i>
     </div>
 
-    <!-- Status Tabs -->
+    <!-- Status Filter Tabs -->
     <div class="status-tabs">
-      <button class="tab-btn active" onclick="filterStatus('new', this)">New</button>
-      <button class="tab-btn" onclick="filterStatus('cooking', this)">Cooking</button>
-      <button class="tab-btn" onclick="filterStatus('ready', this)">Ready</button>
-      <button class="tab-btn" onclick="filterStatus('all', this)">All</button>
+      <button class="tab-btn active" onclick="filterStatus('new', this)" type="button">New / Pending</button>
+      <button class="tab-btn" onclick="filterStatus('cooking', this)" type="button">Cooking</button>
+      <button class="tab-btn" onclick="filterStatus('ready', this)" type="button">Ready</button>
+      <button class="tab-btn" onclick="filterStatus('all', this)" type="button">All Orders</button>
     </div>
 
+    <!-- Orders Container -->
     <div id="ordersListContainer">
-      <p style="color:gray;text-align:center;">အော်ဒါများကို ရယူနေသည်...</p>
+      <div style="text-align:center; color:#94a3b8; padding:40px;">အော်ဒါများကို ရယူနေသည်...</div>
     </div>
 
   </main>
@@ -444,71 +225,35 @@
   let rawOrders = [];
   let currentStatus = "new";
 
-  // Today Date set as default when clicking date filter
-  function setDefaultDate() {
-    const input = document.getElementById("filterDate");
-    if (input) {
-      const today = new Date().toISOString().split('T')[0];
-      input.value = today;
-    }
-  }
-
   function safeJsonParse(value) {
     if (typeof value !== "string") return value;
-    try {
-      return JSON.parse(value);
-    } catch (error) {
-      return [];
-    }
+    try { return JSON.parse(value); } catch (e) { return []; }
   }
 
-function parseOrderItems(order) {
-    let raw =
-      order.items_json ??  // Cloudflare D1 Column Name
-      order.items ??
-      order.order_items ??
-      order.orderItems ??
-      order.cart ??
-      order.products ??
-      order.details ??
-      [];
-
-    // JSON String ဖြစ်နေပါက JS Array/Object ဖြစ်အောင် ပြောင်းမည်
+  function parseOrderItems(order) {
+    let raw = order.items_json ?? order.items ?? order.order_items ?? order.cart ?? [];
     raw = safeJsonParse(raw);
-
     if (raw && !Array.isArray(raw)) {
       if (Array.isArray(raw.items)) raw = raw.items;
-      else if (raw.data && Array.isArray(raw.data.items)) raw = raw.data.items;
       else if (typeof raw === 'object') raw = Object.values(raw);
     }
-
     return Array.isArray(raw) ? raw : [];
   }
 
   function getOrderId(order) {
-    return (
-      order.voucher_code ?? // Cloudflare D1 Column Name
-      order.id ??
-      order.order_id ??
-      order.orderId ??
-      "N/A"
-    );
+    return order.voucher_code ?? order.id ?? order.order_id ?? "N/A";
   }
 
   function getItemName(item) {
-    return item.name ?? item.title ?? item.product_name ?? item.productName ?? item.menu_name ?? item.food_name ?? "Unknown Item";
+    return item.name ?? item.title ?? item.product_name ?? "Unknown Item";
   }
 
   function getItemPrice(item) {
-    return Number(item.price ?? item.unit_price ?? item.unitPrice ?? item.amount ?? 0) || 0;
+    return Number(item.price ?? item.unit_price ?? item.amount ?? 0) || 0;
   }
 
   function getItemQty(item) {
     return Number(item.qty ?? item.quantity ?? item.count ?? 1) || 1;
-  }
-
-  function getOrderId(order) {
-    return order.id ?? order.order_id ?? order.voucher_id ?? "N/A";
   }
 
   function getCustomerName(order) {
@@ -535,7 +280,7 @@ function parseOrderItems(order) {
       applyFilters();
     } catch (error) {
       console.error("Load orders error:", error);
-      container.innerHTML = "<p style='color:red;text-align:center;padding:40px;'>Orders ဒေတာ ရယူ၍ မရပါ။</p>";
+      container.innerHTML = `<div style="color:#ef4444; text-align:center; padding:40px;">အော်ဒါ ဒေတာ ရယူ၍ မရပါ။</div>`;
     }
   }
 
@@ -544,9 +289,7 @@ function parseOrderItems(order) {
     const btn = document.getElementById("searchBtn");
     box.classList.toggle("show");
     btn.classList.toggle("active");
-    if (box.classList.contains("show")) {
-      document.getElementById("searchInput").focus();
-    }
+    if (box.classList.contains("show")) document.getElementById("searchInput").focus();
   }
 
   function toggleDate() {
@@ -565,7 +308,7 @@ function parseOrderItems(order) {
 
   function filterStatus(status, btn) {
     currentStatus = String(status).toLowerCase();
-    document.querySelectorAll(".tab-btn").forEach(button => button.classList.remove("active"));
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     applyFilters();
   }
@@ -579,7 +322,7 @@ function parseOrderItems(order) {
   }
 
   function getOrderDate(order) {
-    const value = order.created_at ?? order.createdAt ?? order.order_date ?? order.date ?? "";
+    const value = order.created_at ?? order.createdAt ?? order.order_date ?? "";
     if (!value) return "";
     return String(value).split("T")[0].split(" ")[0];
   }
@@ -594,25 +337,20 @@ function parseOrderItems(order) {
     const filtered = rawOrders.filter(order => {
       const status = normalizeStatus(order.status);
 
-      // Search ရိုက်ထားလျှင် Tab စစ်ထုတ်မှုကို ကျော်ပြီး မည်သည့် Status မှမဆို ရှာပေးမည်
       if (!query && currentStatus !== "all") {
         if (currentStatus === "new" && status !== "new" && status !== "pending") return false;
         if (currentStatus === "cooking" && status !== "cooking" && status !== "processing") return false;
         if (currentStatus === "ready" && status !== "ready") return false;
       }
 
-      // 1. Search Matching Logic (Voucher, Name, Phone)
       if (query) {
         const voucher = String(getOrderId(order)).toLowerCase();
         const name = String(getCustomerName(order)).toLowerCase();
         const phone = String(getPhone(order)).toLowerCase();
 
-        if (!voucher.includes(query) && !name.includes(query) && !phone.includes(query)) {
-          return false;
-        }
+        if (!voucher.includes(query) && !name.includes(query) && !phone.includes(query)) return false;
       }
 
-      // 2. Date Matching Logic
       if (filterDateVal) {
         const orderDate = getOrderDate(order);
         if (orderDate !== filterDateVal) return false;
@@ -628,7 +366,7 @@ function parseOrderItems(order) {
     const container = document.getElementById("ordersListContainer");
 
     if (!Array.isArray(orders) || orders.length === 0) {
-      container.innerHTML = `<div style="text-align:center;padding:40px;color:#64748b;">အော်ဒါများ မရှိသေးပါ။</div>`;
+      container.innerHTML = `<div style="text-align:center; padding:40px; color:#64748b;">အော်ဒါများ မရှိသေးပါ။</div>`;
       return;
     }
 
@@ -640,49 +378,46 @@ function parseOrderItems(order) {
       const phone = getPhone(order);
       const total = getOrderTotal(order, items);
       const displayStatus = order.status || "New";
+      const payStatus = order.payment_status || "Pending";
 
       let itemsHTML = "";
-
       if (items.length > 0) {
         itemsHTML = items.map(item => {
           const name = getItemName(item);
           const price = getItemPrice(item);
           const qty = getItemQty(item);
-          const itemTotal = price * qty;
-
           return `
             <tr>
               <td class="item-name">${escapeHtml(name)}</td>
-              <td class="item-price">${money(price)}</td>
+              <td class="item-price">${formatMoney(price)}</td>
               <td class="item-qty">x${qty}</td>
-              <td class="item-total">${money(itemTotal)}</td>
+              <td class="item-total">${formatMoney(price * qty)}</td>
             </tr>
           `;
         }).join("");
       } else {
-        itemsHTML = `<tr><td colspan="4" class="no-items">ဒီအော်ဒါမှာ Item Data မပါလာပါ။</td></tr>`;
+        itemsHTML = `<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:12px;">အကြောင်းအရာ စာရင်း မရှိပါ။</td></tr>`;
       }
 
       let actionHTML = "";
-
       if (status === "new" || status === "pending") {
         actionHTML = `
-          <button class="btn-action btn-accept" onclick="updateOrderStatus('${escapeJs(orderId)}','Cooking')">
+          <button class="btn-action btn-accept" onclick="updateOrderStatus('${escapeJs(orderId)}','Cooking')" type="button">
             <i class="fa-solid fa-fire"></i> Accept
           </button>
-          <button class="btn-action btn-cancel" onclick="updateOrderStatus('${escapeJs(orderId)}','Cancelled')">
+          <button class="btn-action btn-cancel" onclick="updateOrderStatus('${escapeJs(orderId)}','Cancelled')" type="button">
             <i class="fa-solid fa-xmark"></i> Cancel
           </button>
         `;
       } else if (status === "cooking" || status === "processing") {
         actionHTML = `
-          <button class="btn-action btn-ready" onclick="updateOrderStatus('${escapeJs(orderId)}','Ready')">
+          <button class="btn-action btn-ready" onclick="updateOrderStatus('${escapeJs(orderId)}','Ready')" type="button">
             <i class="fa-solid fa-check"></i> Ready
           </button>
         `;
       } else if (status === "ready") {
         actionHTML = `
-          <button class="btn-action btn-complete" onclick="updateOrderStatus('${escapeJs(orderId)}','Completed')">
+          <button class="btn-action btn-complete" onclick="updateOrderStatus('${escapeJs(orderId)}','Completed')" type="button">
             <i class="fa-solid fa-circle-check"></i> Complete
           </button>
         `;
@@ -697,7 +432,7 @@ function parseOrderItems(order) {
               <small class="customer-phone"><i class="fa-solid fa-phone"></i> ${escapeHtml(phone)}</small>
             </div>
             <div class="order-header-right">
-              <span class="order-date">${fmtDate(order.created_at ?? order.createdAt ?? order.order_date ?? order.date)}</span>
+              <span class="order-date">${getOrderDate(order)}</span>
               <span class="order-badge badge-${status}">${escapeHtml(displayStatus)}</span>
             </div>
           </div>
@@ -718,8 +453,11 @@ function parseOrderItems(order) {
 
           <div class="total-status-row">
             <div class="order-grand-total">
-              <span class="order-grand-total-label">Grand Total:</span>
-              <b class="red-total">${money(total)}</b>
+              <div>
+                <span class="order-grand-total-label">Grand Total:</span>
+                <span class="pay-badge ${payStatus === 'Paid' ? 'pay-paid' : 'pay-pending'}">${payStatus}</span>
+              </div>
+              <b class="red-total">${formatMoney(total)}</b>
             </div>
             <div class="order-actions">${actionHTML}</div>
           </div>
@@ -728,12 +466,16 @@ function parseOrderItems(order) {
     }).join("");
   }
 
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  function escapeHtml(val) {
+    return String(val ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  function escapeJs(value) {
-    return String(value ?? "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, "\\n").replace(/\r/g, "\\r");
+  function escapeJs(val) {
+    return String(val ?? "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  }
+
+  function formatMoney(amount) {
+    return typeof money === 'function' ? money(amount) : Number(amount).toLocaleString() + ' Ks';
   }
 
   async function updateOrderStatus(orderId, status) {
@@ -744,25 +486,16 @@ function parseOrderItems(order) {
         body: JSON.stringify({ status: status })
       });
 
-      if (typeof showToast === "function") {
-        showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
-      }
+      if (typeof showToast === "function") showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
       await loadOrders();
     } catch (error) {
       console.error("Update status error:", error);
-      if (typeof showToast === "function") {
-        showToast("ပြင်ဆင်မှု မအောင်မြင်ပါ");
-      } else {
-        alert("Order status ပြောင်း၍မရပါ");
-      }
+      alert("Order status ပြောင်း၍မရပါ");
     }
   }
 
   window.onload = function() {
-    if (typeof renderAdminLayout === "function") {
-      renderAdminLayout("orders");
-    }
-    setDefaultDate();
+    if (typeof renderAdminLayout === "function") renderAdminLayout("orders");
     loadOrders();
   };
 </script>

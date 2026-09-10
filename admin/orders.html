@@ -244,10 +244,16 @@
     return item.name ?? item.title ?? item.product_name ?? item.item_name ?? "Unknown Item";
   }
 
-  // Price key နာမည် အမျိုးမျိုးကို စစ်ပေးခြင်း
-  function getItemPrice(item) {
-    const p = item.price ?? item.unit_price ?? item.unitPrice ?? item.item_price ?? item.amount ?? item.cost ?? 0;
-    return Number(p) || 0;
+  // Price field ကို နာမည်အမျိုးမျိုး စစ်ဆေးခြင်း + မပါလျှင် Grand Total မှ မျှတွက်ပေးခြင်း
+  function getItemPrice(item, orderTotal = 0, totalItemsCount = 1) {
+    let p = item.price ?? item.unit_price ?? item.unitPrice ?? item.item_price ?? item.amount ?? item.cost ?? item.pricePerItem ?? 0;
+    p = Number(p) || 0;
+
+    if (p === 0 && orderTotal > 0 && totalItemsCount > 0) {
+      p = Math.round(orderTotal / totalItemsCount);
+    }
+
+    return p;
   }
 
   function getItemQty(item) {
@@ -380,11 +386,14 @@
       const displayStatus = order.status || "New";
       const payStatus = order.payment_status || "Pending";
 
+      // စုစုပေါင်း Item အရေအတွက် ရယူခြင်း
+      const totalQtySum = items.reduce((sum, i) => sum + getItemQty(i), 0) || items.length || 1;
+
       let itemsHTML = "";
       if (items.length > 0) {
         itemsHTML = items.map(item => {
           const name = getItemName(item);
-          const price = getItemPrice(item);
+          const price = getItemPrice(item, total, totalQtySum);
           const qty = getItemQty(item);
           const itemTotal = price * qty;
 
@@ -402,8 +411,8 @@
       }
 
       let actionHTML = "";
-      
-      // ငွေချေမှု status ပြောင်းရန် ခလုတ်
+
+      // ငွေချေမှု Status ပြောင်းရန် ခလုတ်
       if (payStatus !== "Paid") {
         actionHTML += `
           <button class="btn-action" style="background:#059669;" onclick="togglePaymentStatus(${dbId}, 'Paid', this)" type="button">
@@ -487,13 +496,13 @@
     return typeof money === 'function' ? money(amount) : Number(amount).toLocaleString() + ' Ks';
   }
 
-  // Order Status ပြောင်းရန်
+  // Order Status ပြောင်းရန် ခေါ်ယူသည့် Function
   async function updateOrderStatus(dbId, newStatus, btn) {
     if (!dbId) return alert("Order ID မရှိပါ");
 
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Loading...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
     }
 
     try {
@@ -504,12 +513,13 @@
       });
       loadOrders();
     } catch (error) {
+      console.error(error);
       alert("Order Status ပြောင်း၍ မရပါ");
       if (btn) btn.disabled = false;
     }
   }
 
-  // Payment Status ပြောင်းရန်
+  // Payment Status ပြောင်းရန် ခေါ်ယူသည့် Function
   async function togglePaymentStatus(dbId, newPayStatus, btn) {
     if (!dbId) return alert("Order ID မရှိပါ");
 
@@ -526,6 +536,7 @@
       });
       loadOrders();
     } catch (error) {
+      console.error(error);
       alert("Payment Status ပြောင်း၍ မရပါ");
       if (btn) btn.disabled = false;
     }
@@ -536,5 +547,6 @@
     loadOrders();
   };
 </script>
+
 </body>
 </html>

@@ -241,12 +241,12 @@
   }
 
   function getItemName(item) {
-    return item.name ?? item.title ?? item.product_name ?? "Unknown Item";
+    return item.name ?? item.title ?? item.product_name ?? item.item_name ?? "Unknown Item";
   }
 
-  // Price အကျအန စစ်ထုတ်ခြင်း
+  // Price key နာမည် အမျိုးမျိုးကို စစ်ပေးခြင်း
   function getItemPrice(item) {
-    const p = item.price ?? item.unit_price ?? item.unitPrice ?? item.amount ?? item.cost ?? 0;
+    const p = item.price ?? item.unit_price ?? item.unitPrice ?? item.item_price ?? item.amount ?? item.cost ?? 0;
     return Number(p) || 0;
   }
 
@@ -315,7 +315,7 @@
   function normalizeStatus(status) {
     const value = String(status || "new").trim().toLowerCase();
     if (value === "pending") return "pending";
-    if (value === "processing") return "processing";
+    if (value === "processing" || value === "cooking") return "cooking";
     if (value === "cancelled" || value === "canceled") return "cancelled";
     return value;
   }
@@ -338,7 +338,7 @@
 
       if (!query && currentStatus !== "all") {
         if (currentStatus === "new" && status !== "new" && status !== "pending") return false;
-        if (currentStatus === "cooking" && status !== "cooking" && status !== "processing") return false;
+        if (currentStatus === "cooking" && status !== "cooking") return false;
         if (currentStatus === "ready" && status !== "ready") return false;
       }
 
@@ -372,7 +372,7 @@
     container.innerHTML = orders.map(order => {
       const items = parseOrderItems(order);
       const status = normalizeStatus(order.status);
-      const dbId = order.id; // Backend API Update ရန် Numeric ID
+      const dbId = order.id;
       const voucherCode = order.voucher_code || dbId || "N/A";
       const customerName = getCustomerName(order);
       const phone = getPhone(order);
@@ -402,8 +402,19 @@
       }
 
       let actionHTML = "";
+      
+      // ငွေချေမှု status ပြောင်းရန် ခလုတ်
+      if (payStatus !== "Paid") {
+        actionHTML += `
+          <button class="btn-action" style="background:#059669;" onclick="togglePaymentStatus(${dbId}, 'Paid', this)" type="button">
+            <i class="fa-solid fa-money-bill-wave"></i> Mark Paid
+          </button>
+        `;
+      }
+
+      // Order Status ပြောင်းရန် ခလုတ်များ
       if (status === "new" || status === "pending") {
-        actionHTML = `
+        actionHTML += `
           <button class="btn-action btn-accept" onclick="updateOrderStatus(${dbId}, 'Processing', this)" type="button">
             <i class="fa-solid fa-fire"></i> Accept
           </button>
@@ -411,14 +422,14 @@
             <i class="fa-solid fa-xmark"></i> Cancel
           </button>
         `;
-      } else if (status === "cooking" || status === "processing") {
-        actionHTML = `
+      } else if (status === "cooking") {
+        actionHTML += `
           <button class="btn-action btn-ready" onclick="updateOrderStatus(${dbId}, 'Ready', this)" type="button">
             <i class="fa-solid fa-check"></i> Ready
           </button>
         `;
       } else if (status === "ready") {
-        actionHTML = `
+        actionHTML += `
           <button class="btn-action btn-complete" onclick="updateOrderStatus(${dbId}, 'Completed', this)" type="button">
             <i class="fa-solid fa-circle-check"></i> Complete
           </button>
@@ -476,16 +487,13 @@
     return typeof money === 'function' ? money(amount) : Number(amount).toLocaleString() + ' Ks';
   }
 
-  // numeric ID ခေါ်ဆို၍ Backend သို့ PATCH တောင်းခံခြင်း
+  // Order Status ပြောင်းရန်
   async function updateOrderStatus(dbId, newStatus, btn) {
-    if (!dbId) {
-      alert("Order Database ID မရှိပါ");
-      return;
-    }
+    if (!dbId) return alert("Order ID မရှိပါ");
 
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Loading...`;
     }
 
     try {
@@ -494,18 +502,32 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus })
       });
-
-      if (typeof showToast === "function") {
-        showToast(`Status ကို ${newStatus} သို့ ပြောင်းလဲပြီးပါပြီ`);
-      }
-      await loadOrders();
+      loadOrders();
     } catch (error) {
-      console.error("Update status error:", error);
       alert("Order Status ပြောင်း၍ မရပါ");
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = `Retry`;
-      }
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  // Payment Status ပြောင်းရန်
+  async function togglePaymentStatus(dbId, newPayStatus, btn) {
+    if (!dbId) return alert("Order ID မရှိပါ");
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
+    }
+
+    try {
+      await apiFetch(`/api/admin/orders/${dbId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payment_status: newPayStatus })
+      });
+      loadOrders();
+    } catch (error) {
+      alert("Payment Status ပြောင်း၍ မရပါ");
+      if (btn) btn.disabled = false;
     }
   }
 
@@ -514,6 +536,5 @@
     loadOrders();
   };
 </script>
-
 </body>
 </html>

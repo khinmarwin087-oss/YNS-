@@ -240,20 +240,19 @@
     return Array.isArray(raw) ? raw : [];
   }
 
-  function getOrderId(order) {
-    return order.voucher_code ?? order.id ?? order.order_id ?? "N/A";
-  }
-
   function getItemName(item) {
     return item.name ?? item.title ?? item.product_name ?? "Unknown Item";
   }
 
+  // Price အကျအန စစ်ထုတ်ခြင်း
   function getItemPrice(item) {
-    return Number(item.price ?? item.unit_price ?? item.amount ?? 0) || 0;
+    const p = item.price ?? item.unit_price ?? item.unitPrice ?? item.amount ?? item.cost ?? 0;
+    return Number(p) || 0;
   }
 
   function getItemQty(item) {
-    return Number(item.qty ?? item.quantity ?? item.count ?? 1) || 1;
+    const q = item.qty ?? item.quantity ?? item.count ?? 1;
+    return Number(q) || 1;
   }
 
   function getCustomerName(order) {
@@ -267,7 +266,7 @@
   function getOrderTotal(order, items) {
     let total = Number(order.total ?? order.grand_total ?? order.total_amount ?? 0) || 0;
     if (!total && items.length) {
-      total = items.reduce((sum, item) => sum + getItemPrice(item) * getItemQty(item), 0);
+      total = items.reduce((sum, item) => sum + (getItemPrice(item) * getItemQty(item)), 0);
     }
     return total;
   }
@@ -275,7 +274,7 @@
   async function loadOrders() {
     const container = document.getElementById("ordersListContainer");
     try {
-      const res = await apiFetch("/api/admin/orders");
+      const res = await apiFetch("/api/admin/orders?pageSize=50");
       rawOrders = Array.isArray(res) ? res : ((res && res.orders) || []);
       applyFilters();
     } catch (error) {
@@ -344,7 +343,7 @@
       }
 
       if (query) {
-        const voucher = String(getOrderId(order)).toLowerCase();
+        const voucher = String(order.voucher_code || "").toLowerCase();
         const name = String(getCustomerName(order)).toLowerCase();
         const phone = String(getPhone(order)).toLowerCase();
 
@@ -373,7 +372,8 @@
     container.innerHTML = orders.map(order => {
       const items = parseOrderItems(order);
       const status = normalizeStatus(order.status);
-      const orderId = getOrderId(order);
+      const dbId = order.id; // Backend API Update ရန် Numeric ID
+      const voucherCode = order.voucher_code || dbId || "N/A";
       const customerName = getCustomerName(order);
       const phone = getPhone(order);
       const total = getOrderTotal(order, items);
@@ -386,12 +386,14 @@
           const name = getItemName(item);
           const price = getItemPrice(item);
           const qty = getItemQty(item);
+          const itemTotal = price * qty;
+
           return `
             <tr>
               <td class="item-name">${escapeHtml(name)}</td>
               <td class="item-price">${formatMoney(price)}</td>
               <td class="item-qty">x${qty}</td>
-              <td class="item-total">${formatMoney(price * qty)}</td>
+              <td class="item-total">${formatMoney(itemTotal)}</td>
             </tr>
           `;
         }).join("");
@@ -402,22 +404,22 @@
       let actionHTML = "";
       if (status === "new" || status === "pending") {
         actionHTML = `
-          <button class="btn-action btn-accept" onclick="updateOrderStatus('${escapeJs(orderId)}','Cooking')" type="button">
+          <button class="btn-action btn-accept" onclick="updateOrderStatus(${dbId}, 'Processing', this)" type="button">
             <i class="fa-solid fa-fire"></i> Accept
           </button>
-          <button class="btn-action btn-cancel" onclick="updateOrderStatus('${escapeJs(orderId)}','Cancelled')" type="button">
+          <button class="btn-action btn-cancel" onclick="updateOrderStatus(${dbId}, 'Cancelled', this)" type="button">
             <i class="fa-solid fa-xmark"></i> Cancel
           </button>
         `;
       } else if (status === "cooking" || status === "processing") {
         actionHTML = `
-          <button class="btn-action btn-ready" onclick="updateOrderStatus('${escapeJs(orderId)}','Ready')" type="button">
+          <button class="btn-action btn-ready" onclick="updateOrderStatus(${dbId}, 'Ready', this)" type="button">
             <i class="fa-solid fa-check"></i> Ready
           </button>
         `;
       } else if (status === "ready") {
         actionHTML = `
-          <button class="btn-action btn-complete" onclick="updateOrderStatus('${escapeJs(orderId)}','Completed')" type="button">
+          <button class="btn-action btn-complete" onclick="updateOrderStatus(${dbId}, 'Completed', this)" type="button">
             <i class="fa-solid fa-circle-check"></i> Complete
           </button>
         `;
@@ -427,7 +429,7 @@
         <div class="order-card">
           <div class="order-header">
             <div class="order-header-left">
-              <span class="voucher-label">Voucher: #${escapeHtml(orderId)}</span>
+              <span class="voucher-label">Voucher: #${escapeHtml(voucherCode)}</span>
               <h3 class="customer-name">${escapeHtml(customerName)}</h3>
               <small class="customer-phone"><i class="fa-solid fa-phone"></i> ${escapeHtml(phone)}</small>
             </div>
@@ -470,27 +472,40 @@
     return String(val ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
-  function escapeJs(val) {
-    return String(val ?? "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
-  }
-
   function formatMoney(amount) {
     return typeof money === 'function' ? money(amount) : Number(amount).toLocaleString() + ' Ks';
   }
 
-  async function updateOrderStatus(orderId, status) {
+  // numeric ID ခေါ်ဆို၍ Backend သို့ PATCH တောင်းခံခြင်း
+  async function updateOrderStatus(dbId, newStatus, btn) {
+    if (!dbId) {
+      alert("Order Database ID မရှိပါ");
+      return;
+    }
+
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing...`;
+    }
+
     try {
-      await apiFetch(`/api/admin/orders/${encodeURIComponent(orderId)}`, {
+      await apiFetch(`/api/admin/orders/${dbId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: status })
+        body: JSON.stringify({ status: newStatus })
       });
 
-      if (typeof showToast === "function") showToast(`Status ကို ${status} သို့ ပြောင်းလိုက်ပါပြီ`);
+      if (typeof showToast === "function") {
+        showToast(`Status ကို ${newStatus} သို့ ပြောင်းလဲပြီးပါပြီ`);
+      }
       await loadOrders();
     } catch (error) {
       console.error("Update status error:", error);
-      alert("Order status ပြောင်း၍မရပါ");
+      alert("Order Status ပြောင်း၍ မရပါ");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = `Retry`;
+      }
     }
   }
 

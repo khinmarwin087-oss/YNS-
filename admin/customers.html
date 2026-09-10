@@ -328,8 +328,8 @@
 
     try {
       const res = await apiFetch("/api/admin/customers");
-      // API response structure စစ်ဆေးခြင်း
-      customersList = Array.isArray(res) ? res : (res.customers || res.data || []);
+      // Backend Response Format မျိုးစုံကို စစ်ဆေးခြင်း
+      customersList = Array.isArray(res) ? res : ((res && (res.customers || res.data)) || []);
       renderCustomers(customersList);
     } catch (err) {
       console.error("Load customers error:", err);
@@ -345,16 +345,16 @@
     }
 
     grid.innerHTML = list.map((c, index) => {
-      // Backend မှ Key မတူညီပါက ယူနိုင်မည့် Alternative Keys များကို စစ်ပေးခြင်း
+      // Backend မတူညီပါက ရနိုင်သော Key Name များကို တစ်ခါတည်း စစ်ထုတ်ပေးခြင်း
       const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
       const initial = name.charAt(0).toUpperCase();
       const phone = c.phone || c.phone_number || c.Phone || "-";
       
-      // Order Count ကို Key အမျိုးမျိုးဖြင့် စစ်ပေးခြင်း
+      // Order Count & Total Spent Matching
       const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
-      
-      // Total Spent မပါလာပါက အလွယ်တကူ compute လုပ်နိုင်အောင် စစ်ပေးခြင်း
       const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
+
+      const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks';
 
       return `
         <div class="customer-card">
@@ -376,7 +376,7 @@
               </div>
               <div class="stat-item" style="text-align:right;">
                 <span class="stat-label">ဝယ်ယူမှု စုစုပေါင်း</span>
-                <span class="stat-value" style="color:#dc2626;">${typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks'}</span>
+                <span class="stat-value" style="color:#dc2626;">${formattedSpent}</span>
               </div>
             </div>
           </div>
@@ -407,13 +407,15 @@
     const container = document.getElementById("modalContent");
     modal.classList.add("show");
 
-    // Dynamic Keys Matching
+    // Profile Details Data
     const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
     const phone = c.phone || c.phone_number || c.Phone || "-";
     const address = c.address || c.full_address || c.location || "မရှိသေးပါ";
     const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
     const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
     const orders = c.orders || c.order_history || [];
+
+    const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks';
 
     container.innerHTML = `
       <!-- Profile Summary -->
@@ -431,7 +433,7 @@
         <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Order Summary</div>
         <div style="display:flex; justify-content:space-between; font-size:13px;">
           <div>အော်ဒါ အရေအတွက်: <b>${totalOrders} ကြိမ်</b></div>
-          <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks'}</b></div>
+          <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${formattedSpent}</b></div>
         </div>
       </div>
 
@@ -457,18 +459,22 @@
           </tr>
         </thead>
         <tbody>
-          ${orders.map(o => `
-            <tr>
-              <td><b>#${o.id || o.order_id || '-'}</b></td>
-              <td>${o.date || o.created_at || '-'}</td>
-              <td>${typeof money === 'function' ? money(o.total_price || o.amount || 0) : (o.total_price || 0) + ' Ks'}</td>
-              <td>
-                <span class="badge-status ${(o.status || '').toLowerCase() === 'completed' ? 'badge-completed' : 'badge-pending'}">
-                  ${o.status || 'Pending'}
-                </span>
-              </td>
-            </tr>
-          `).join('')}
+          ${orders.map(o => {
+            const orderAmount = o.total_price || o.amount || 0;
+            const formattedAmount = typeof money === 'function' ? money(orderAmount) : orderAmount + ' Ks';
+            return `
+              <tr>
+                <td><b>#${o.id || o.order_id || '-'}</b></td>
+                <td>${o.date || o.created_at || '-'}</td>
+                <td>${formattedAmount}</td>
+                <td>
+                  <span class="badge-status ${(o.status || '').toLowerCase() === 'completed' ? 'badge-completed' : 'badge-pending'}">
+                    ${o.status || 'Pending'}
+                  </span>
+                </td>
+              </tr>
+            `;
+          }).join('')}
         </tbody>
       </table>
     `;
@@ -489,5 +495,6 @@
     loadCustomers();
   };
 </script>
+
 </body>
 </html>

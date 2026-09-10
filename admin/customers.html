@@ -42,7 +42,6 @@
       cursor: pointer;
     }
 
-    /* Search & Filter Bar */
     .filter-bar {
       display: flex;
       gap: 10px;
@@ -73,7 +72,6 @@
       color: #94a3b8;
     }
 
-    /* Responsive Grid for Customer Cards */
     .customers-grid {
       display: grid;
       grid-template-columns: repeat(1, 1fr);
@@ -88,7 +86,6 @@
       .customers-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
-    /* Customer Card Style */
     .customer-card {
       background: #fff;
       border-radius: 14px;
@@ -175,7 +172,6 @@
       border-color: #2563eb;
     }
 
-    /* Customer Details Modal Design */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -194,16 +190,14 @@
       border-radius: 16px;
       padding: 20px;
       width: 100%;
-      max-width: 600px;
-      max-height: 85vh;
-      overflow-y: auto;
+      max-width: 500px;
       box-shadow: 0 10px 25px rgba(0,0,0,.15);
     }
 
     .detail-section {
       background: #f8fafc;
       border-radius: 12px;
-      padding: 12px;
+      padding: 14px;
       margin-bottom: 12px;
       border: 1px solid #e2e8f0;
     }
@@ -213,38 +207,11 @@
       font-weight: 800;
       color: #64748b;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
-    .history-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-    }
-
-    .history-table th {
-      text-align: left;
-      padding: 6px;
-      color: #64748b;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .history-table td {
-      padding: 8px 6px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-
-    .badge-status {
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-    .badge-completed { background: #f0fdf4; color: #16a34a; }
-    .badge-pending { background: #fefce8; color: #ca8a04; }
   </style>
 </head>
 
@@ -283,7 +250,7 @@
       </button>
     </header>
 
-    <!-- Search & Filter Area -->
+    <!-- Search Bar -->
     <div class="filter-bar">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
@@ -312,7 +279,7 @@
     </div>
 
     <div id="modalContent">
-      <!-- Dynamic Data Render Here -->
+      <!-- Modal Content Render Area -->
     </div>
   </div>
 </div>
@@ -328,8 +295,9 @@
 
     try {
       const res = await apiFetch("/api/admin/customers");
-      // Backend Response Format မျိုးစုံကို စစ်ဆေးခြင်း
-      customersList = Array.isArray(res) ? res : ((res && (res.customers || res.data)) || []);
+      
+      // Worker API က { ok: true, customers: [...] } ဆိုပြီး ပြန်ပေးတာဖြစ်ပါတယ်
+      customersList = (res && res.customers) ? res.customers : (Array.isArray(res) ? res : []);
       renderCustomers(customersList);
     } catch (err) {
       console.error("Load customers error:", err);
@@ -345,16 +313,15 @@
     }
 
     grid.innerHTML = list.map((c, index) => {
-      // Backend မတူညီပါက ရနိုင်သော Key Name များကို တစ်ခါတည်း စစ်ထုတ်ပေးခြင်း
-      const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
+      // Worker.js D1 DB Columns: name, phone, orders, spent, last_order
+      const name = c.name || "Unknown Customer";
       const initial = name.charAt(0).toUpperCase();
-      const phone = c.phone || c.phone_number || c.Phone || "-";
+      const phone = c.phone || "-";
       
-      // Order Count & Total Spent Matching
-      const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
-      const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
+      const totalOrders = c.orders ?? 0;
+      const totalSpent = c.spent ?? 0;
 
-      const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks';
+      const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent.toLocaleString() + ' Ks';
 
       return `
         <div class="customer-card">
@@ -392,8 +359,8 @@
   function filterCustomers() {
     const q = document.getElementById("searchInput").value.toLowerCase().trim();
     const filtered = customersList.filter(c => {
-      const name = (c.name || c.customer_name || c.CustomerName || "").toLowerCase();
-      const phone = (c.phone || c.phone_number || c.Phone || "").toLowerCase();
+      const name = String(c.name || "").toLowerCase();
+      const phone = String(c.phone || "").toLowerCase();
       return name.includes(q) || phone.includes(q);
     });
     renderCustomers(filtered);
@@ -401,82 +368,55 @@
 
   function viewCustomerDetailByIndex(index) {
     const c = customersList[index];
-    if (!c) return;
-
     const modal = document.getElementById("customerModal");
     const container = document.getElementById("modalContent");
+
+    if (!container) return;
+
     modal.classList.add("show");
 
-    // Profile Details Data
-    const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
-    const phone = c.phone || c.phone_number || c.Phone || "-";
-    const address = c.address || c.full_address || c.location || "မရှိသေးပါ";
-    const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
-    const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
-    const orders = c.orders || c.order_history || [];
+    if (!c) {
+      container.innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px;">Customer အချက်အလက် မရှိပါ။</div>`;
+      return;
+    }
 
-    const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks';
+    // Worker DB exact keys matching
+    const name = c.name || "Unknown Customer";
+    const phone = c.phone || "-";
+    const totalOrders = c.orders ?? 0;
+    const totalSpent = c.spent ?? 0;
+    const lastOrder = c.last_order || "မရှိသေးပါ";
+
+    const formattedSpent = typeof money === 'function' ? money(totalSpent) : totalSpent.toLocaleString() + ' Ks';
 
     container.innerHTML = `
-      <!-- Profile Summary -->
+      <!-- Customer Info -->
       <div class="detail-section">
         <div class="detail-section-title"><i class="fa-solid fa-user"></i> Customer Info</div>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
+        <div style="display:grid; grid-template-columns: 1fr; gap:10px; font-size:13px;">
           <div><b>အမည်:</b> ${escapeHtml(name)}</div>
           <div><b>ဖုန်း:</b> <a href="tel:${phone}" style="color:#2563eb; text-decoration:none;">${escapeHtml(phone)}</a></div>
-          <div style="grid-column: 1 / -1;"><b>လိပ်စာ:</b> ${escapeHtml(address)}</div>
         </div>
       </div>
 
-      <!-- Financial Overview -->
+      <!-- Financial & Activity Summary -->
       <div class="detail-section">
         <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Order Summary</div>
-        <div style="display:flex; justify-content:space-between; font-size:13px;">
-          <div>အော်ဒါ အရေအတွက်: <b>${totalOrders} ကြိမ်</b></div>
-          <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${formattedSpent}</b></div>
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>အော်ဒါ အရေအတွက်:</span>
+            <b>${totalOrders} ကြိမ်</b>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>စုစုပေါင်း ကျသင့်ငွေ:</span>
+            <b style="color:#dc2626;">${formattedSpent}</b>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px; padding-top:6px; border-top:1px dashed #cbd5e1;">
+            <span>နောက်ဆုံး မှာယူခဲ့သည့် ရက်စွဲ:</span>
+            <b style="color:#475569;">${lastOrder}</b>
+          </div>
         </div>
       </div>
-
-      <!-- Order History List -->
-      <div class="detail-section">
-        <div class="detail-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Order History</div>
-        <div>
-          ${orders.length === 0 ? '<div style="color:#94a3b8; font-size:12px;">အော်ဒါ ရာဇဝင် မရှိသေးပါ။</div>' : renderOrdersTable(orders)}
-        </div>
-      </div>
-    `;
-  }
-
-  function renderOrdersTable(orders) {
-    return `
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>ရက်စွဲ</th>
-            <th>ကျသင့်ငွေ</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${orders.map(o => {
-            const orderAmount = o.total_price || o.amount || 0;
-            const formattedAmount = typeof money === 'function' ? money(orderAmount) : orderAmount + ' Ks';
-            return `
-              <tr>
-                <td><b>#${o.id || o.order_id || '-'}</b></td>
-                <td>${o.date || o.created_at || '-'}</td>
-                <td>${formattedAmount}</td>
-                <td>
-                  <span class="badge-status ${(o.status || '').toLowerCase() === 'completed' ? 'badge-completed' : 'badge-pending'}">
-                    ${o.status || 'Pending'}
-                  </span>
-                </td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
     `;
   }
 

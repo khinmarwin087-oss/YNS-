@@ -328,7 +328,8 @@
 
     try {
       const res = await apiFetch("/api/admin/customers");
-      customersList = Array.isArray(res) ? res : ((res && res.customers) || []);
+      // API response structure စစ်ဆေးခြင်း
+      customersList = Array.isArray(res) ? res : (res.customers || res.data || []);
       renderCustomers(customersList);
     } catch (err) {
       console.error("Load customers error:", err);
@@ -343,12 +344,17 @@
       return;
     }
 
-    grid.innerHTML = list.map(c => {
-      const name = c.name || "Unknown Customer";
+    grid.innerHTML = list.map((c, index) => {
+      // Backend မှ Key မတူညီပါက ယူနိုင်မည့် Alternative Keys များကို စစ်ပေးခြင်း
+      const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
       const initial = name.charAt(0).toUpperCase();
-      const phone = c.phone || "-";
-      const totalOrders = c.total_orders || c.orders_count || 0;
-      const totalSpent = c.total_spent || 0;
+      const phone = c.phone || c.phone_number || c.Phone || "-";
+      
+      // Order Count ကို Key အမျိုးမျိုးဖြင့် စစ်ပေးခြင်း
+      const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
+      
+      // Total Spent မပါလာပါက အလွယ်တကူ compute လုပ်နိုင်အောင် စစ်ပေးခြင်း
+      const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
 
       return `
         <div class="customer-card">
@@ -370,12 +376,12 @@
               </div>
               <div class="stat-item" style="text-align:right;">
                 <span class="stat-label">ဝယ်ယူမှု စုစုပေါင်း</span>
-                <span class="stat-value" style="color:#dc2626;">${money(totalSpent)}</span>
+                <span class="stat-value" style="color:#dc2626;">${typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks'}</span>
               </div>
             </div>
           </div>
 
-          <button class="btn-detail" onclick="viewCustomerDetail('${c.phone}')">
+          <button class="btn-detail" onclick="viewCustomerDetailByIndex(${index})">
             <i class="fa-solid fa-eye"></i> View Detail
           </button>
         </div>
@@ -385,84 +391,87 @@
 
   function filterCustomers() {
     const q = document.getElementById("searchInput").value.toLowerCase().trim();
-    const filtered = customersList.filter(c => 
-      (c.name && c.name.toLowerCase().includes(q)) || 
-      (c.phone && c.phone.includes(q))
-    );
+    const filtered = customersList.filter(c => {
+      const name = (c.name || c.customer_name || c.CustomerName || "").toLowerCase();
+      const phone = (c.phone || c.phone_number || c.Phone || "").toLowerCase();
+      return name.includes(q) || phone.includes(q);
+    });
     renderCustomers(filtered);
   }
 
-  async function viewCustomerDetail(phone) {
+  function viewCustomerDetailByIndex(index) {
+    const c = customersList[index];
+    if (!c) return;
+
     const modal = document.getElementById("customerModal");
     const container = document.getElementById("modalContent");
-    container.innerHTML = `<div style="text-align:center; padding: 20px; color:#94a3b8;">အသေးစိတ် ရယူနေသည်...</div>`;
     modal.classList.add("show");
 
-    try {
-      // Customer Detail & Order History API Fetch
-      const c = await apiFetch(`/api/admin/customers/${phone}`);
-      
-      const name = c.name || "Customer Detail";
-      const totalOrders = c.total_orders || 0;
-      const totalSpent = c.total_spent || 0;
-      const address = c.address || "မရှိသေးပါ";
-      const orders = c.orders || [];
+    // Dynamic Keys Matching
+    const name = c.name || c.customer_name || c.CustomerName || "Unknown Customer";
+    const phone = c.phone || c.phone_number || c.Phone || "-";
+    const address = c.address || c.full_address || c.location || "မရှိသေးပါ";
+    const totalOrders = c.total_orders ?? c.orders_count ?? c["Total Orders"] ?? c.totalOrders ?? 0;
+    const totalSpent = c.total_spent ?? c.total_amount ?? c["Total Spent"] ?? c.totalSpent ?? 0;
+    const orders = c.orders || c.order_history || [];
 
-      container.innerHTML = `
-        <!-- Profile Summary -->
-        <div class="detail-section">
-          <div class="detail-section-title"><i class="fa-solid fa-user"></i> Customer Info</div>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
-            <div><b>အမည်:</b> ${escapeHtml(name)}</div>
-            <div><b>ဖုန်း:</b> <a href="tel:${c.phone}" style="color:#2563eb; text-decoration:none;">${escapeHtml(c.phone)}</a></div>
-            <div style="grid-column: 1 / -1;"><b>လိပ်စာ:</b> ${escapeHtml(address)}</div>
-          </div>
+    container.innerHTML = `
+      <!-- Profile Summary -->
+      <div class="detail-section">
+        <div class="detail-section-title"><i class="fa-solid fa-user"></i> Customer Info</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
+          <div><b>အမည်:</b> ${escapeHtml(name)}</div>
+          <div><b>ဖုန်း:</b> <a href="tel:${phone}" style="color:#2563eb; text-decoration:none;">${escapeHtml(phone)}</a></div>
+          <div style="grid-column: 1 / -1;"><b>လိပ်စာ:</b> ${escapeHtml(address)}</div>
         </div>
+      </div>
 
-        <!-- Financial Overview -->
-        <div class="detail-section">
-          <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Order Summary</div>
-          <div style="display:flex; justify-content:space-between; font-size:13px;">
-            <div>အော်ဒါ အရေအတွက်: <b>${totalOrders} ကြိမ်</b></div>
-            <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${money(totalSpent)}</b></div>
-          </div>
+      <!-- Financial Overview -->
+      <div class="detail-section">
+        <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Order Summary</div>
+        <div style="display:flex; justify-content:space-between; font-size:13px;">
+          <div>အော်ဒါ အရေအတွက်: <b>${totalOrders} ကြိမ်</b></div>
+          <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${typeof money === 'function' ? money(totalSpent) : totalSpent + ' Ks'}</b></div>
         </div>
+      </div>
 
-        <!-- Order History List -->
-        <div class="detail-section">
-          <div class="detail-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Order History</div>
-          ${orders.length === 0 ? '<div style="color:#94a3b8; font-size:12px;">အော်ဒါ ရာဇဝင် မရှိသေးပါ။</div>' : `
-            <table class="history-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>ရက်စွဲ</th>
-                  <th>ကျသင့်ငွေ</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${orders.map(o => `
-                  <tr>
-                    <td><b>#${o.id}</b></td>
-                    <td>${o.date || '-'}</td>
-                    <td>${money(o.total_price || 0)}</td>
-                    <td>
-                      <span class="badge-status ${o.status === 'completed' ? 'badge-completed' : 'badge-pending'}">
-                        ${o.status || 'Pending'}
-                      </span>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          `}
+      <!-- Order History List -->
+      <div class="detail-section">
+        <div class="detail-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Order History</div>
+        <div>
+          ${orders.length === 0 ? '<div style="color:#94a3b8; font-size:12px;">အော်ဒါ ရာဇဝင် မရှိသေးပါ။</div>' : renderOrdersTable(orders)}
         </div>
-      `;
-    } catch (err) {
-      console.error("View detail error:", err);
-      container.innerHTML = `<div style="text-align:center; padding:20px; color:#ef4444;">အချက်အလက်များ ဆွဲယူ၍ မရပါ။</div>`;
-    }
+      </div>
+    `;
+  }
+
+  function renderOrdersTable(orders) {
+    return `
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>ရက်စွဲ</th>
+            <th>ကျသင့်ငွေ</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${orders.map(o => `
+            <tr>
+              <td><b>#${o.id || o.order_id || '-'}</b></td>
+              <td>${o.date || o.created_at || '-'}</td>
+              <td>${typeof money === 'function' ? money(o.total_price || o.amount || 0) : (o.total_price || 0) + ' Ks'}</td>
+              <td>
+                <span class="badge-status ${(o.status || '').toLowerCase() === 'completed' ? 'badge-completed' : 'badge-pending'}">
+                  ${o.status || 'Pending'}
+                </span>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
   }
 
   function closeCustomerModal() {
@@ -480,6 +489,5 @@
     loadCustomers();
   };
 </script>
-
 </body>
 </html>

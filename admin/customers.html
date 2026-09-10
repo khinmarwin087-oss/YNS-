@@ -2,94 +2,484 @@
 <html lang="my">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>မြင်သာကြက်ကင် • Customers</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Customers Management • YNS Kitchen</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Pyidaungsu:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
+
   <style>
-    .tbl-wrap { overflow-x: auto; margin-top: 14px; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); }
-    th { background: #f8f9fb; color: var(--muted); font-weight: 600; }
+    .app { display: flex; width: 100%; min-height: 100vh; position: relative; background-color: #f8fafc; }
+
+    .dash-header-custom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 4px;
+      margin-bottom: 12px;
+    }
+
+    .header-center-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .icon-circle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #0f172a;
+      box-shadow: 0 2px 4px rgba(0,0,0,.04);
+      cursor: pointer;
+    }
+
+    /* Search & Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .search-box {
+      flex: 1;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      outline: none;
+      font-size: 13px;
+      box-sizing: border-box;
+      background: #fff;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    /* Responsive Grid for Customer Cards */
+    .customers-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .customers-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .customers-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* Customer Card Style */
+    .customer-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(15,23,42,.02);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .customer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .customer-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      border: 1px solid #dbeafe;
+    }
+
+    .customer-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .customer-phone {
+      font-size: 12px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .customer-stats {
+      display: flex;
+      justify-content: space-between;
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin: 10px 0;
+      border: 1px solid #f1f5f9;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label { font-size: 10px; color: #64748b; font-weight: 600; }
+    .stat-value { font-size: 13px; font-weight: 800; color: #0f172a; }
+
+    .btn-detail {
+      width: 100%;
+      padding: 8px;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-detail:hover {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+
+    /* Customer Details Modal Design */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal-box-large {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    .detail-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .detail-section-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748b;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .history-table th {
+      text-align: left;
+      padding: 6px;
+      color: #64748b;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .history-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .badge-status {
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .badge-completed { background: #f0fdf4; color: #16a34a; }
+    .badge-pending { background: #fefce8; color: #ca8a04; }
   </style>
 </head>
+
 <body>
+
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand"><div class="brand-icon">🍗</div><div><b>မြင်သာကြက်ကင်</b><small>Premium Admin</small></div></div>
-    <div class="nav-title">MAIN MENU</div>
-    <nav class="nav" id="sidebarNav"></nav>
-    <div class="side-bottom"><button class="nav" style="background:transparent;color:#aeb8c8;width:100%;padding:11px 12px" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</button></div>
-  </aside>
 
-  <main class="main">
-    <header class="topbar">
-      <div><h1>Customers</h1><p>ဝယ်ယူသူဖောက်သည်များ စာရင်း</p></div>
-    </header>
-
-    <div class="card panel">
-      <h2>Recent Customers</h2>
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Customer Name</th>
-              <th>Phone</th>
-              <th>Total Orders</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="customerTableBody">
-            <tr><td colspan="4" style="text-align:center; color:gray;">Loading customers...</td></tr>
-          </tbody>
-        </table>
+  <!-- Sidebar Nav -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div>
+        <b>YNS Kitchen</b>
+        <small>Admin Panel</small>
       </div>
     </div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Main Content -->
+  <main class="main" style="width: 100%; overflow-x: hidden; padding: 12px;">
+
+    <!-- Header Navigation Bar -->
+    <header class="dash-header-custom">
+      <button class="icon-circle-btn" onclick="toggleSidebar()" type="button" aria-label="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <h1 class="header-center-title">Customers</h1>
+
+      <button class="icon-circle-btn" onclick="loadCustomers()" type="button" style="width:36px; height:36px; font-size:13px;">
+        <i class="fa-solid fa-rotate-right"></i>
+      </button>
+    </header>
+
+    <!-- Search & Filter Area -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" oninput="filterCustomers()" placeholder="အမည် သို့မဟုတ် ဖုန်းနံပါတ် ရှာပါ...">
+      </div>
+    </div>
+
+    <!-- Customers Grid Container -->
+    <div id="customersGrid" class="customers-grid">
+      <div style="text-align:center; padding: 30px; color:#94a3b8; grid-column: 1 / -1;">
+        Data ရယူနေသည်...
+      </div>
+    </div>
+
   </main>
 </div>
 
+<!-- Customer Details Modal Popup -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal-box-large">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="margin:0; font-size:16px; color:#0f172a;">Customer အသေးစိတ် အချက်အလက်</h3>
+      <button onclick="closeCustomerModal()" style="border:0; background:transparent; font-size:18px; color:#94a3b8; cursor:pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div id="modalContent">
+      <!-- Dynamic Data Render Here -->
+    </div>
+  </div>
+</div>
+
 <script src="js/main.js"></script>
+
 <script>
+  let customersList = [];
+
   async function loadCustomers() {
-    const tbody = document.getElementById("customerTableBody");
+    const grid = document.getElementById("customersGrid");
+    grid.innerHTML = `<div style="text-align:center; padding: 30px; color:#94a3b8; grid-column: 1 / -1;">Data ရယူနေသည်...</div>`;
+
     try {
-      const res = await apiFetch("/api/admin/orders?pageSize=200");
-      if (res.ok && res.orders) {
-        // Group by phone
-        const custMap = {};
-        res.orders.forEach(o => {
-          const ph = o.phone || "Unknown";
-          if (!custMap[ph]) {
-            custMap[ph] = { name: o.customer_name || "Guest", phone: ph, count: 0 };
-          }
-          custMap[ph].count += 1;
-        });
-
-        const list = Object.values(custMap);
-        if (list.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">ဖောက်သည် စာရင်းမရှိသေးပါ</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = list.map(c => `
-          <tr>
-            <td><b>${c.name}</b></td>
-            <td><a href="tel:${c.phone}" style="color:var(--blue); font-weight:bold;">${c.phone}</a></td>
-            <td><span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; border-radius:12px; font-size:12px; font-weight:bold;">${c.count} Orders</span></td>
-            <td><button onclick="alert('Phone: ${c.phone}')" style="background:var(--navy); color:#fff; padding:6px 12px; border-radius:8px; font-size:12px;">View Detail</button></td>
-          </tr>
-        `).join('');
-      }
-    } catch(e) {
-      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Data ရယူ၍ မရပါ</td></tr>`;
+      const res = await apiFetch("/api/admin/customers");
+      customersList = Array.isArray(res) ? res : ((res && res.customers) || []);
+      renderCustomers(customersList);
+    } catch (err) {
+      console.error("Load customers error:", err);
+      grid.innerHTML = `<div style="text-align:center; padding: 30px; color:#ef4444; grid-column: 1 / -1;">Customers Data ရယူ၍ မရပါ။</div>`;
     }
   }
 
-  window.onload = () => {
-    renderAdminLayout("customers");
+  function renderCustomers(list) {
+    const grid = document.getElementById("customersGrid");
+    if (!list || list.length === 0) {
+      grid.innerHTML = `<div style="text-align:center; padding: 30px; color:#94a3b8; grid-column: 1 / -1;">Customer စာရင်း မရှိသေးပါ။</div>`;
+      return;
+    }
+
+    grid.innerHTML = list.map(c => {
+      const name = c.name || "Unknown Customer";
+      const initial = name.charAt(0).toUpperCase();
+      const phone = c.phone || "-";
+      const totalOrders = c.total_orders || c.orders_count || 0;
+      const totalSpent = c.total_spent || 0;
+
+      return `
+        <div class="customer-card">
+          <div>
+            <div class="customer-header">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="customer-avatar">${initial}</div>
+                <div>
+                  <div class="customer-name">${escapeHtml(name)}</div>
+                  <a href="tel:${phone}" class="customer-phone"><i class="fa-solid fa-phone" style="font-size:10px;"></i> ${escapeHtml(phone)}</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="customer-stats">
+              <div class="stat-item">
+                <span class="stat-label">အော်ဒါ အရေအတွက်</span>
+                <span class="stat-value">${totalOrders} Orders</span>
+              </div>
+              <div class="stat-item" style="text-align:right;">
+                <span class="stat-label">ဝယ်ယူမှု စုစုပေါင်း</span>
+                <span class="stat-value" style="color:#dc2626;">${money(totalSpent)}</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-detail" onclick="viewCustomerDetail('${c.phone}')">
+            <i class="fa-solid fa-eye"></i> View Detail
+          </button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function filterCustomers() {
+    const q = document.getElementById("searchInput").value.toLowerCase().trim();
+    const filtered = customersList.filter(c => 
+      (c.name && c.name.toLowerCase().includes(q)) || 
+      (c.phone && c.phone.includes(q))
+    );
+    renderCustomers(filtered);
+  }
+
+  async function viewCustomerDetail(phone) {
+    const modal = document.getElementById("customerModal");
+    const container = document.getElementById("modalContent");
+    container.innerHTML = `<div style="text-align:center; padding: 20px; color:#94a3b8;">အသေးစိတ် ရယူနေသည်...</div>`;
+    modal.classList.add("show");
+
+    try {
+      // Customer Detail & Order History API Fetch
+      const c = await apiFetch(`/api/admin/customers/${phone}`);
+      
+      const name = c.name || "Customer Detail";
+      const totalOrders = c.total_orders || 0;
+      const totalSpent = c.total_spent || 0;
+      const address = c.address || "မရှိသေးပါ";
+      const orders = c.orders || [];
+
+      container.innerHTML = `
+        <!-- Profile Summary -->
+        <div class="detail-section">
+          <div class="detail-section-title"><i class="fa-solid fa-user"></i> Customer Info</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; font-size:13px;">
+            <div><b>အမည်:</b> ${escapeHtml(name)}</div>
+            <div><b>ဖုန်း:</b> <a href="tel:${c.phone}" style="color:#2563eb; text-decoration:none;">${escapeHtml(c.phone)}</a></div>
+            <div style="grid-column: 1 / -1;"><b>လိပ်စာ:</b> ${escapeHtml(address)}</div>
+          </div>
+        </div>
+
+        <!-- Financial Overview -->
+        <div class="detail-section">
+          <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Order Summary</div>
+          <div style="display:flex; justify-content:space-between; font-size:13px;">
+            <div>အော်ဒါ အရေအတွက်: <b>${totalOrders} ကြိမ်</b></div>
+            <div>စုစုပေါင်း ကျသင့်ငွေ: <b style="color:#dc2626;">${money(totalSpent)}</b></div>
+          </div>
+        </div>
+
+        <!-- Order History List -->
+        <div class="detail-section">
+          <div class="detail-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Order History</div>
+          ${orders.length === 0 ? '<div style="color:#94a3b8; font-size:12px;">အော်ဒါ ရာဇဝင် မရှိသေးပါ။</div>' : `
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>ရက်စွဲ</th>
+                  <th>ကျသင့်ငွေ</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${orders.map(o => `
+                  <tr>
+                    <td><b>#${o.id}</b></td>
+                    <td>${o.date || '-'}</td>
+                    <td>${money(o.total_price || 0)}</td>
+                    <td>
+                      <span class="badge-status ${o.status === 'completed' ? 'badge-completed' : 'badge-pending'}">
+                        ${o.status || 'Pending'}
+                      </span>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `}
+        </div>
+      `;
+    } catch (err) {
+      console.error("View detail error:", err);
+      container.innerHTML = `<div style="text-align:center; padding:20px; color:#ef4444;">အချက်အလက်များ ဆွဲယူ၍ မရပါ။</div>`;
+    }
+  }
+
+  function closeCustomerModal() {
+    document.getElementById("customerModal").classList.remove("show");
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  window.onload = function() {
+    if (typeof renderAdminLayout === "function") {
+      renderAdminLayout("customers");
+    }
     loadCustomers();
   };
 </script>
+
 </body>
 </html>

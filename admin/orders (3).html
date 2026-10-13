@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Orders • YNS Kitchen</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --c-new: #2563eb;      --c-new-bg: #eff6ff;
+      --c-cooking: #ea580c;  --c-cooking-bg: #fff4ec;
+      --c-ready: #16a34a;    --c-ready-bg: #ecfdf3;
+      --c-completed: #64748b;--c-completed-bg: #f1f5f9;
+      --c-cancelled: #dc2626;--c-cancelled-bg: #fef2f2;
+      --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18);
+    }
+
+    html, body { overflow-x: hidden; }
+    body { line-height: 1.5; }
+    .main { padding: 0 14px 96px; min-width: 0; }
+    .o-wrap { max-width: 860px; margin: 0 auto; }
+    @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+
+    /* ============ Sticky top area ============ */
+    .o-top {
+      position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px 10px;
+      background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    @media (min-width: 769px) { .o-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+    .o-top-inner { max-width: 860px; margin: 0 auto; }
+
+    .o-bar { display: flex; align-items: center; gap: 10px; }
+    .o-title { flex: 1; min-width: 0; }
+    .o-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+    .o-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; margin-top: 1px; }
+
+    .ibtn {
+      position: relative; width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff;
+      border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink);
+      box-shadow: 0 1px 2px rgba(15,23,42,.05); transition: transform .15s, background .2s;
+    }
+    .ibtn:active { transform: scale(.93); }
+    .ibtn.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .ibtn .dot { position: absolute; top: 8px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #ef4444; border: 2px solid #fff; display: none; }
+    .ibtn.has-filter .dot { display: block; }
+    .ibtn.spin i { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .o-filters { display: none; gap: 8px; margin-top: 10px; }
+    .o-filters.show { display: flex; }
+    .f-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 0 12px; }
+    .f-search i { color: #94a3b8; font-size: 13px; }
+    .f-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; padding: 11px 0; font-size: 14px; }
+    .f-date { flex: 0 0 auto; width: 150px; border: 1px solid var(--line); border-radius: 13px; background: #fff; padding: 0 10px; font-size: 13px; outline: none; min-width: 0; }
+    .f-clear { flex: 0 0 auto; width: 42px; border-radius: 13px; background: #fee2e2; color: #dc2626; font-size: 14px; }
+    @media (max-width: 480px) { .o-filters.show { flex-wrap: wrap; } .f-search { flex: 1 1 100%; } .f-date { flex: 1; width: auto; height: 42px; } }
+
+    /* ============ Tabs (fit width — no sideways scroll) ============ */
+    .o-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+    .t {
+      min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+      padding: 7px 2px 6px; border-radius: 14px; background: #fff; border: 1px solid var(--line); color: var(--muted);
+      transition: background .2s, color .2s, transform .15s; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    .t:active { transform: scale(.96); }
+    .t b { font-size: 17px; font-weight: 800; line-height: 1.25; color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; }
+    .t span { font-size: 10.5px; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .t.active { background: var(--navy); border-color: var(--navy); color: #cbd5e1; }
+    .t.active b { color: #fff; }
+    .t.alert:not(.active) b { color: #2563eb; }
+    .t.alert:not(.active) { border-color: #bfdbfe; background: #f5f9ff; }
+    .t.alert b::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 4px; vertical-align: super; border-radius: 50%; background: #ef4444; animation: blink 1.4s infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+
+    /* ============ Order rows ============ */
+    .o-note { font-size: 12px; color: var(--muted); font-weight: 600; margin: 14px 4px 0; }
+    .o-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+    .o-note + .o-list { margin-top: 8px; }
+
+    .row {
+      position: relative; width: 100%; text-align: left; display: flex; align-items: stretch; gap: 12px;
+      background: #fff; border: 1px solid #e8edf5; border-radius: 18px; padding: 13px 14px 13px 18px;
+      box-shadow: var(--card-shadow); overflow: hidden; transition: transform .15s, box-shadow .2s, border-color .2s;
+      animation: rise .35s both;
+    }
+    .row:active { transform: scale(.985); }
+    @media (hover: hover) { .row:hover { border-color: #cbd5e1; box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 14px 30px -14px rgba(15,23,42,.25); } }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--rc, #94a3b8); }
+    .row.s-new { --rc: var(--c-new); background: linear-gradient(90deg, var(--c-new-bg), #fff 38%); }
+    .row.s-cooking { --rc: var(--c-cooking); }
+    .row.s-ready { --rc: var(--c-ready); }
+    .row.s-completed { --rc: var(--c-completed); }
+    .row.s-cancelled { --rc: var(--c-cancelled); opacity: .72; }
+
+    .r-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .r-l1 { display: flex; align-items: baseline; gap: 8px; }
+    .r-name { min-width: 0; font-size: 15.5px; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r-v { flex-shrink: 0; margin-right: auto; font-size: 11px; font-weight: 700; color: #94a3b8; font-family: "Plus Jakarta Sans", sans-serif; }
+    .r-total { flex-shrink: 0; font-size: 15px; font-weight: 800; color: var(--ink); font-family: "Plus Jakarta Sans", "Noto Sans Myanmar", sans-serif; }
+    .r-items { font-size: 12.5px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r-items em { color: #94a3b8; font-style: normal; }
+    .r-l3 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 3px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; line-height: 1.6; }
+    .pill i { font-size: 10px; }
+    .p-new { background: var(--c-new-bg); color: var(--c-new); }
+    .p-cooking { background: var(--c-cooking-bg); color: var(--c-cooking); }
+    .p-ready { background: var(--c-ready-bg); color: var(--c-ready); }
+    .p-completed { background: var(--c-completed-bg); color: var(--c-completed); }
+    .p-cancelled { background: var(--c-cancelled-bg); color: var(--c-cancelled); }
+    .p-pickup { background: #fffbeb; color: #b45309; }
+    .p-paid { background: #dcfce7; color: #15803d; }
+    .p-pending { background: #fef9c3; color: #a16207; }
+    .p-failed { background: #fee2e2; color: #b91c1c; }
+    .r-ago { margin-left: auto; font-size: 11px; color: #94a3b8; font-weight: 600; white-space: nowrap; }
+    .r-ago.urgent { color: #dc2626; font-weight: 800; }
+    .r-go { align-self: center; color: #cbd5e1; font-size: 13px; flex-shrink: 0; }
+
+    .skel { height: 92px; border-radius: 18px; background: linear-gradient(100deg, #eef2f7 30%, #f8fafc 50%, #eef2f7 70%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    .o-empty, .o-error { text-align: center; padding: 56px 24px; color: var(--muted); }
+    .o-empty .ico, .o-error .ico { width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 26px; color: #94a3b8; box-shadow: var(--card-shadow); }
+    .o-empty b, .o-error b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+    .o-error .ico { color: #ef4444; }
+    .o-error a, .o-error button.lnk { color: #0284c7; font-weight: 700; background: none; text-decoration: underline; margin-top: 10px; display: inline-block; }
+
+    /* ============ Detail sheet ============ */
+    .backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 1200; }
+    .backdrop.show { opacity: 1; pointer-events: auto; }
+
+    .sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 1210; display: flex; flex-direction: column;
+      max-height: 92vh; max-height: 92dvh; background: #f4f6fb; border-radius: 26px 26px 0 0;
+      box-shadow: 0 -20px 60px rgba(15,23,42,.3); transform: translateY(105%); transition: transform .32s cubic-bezier(.2,.85,.25,1);
+      visibility: hidden;
+    }
+    .sheet.show { transform: translateY(0); visibility: visible; }
+    @media (min-width: 900px) {
+      .sheet { left: auto; top: 0; width: 470px; max-height: none; border-radius: 26px 0 0 26px; transform: translateX(105%); }
+      .sheet.show { transform: translateX(0); }
+      .grab { display: none; }
+    }
+    .grab { width: 42px; height: 5px; border-radius: 99px; background: #cbd5e1; margin: 9px auto 0; flex-shrink: 0; }
+
+    .sh-head { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px; flex-shrink: 0; }
+    .sh-id { flex: 1; min-width: 0; }
+    .sh-id b { display: block; font-size: 19px; font-weight: 800; letter-spacing: -.2px; color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; }
+    .sh-id small { color: var(--muted); font-size: 11.5px; font-weight: 500; }
+    .sh-x { width: 38px; height: 38px; border-radius: 12px; background: #fff; border: 1px solid var(--line); color: #475569; font-size: 15px; flex-shrink: 0; }
+
+    .sh-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding: 2px 16px 18px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
+
+    .card { background: #fff; border: 1px solid #e8edf5; border-radius: 18px; padding: 14px; box-shadow: var(--card-shadow); }
+    .card-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; font-weight: 800; color: #475569; margin-bottom: 10px; letter-spacing: .2px; }
+    .card-h i { margin-right: 6px; color: #94a3b8; }
+    .card-h .sub { font-weight: 600; color: #94a3b8; }
+
+    /* stepper */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; min-width: 0; }
+    .step::before { content: ""; position: absolute; top: 13px; right: 50%; width: 100%; height: 3px; background: #e2e8f0; z-index: 0; }
+    .step:first-child::before { display: none; }
+    .step .dotc { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; background: #e2e8f0; color: #94a3b8; display: grid; place-items: center; font-size: 12px; font-weight: 800; border: 3px solid #fff; box-shadow: 0 0 0 1px #e2e8f0; }
+    .step span { font-size: 10.5px; font-weight: 600; color: #94a3b8; line-height: 1.4; }
+    .step.done::before, .step.cur::before { background: var(--navy); }
+    .step.done .dotc { background: var(--navy); color: #fff; box-shadow: 0 0 0 1px var(--navy); }
+    .step.cur .dotc { background: var(--sc); color: #fff; box-shadow: 0 0 0 1px var(--sc), 0 0 0 6px color-mix(in srgb, var(--sc) 18%, transparent); }
+    .step.cur span, .step.done span { color: var(--ink); font-weight: 700; }
+    .cancel-banner { display: flex; align-items: center; gap: 10px; background: var(--c-cancelled-bg); color: var(--c-cancelled); border: 1px solid #fecaca; border-radius: 14px; padding: 12px 14px; font-weight: 700; font-size: 13.5px; }
+
+    /* customer */
+    .cust { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 46px; height: 46px; border-radius: 15px; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; display: grid; place-items: center; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+    .cust-i { flex: 1; min-width: 0; }
+    .cust-i b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); word-break: break-word; line-height: 1.4; }
+    .cust-i small { color: var(--muted); font-size: 12.5px; font-weight: 600; word-break: break-all; }
+    .call { width: 44px; height: 44px; border-radius: 14px; background: #ecfdf3; color: #16a34a; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; text-decoration: none; border: 1px solid #bbf7d0; }
+    .call.copy { background: #f1f5f9; color: #475569; border-color: var(--line); }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .info-grid .k { font-size: 10.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+    .info-grid .v { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-top: 1px; word-break: break-word; }
+    .info-grid .v.warn { color: #b45309; }
+
+    /* items */
+    .items { list-style: none; margin: 0; padding: 0; }
+    .items li { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f1f5f9; }
+    .items li:last-child { border-bottom: 0; padding-bottom: 2px; }
+    .items li:first-child { padding-top: 2px; }
+    .q { flex-shrink: 0; min-width: 46px; text-align: center; background: var(--navy); color: #fff; border-radius: 11px; padding: 5px 8px; font-size: 15px; font-weight: 800; font-family: "Plus Jakarta Sans", sans-serif; }
+    .n { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; color: var(--ink); word-break: break-word; line-height: 1.45; }
+    .n small { display: block; font-size: 11.5px; font-weight: 500; color: #94a3b8; }
+    .lt { flex-shrink: 0; font-size: 13.5px; font-weight: 800; color: #334155; white-space: nowrap; }
+    .no-items { text-align: center; padding: 14px 6px; color: #64748b; font-size: 13px; line-height: 1.7; background: #f8fafc; border-radius: 12px; }
+
+    .sum { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding: 13px 14px; border-radius: 14px; background: linear-gradient(135deg, #fff1f2, #fef2f2); border: 1px solid #fecaca; }
+    .sum .l { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #991b1b; }
+    .sum b { font-size: 21px; font-weight: 800; color: #dc2626; font-family: "Plus Jakarta Sans", "Noto Sans Myanmar", sans-serif; }
+
+    /* footer actions */
+    .sh-foot { flex-shrink: 0; padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; box-shadow: 0 -8px 24px -12px rgba(15,23,42,.15); }
+    .act-main { width: 100%; min-height: 54px; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .15s, filter .2s; box-shadow: 0 10px 20px -10px var(--ac); background: var(--ac); }
+    .act-main:active { transform: scale(.98); }
+    .act-main:disabled { opacity: .6; }
+    .act-new { --ac: var(--c-new); } .act-cooking { --ac: var(--c-ready); } .act-ready { --ac: var(--navy); }
+    .act-row { display: flex; gap: 8px; }
+    .act-sec { flex: 1; min-height: 46px; border-radius: 14px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line); background: #fff; color: #334155; }
+    .act-sec.pay { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+    .act-sec.danger { background: #fff; color: #dc2626; border-color: #fecaca; }
+    .act-sec.undo { background: #f8fafc; color: #64748b; font-weight: 700; }
+    .act-sec:active { transform: scale(.97); }
+    .confirm { background: #fef2f2; border: 1px solid #fecaca; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .confirm p { margin: 0; text-align: center; font-weight: 800; color: #991b1b; font-size: 14px; }
+    .confirm .act-row .act-sec.yes { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .done-note { text-align: center; color: #64748b; font-size: 13px; font-weight: 700; padding: 6px; }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
+    </div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+
+    <!-- Sticky: header + filters + tabs -->
+    <div class="o-top">
+      <div class="o-top-inner">
+        <div class="o-bar">
+          <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+          <div class="o-title">
+            <h1>Orders</h1>
+            <small id="subTitle">အော်ဒါများ</small>
+          </div>
+          <button class="ibtn" id="filterBtn" onclick="toggleFilters()" aria-label="ရှာဖွေရန်" type="button"><i class="fa-solid fa-magnifying-glass"></i><span class="dot"></span></button>
+          <button class="ibtn" id="refreshBtn" onclick="manualRefresh()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+
+        <div class="o-filters" id="filters">
+          <label class="f-search"><i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Voucher / အမည် / ဖုန်း">
+          </label>
+          <input type="date" class="f-date" id="filterDate" onchange="applyFilters()" aria-label="ရက်စွဲ">
+          <button class="f-clear" type="button" onclick="clearFilters()" aria-label="ရှင်းမည်"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="o-tabs" id="tabs">
+          <button class="t active" data-s="new" onclick="filterStatus('new')" type="button"><b id="cnt-new">0</b><span>အသစ်</span></button>
+          <button class="t" data-s="cooking" onclick="filterStatus('cooking')" type="button"><b id="cnt-cooking">0</b><span>ချက်နေ</span></button>
+          <button class="t" data-s="ready" onclick="filterStatus('ready')" type="button"><b id="cnt-ready">0</b><span>အဆင်သင့်</span></button>
+          <button class="t" data-s="done" onclick="filterStatus('done')" type="button"><b id="cnt-done">0</b><span>ပြီးစီး</span></button>
+          <button class="t" data-s="all" onclick="filterStatus('all')" type="button"><b id="cnt-all">0</b><span>အားလုံး</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="o-wrap">
+      <div id="ordersListContainer">
+        <div class="o-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Detail sheet -->
+<div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Order အသေးစိတ်">
+  <div class="grab"></div>
+  <div class="sh-head" id="shHead"></div>
+  <div class="sh-body" id="shBody"></div>
+  <div class="sh-foot" id="shFoot"></div>
+</section>
+
+<script src="js/main.js"></script>
+
+<script>
+  /* =====================================================================
+     State
+  ===================================================================== */
+  let rawOrders = [];
+  let currentStatus = "new";
+  let selectedId = null;
+  let confirmCancel = false;
+  let busy = false;
+  let lastNewCount = -1;
+  let historyPushed = false;
+  let searchingNow = false;
+
+  const STATUS_LABEL = { new: "အသစ်", cooking: "ချက်နေသည်", ready: "အဆင်သင့်", completed: "ပြီးစီး", cancelled: "ပယ်ဖျက်" };
+  const STATUS_ICON  = { new: "fa-bell", cooking: "fa-fire", ready: "fa-bag-shopping", completed: "fa-circle-check", cancelled: "fa-ban" };
+  const STATUS_COLOR = { new: "#2563eb", cooking: "#ea580c", ready: "#16a34a", completed: "#64748b", cancelled: "#dc2626" };
+  const DONE_MSG = { Processing: "လက်ခံပြီးပါပြီ ✅", Ready: "အဆင်သင့် ဖြစ်ပါပြီ ✅", Completed: "ပြီးစီးပါပြီ ✅", Cancelled: "ပယ်ဖျက်ပြီးပါပြီ" };
+
+  /* =====================================================================
+     Helpers
+  ===================================================================== */
+  function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function toNum(v) {
+    const n = Number(String(v ?? 0).replace(/[^\d.\-]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  function fmtMoney(n) { return typeof money === "function" ? money(n) : Number(n).toLocaleString() + " Ks"; }
+
+  function parseItems(o) {
+    let raw = o.items_json ?? o.items ?? o.order_items ?? o.cart ?? [];
+    if (typeof raw === "string") { try { raw = JSON.parse(raw); } catch (_) { raw = []; } }
+    if (raw && !Array.isArray(raw)) raw = Array.isArray(raw.items) ? raw.items : (typeof raw === "object" ? Object.values(raw) : []);
+    return Array.isArray(raw) ? raw : [];
+  }
+  const iName  = i => i.name ?? i.title ?? i.product_name ?? i.item_name ?? "Unknown Item";
+  const iPrice = i => toNum(i.price ?? i.unit_price ?? i.unitPrice ?? i.item_price ?? i.amount ?? i.cost ?? 0);
+  const iQty   = i => toNum(i.qty ?? i.quantity ?? i.count ?? 1) || 1;
+  const iLine  = i => { const t = toNum(i.total); return t > 0 ? t : iPrice(i) * iQty(i); };
+
+  const custName = o => o.customer_name ?? o.customerName ?? o.name ?? "Guest";
+  const custPhone = o => o.phone ?? o.customer_phone ?? "";
+
+  function orderTotal(o, items) {
+    let t = toNum(o.total ?? o.grand_total ?? o.total_amount ?? 0);
+    if (!t && items.length) t = items.reduce((s, i) => s + iLine(i), 0);
+    return t;
+  }
+
+  function statusOf(o) {
+    const v = String(o.status || "new").trim().toLowerCase();
+    if (v === "pending" || v === "new") return "new";
+    if (v === "processing" || v === "cooking") return "cooking";
+    if (v === "canceled" || v === "cancelled") return "cancelled";
+    return STATUS_LABEL[v] ? v : "new";
+  }
+
+  function voucherOf(o) {
+    const v = String(o.voucher_code || "").trim().replace(/^#+/, "");
+    return "#" + (v || o.id || "N/A");
+  }
+
+  function telHref(p) {
+    const d = String(p || "").replace(/[\s\-()]/g, "");
+    return /^(\+?95|0)\d{6,}$/.test(d) ? "tel:" + d : "";
+  }
+
+  function createdMs(o) {
+    const v = o.created_at ?? o.createdAt ?? "";
+    if (!v) return NaN;
+    const s = String(v);
+    return new Date(/[zZ]$|[+-]\d\d:?\d\d$/.test(s) ? s : s.replace(" ", "T") + "Z").getTime();
+  }
+
+  function orderDateMMT(o) {
+    const t = createdMs(o);
+    if (isNaN(t)) return "";
+    return new Date(t + 390 * 60000).toISOString().split("T")[0];
+  }
+
+  function ago(o) {
+    const t = createdMs(o);
+    if (isNaN(t)) return { text: "", mins: 0 };
+    const mins = Math.max(0, Math.floor((Date.now() - t) / 60000));
+    let text;
+    if (mins < 1) text = "ယခုလေးတင်";
+    else if (mins < 60) text = mins + " မိနစ်က";
+    else if (mins < 1440) text = Math.floor(mins / 60) + " နာရီက";
+    else text = typeof fmtDate === "function" ? fmtDate(o.created_at) : String(o.created_at);
+    return { text, mins };
+  }
+
+  function pickupText(o) {
+    return [String(o.pickup_date || "").trim(), String(o.pickup_time || "").trim()].filter(Boolean).join(" ");
+  }
+
+  function payClass(p) { return p === "Paid" ? "p-paid" : p === "Failed" ? "p-failed" : "p-pending"; }
+
+  /* =====================================================================
+     Load
+  ===================================================================== */
+  async function loadOrders(silent) {
+    const box = document.getElementById("ordersListContainer");
+    try {
+      const res = await apiFetch("/api/admin/orders?pageSize=50");
+      rawOrders = Array.isArray(res) ? res : ((res && res.orders) || []);
+
+      const newCount = rawOrders.filter(o => statusOf(o) === "new").length;
+      if (silent === true && lastNewCount !== -1 && newCount > lastNewCount) {
+        showToast("🔔 အော်ဒါအသစ် ရောက်ရှိလာပါသည်");
+        try { navigator.vibrate && navigator.vibrate(200); } catch (_) {}
+      }
+      lastNewCount = newCount;
+      refresh();
+    } catch (err) {
+      console.error("Load orders error:", err);
+      if (silent === true) return;
+      box.innerHTML = `<div class="o-error"><div class="ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <b>အော်ဒါ ဒေတာ ရယူ၍ မရပါ</b><small>${esc(err && err.message || "")}</small><br>
+        <button class="lnk" type="button" onclick="loadOrders()">ပြန်ကြိုးစားမည်</button> ·
+        <button class="lnk" type="button" onclick="changeAdminKey()">Admin Key ပြန်ထည့်ရန်</button></div>`;
+    }
+  }
+
+  async function manualRefresh() {
+    const b = document.getElementById("refreshBtn");
+    b.classList.add("spin");
+    await loadOrders();
+    setTimeout(() => b.classList.remove("spin"), 300);
+  }
+
+  function refresh() {
+    applyFilters();
+    if (selectedId !== null) renderSheet();
+  }
+
+  /* =====================================================================
+     Filters / tabs
+  ===================================================================== */
+  function toggleFilters() {
+    const f = document.getElementById("filters");
+    const on = f.classList.toggle("show");
+    document.getElementById("filterBtn").classList.toggle("on", on);
+    if (on) document.getElementById("searchInput").focus();
+  }
+  function clearFilters() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("filterDate").value = "";
+    applyFilters();
+  }
+  function filterStatus(s) { currentStatus = s; applyFilters(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+  function updateTabs() {
+    const c = { new: 0, cooking: 0, ready: 0, done: 0, all: rawOrders.length };
+    rawOrders.forEach(o => {
+      const s = statusOf(o);
+      if (s === "completed" || s === "cancelled") c.done++; else c[s]++;
+    });
+    for (const k in c) document.getElementById("cnt-" + k).textContent = c[k];
+    document.querySelectorAll(".t").forEach(b => {
+      b.classList.toggle("active", b.dataset.s === currentStatus);
+      b.classList.toggle("alert", b.dataset.s === "new" && c.new > 0);
+    });
+    document.getElementById("subTitle").textContent =
+      c.new ? `အသစ် ${c.new} ခု စောင့်နေသည်` : "အော်ဒါအသစ် မရှိပါ";
+  }
+
+  function applyFilters() {
+    const q = document.getElementById("searchInput").value.toLowerCase().trim();
+    const d = document.getElementById("filterDate").value;
+    searchingNow = !!(q || d);
+    document.getElementById("filterBtn").classList.toggle("has-filter", searchingNow);
+    updateTabs();
+
+    const list = rawOrders.filter(o => {
+      const s = statusOf(o);
+      if (!q && currentStatus !== "all") {
+        if (currentStatus === "done") { if (s !== "completed" && s !== "cancelled") return false; }
+        else if (s !== currentStatus) return false;
+      }
+      if (q) {
+        const hay = (String(o.voucher_code || "") + " " + custName(o) + " " + custPhone(o)).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (d && orderDateMMT(o) !== d) return false;
+      return true;
+    });
+    renderList(list, !!(q || d));
+  }
+
+  /* =====================================================================
+     List (compact rows)
+  ===================================================================== */
+  function previewHtml(items) {
+    if (!items.length) return "<em>ပစ္စည်းစာရင်း မသိမ်းထားပါ</em>";
+    const shown = items.slice(0, 3).map(i => `${esc(iName(i))} ×${iQty(i)}`).join(" · ");
+    return shown + (items.length > 3 ? ` · +${items.length - 3}` : "");
+  }
+
+  function rowHtml(o, idx) {
+    const items = parseItems(o);
+    const s = statusOf(o);
+    const pay = o.payment_status || "Pending";
+    const a = ago(o);
+    const urgent = s === "new" && a.mins >= 5;
+    const pk = pickupText(o);
+    const showStatus = currentStatus === "all" || currentStatus === "done" || searchingNow;
+    return `
+      <button class="row s-${s}" type="button" onclick="openOrder(${Number(o.id)})" style="animation-delay:${Math.min(idx, 8) * 35}ms">
+        <div class="r-main">
+          <div class="r-l1"><span class="r-name">${esc(custName(o))}</span><span class="r-v">${esc(voucherOf(o))}</span><span class="r-total">${fmtMoney(orderTotal(o, items))}</span></div>
+          <div class="r-items">${previewHtml(items)}</div>
+          <div class="r-l3">
+            ${showStatus ? `<span class="pill p-${s}"><i class="fa-solid ${STATUS_ICON[s]}"></i>${STATUS_LABEL[s]}</span>` : ""}
+            ${pk ? `<span class="pill p-pickup"><i class="fa-regular fa-clock"></i>${esc(pk)}</span>` : ""}
+            <span class="pill ${payClass(pay)}">${esc(pay)}</span>
+            <span class="r-ago ${urgent ? "urgent" : ""}">${urgent ? "⏱ " : ""}${esc(a.text)}</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right r-go"></i>
+      </button>`;
+  }
+
+  function renderList(list, searching) {
+    const box = document.getElementById("ordersListContainer");
+    if (!list.length) {
+      const msg = searching ? "ရှာဖွေမှုနှင့် ကိုက်ညီသော အော်ဒါ မရှိပါ" : "ဤအမျိုးအစားတွင် အော်ဒါ မရှိသေးပါ";
+      box.innerHTML = `<div class="o-empty"><div class="ico"><i class="fa-regular fa-folder-open"></i></div><b>${msg}</b><small>အော်ဒါအသစ်ဝင်လာပါက ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်</small></div>`;
+      return;
+    }
+    const note = searching ? `<div class="o-note">ရှာဖွေမှုရလဒ် ${list.length} ခု (အားလုံးထဲမှ)</div>` : "";
+    box.innerHTML = note + `<div class="o-list">${list.map(rowHtml).join("")}</div>`;
+  }
+
+  /* =====================================================================
+     Detail sheet
+  ===================================================================== */
+  function findOrder(id) { return rawOrders.find(o => Number(o.id) === Number(id)); }
+
+  function openOrder(id) {
+    selectedId = Number(id);
+    confirmCancel = false;
+    renderSheet();
+    document.getElementById("backdrop").classList.add("show");
+    document.getElementById("sheet").classList.add("show");
+    document.body.style.overflow = "hidden";
+    document.getElementById("shBody").scrollTop = 0;
+    try { history.pushState({ sheet: 1 }, ""); historyPushed = true; } catch (_) {}
+  }
+
+  function closeSheet(fromPop) {
+    if (selectedId === null) return;
+    selectedId = null;
+    confirmCancel = false;
+    document.getElementById("backdrop").classList.remove("show");
+    document.getElementById("sheet").classList.remove("show");
+    document.body.style.overflow = "";
+    if (!fromPop && historyPushed) { historyPushed = false; try { history.back(); } catch (_) {} }
+    historyPushed = fromPop ? false : historyPushed;
+  }
+
+  window.addEventListener("popstate", () => { if (selectedId !== null) { historyPushed = false; closeSheet(true); } });
+  window.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+  function stepperHtml(s) {
+    if (s === "cancelled") {
+      return `<div class="cancel-banner"><i class="fa-solid fa-ban"></i> ဤအော်ဒါကို ပယ်ဖျက်ထားသည်</div>`;
+    }
+    const keys = ["new", "cooking", "ready", "completed"];
+    const idx = keys.indexOf(s);
+    return `<div class="steps">${keys.map((k, i) => {
+      const cls = i < idx ? "done" : i === idx ? "cur" : "";
+      const inner = i < idx ? '<i class="fa-solid fa-check"></i>' : `<i class="fa-solid ${STATUS_ICON[k]}"></i>`;
+      return `<div class="step ${cls}" style="--sc:${STATUS_COLOR[k]}"><div class="dotc">${inner}</div><span>${STATUS_LABEL[k]}</span></div>`;
+    }).join("")}</div>`;
+  }
+
+  function itemsCardHtml(items, total, pay) {
+    const qty = items.reduce((s, i) => s + iQty(i), 0);
+    const list = items.length
+      ? `<ul class="items">${items.map(i => {
+          const p = iPrice(i), l = iLine(i);
+          return `<li><span class="q">×${iQty(i)}</span><div class="n">${esc(iName(i))}${p > 0 ? `<small>${fmtMoney(p)} / ခု</small>` : ""}</div><span class="lt">${l > 0 ? fmtMoney(l) : "-"}</span></li>`;
+        }).join("")}</ul>`
+      : `<div class="no-items"><i class="fa-regular fa-circle-question"></i> ပစ္စည်းစာရင်း မသိမ်းထားပါ<br>(အော်ဒါဟောင်း ဖြစ်နိုင်သည် — Telegram မက်ဆေ့ချ်တွင် ကြည့်ပါ)</div>`;
+    return `<div class="card">
+        <div class="card-h"><span><i class="fa-solid fa-bag-shopping"></i>မှာယူထားသည့် ပစ္စည်းများ</span><span class="sub">${items.length ? `${items.length} မျိုး · ${qty} ခု` : ""}</span></div>
+        ${list}
+        <div class="sum"><div class="l">စုစုပေါင်း <span class="pill ${payClass(pay)}">${esc(pay)}</span></div><b>${fmtMoney(total)}</b></div>
+      </div>`;
+  }
+
+  function copyText(t) {
+    try { navigator.clipboard.writeText(t); showToast("ကူးယူပြီးပါပြီ"); } catch (_) {}
+  }
+
+  function renderSheet() {
+    const o = findOrder(selectedId);
+    if (!o) { closeSheet(); return; }
+
+    const items = parseItems(o);
+    const s = statusOf(o);
+    const pay = o.payment_status || "Pending";
+    const total = orderTotal(o, items);
+    const a = ago(o);
+    const phone = custPhone(o);
+    const href = telHref(phone);
+    const pd = String(o.pickup_date || "").trim(), pt = String(o.pickup_time || "").trim();
+    const when = typeof fmtDate === "function" ? fmtDate(o.created_at) : (o.created_at || "");
+
+    document.getElementById("shHead").innerHTML = `
+      <div class="sh-id"><b>${esc(voucherOf(o))}</b><small>${esc(a.text)}${when ? " · " + esc(when) : ""}</small></div>
+      <span class="pill p-${s}" style="font-size:12px;padding:4px 12px;"><i class="fa-solid ${STATUS_ICON[s]}"></i>${STATUS_LABEL[s]}</span>
+      <button class="sh-x" type="button" onclick="closeSheet()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button>`;
+
+    const initial = esc(String(custName(o)).trim().charAt(0).toUpperCase() || "?");
+    const contactBtn = !phone ? "" : href
+      ? `<a class="call" href="${esc(href)}" aria-label="ဖုန်းခေါ်မည်"><i class="fa-solid fa-phone"></i></a>`
+      : `<button class="call copy" type="button" onclick="copyText(${esc(JSON.stringify(String(phone)))})" aria-label="ကူးယူမည်"><i class="fa-regular fa-copy"></i></button>`;
+
+    const pickupGrid = (pd || pt) ? `
+        <div class="info-grid">
+          <div><div class="k">ယူမည့်ရက်</div><div class="v warn">${esc(pd || "-")}</div></div>
+          <div><div class="k">ယူမည့်အချိန်</div><div class="v warn">${esc(pt || "-")}</div></div>
+        </div>` : "";
+
+    document.getElementById("shBody").innerHTML = `
+      <div class="card">${stepperHtml(s)}</div>
+      <div class="card">
+        <div class="cust">
+          <div class="avatar">${initial}</div>
+          <div class="cust-i"><b>${esc(custName(o))}</b><small>${esc(phone || "ဖုန်း မရှိပါ")}</small></div>
+          ${contactBtn}
+        </div>
+        ${pickupGrid}
+      </div>
+      ${itemsCardHtml(items, total, pay)}`;
+
+    document.getElementById("shFoot").innerHTML = footHtml(o, s, pay);
+  }
+
+  function footHtml(o, s, pay) {
+    const id = Number(o.id);
+    if (confirmCancel) {
+      return `<div class="confirm"><p>ဤအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?</p>
+        <div class="act-row">
+          <button class="act-sec" type="button" onclick="confirmCancel=false;renderSheet()">မဟုတ်ပါ</button>
+          <button class="act-sec yes" type="button" onclick="setStatus(${id}, 'Cancelled')"><i class="fa-solid fa-ban"></i> ပယ်ဖျက်မည်</button>
+        </div></div>`;
+    }
+    let html = "";
+    if (s === "new")
+      html += `<button class="act-main act-new" type="button" onclick="setStatus(${id}, 'Processing')"><i class="fa-solid fa-fire"></i> လက်ခံမည် (ချက်မည်)</button>`;
+    else if (s === "cooking")
+      html += `<button class="act-main act-cooking" type="button" onclick="setStatus(${id}, 'Ready')"><i class="fa-solid fa-check"></i> အဆင်သင့် ဖြစ်ပြီ</button>`;
+    else if (s === "ready")
+      html += `<button class="act-main act-ready" type="button" onclick="setStatus(${id}, 'Completed')"><i class="fa-solid fa-circle-check"></i> ပေးအပ်ပြီး / ပြီးစီး</button>`;
+    else if (s === "completed")
+      html += `<div class="done-note"><i class="fa-solid fa-circle-check"></i> ဤအော်ဒါ ပြီးစီးပြီး ဖြစ်ပါသည်</div>`;
+
+    const sec = [];
+    if (s !== "cancelled") {
+      sec.push(pay !== "Paid"
+        ? `<button class="act-sec pay" type="button" onclick="setPay(${id}, 'Paid')"><i class="fa-solid fa-money-bill-wave"></i> ငွေရပြီ</button>`
+        : `<button class="act-sec undo" type="button" onclick="setPay(${id}, 'Pending')"><i class="fa-solid fa-rotate-left"></i> ငွေမရသေးသို့ ပြန်ပြောင်း</button>`);
+    }
+    if (s === "new" || s === "cooking" || s === "ready")
+      sec.push(`<button class="act-sec danger" type="button" onclick="confirmCancel=true;renderSheet()"><i class="fa-solid fa-xmark"></i> ပယ်ဖျက်</button>`);
+    if (sec.length) html += `<div class="act-row">${sec.join("")}</div>`;
+    return html || `<button class="act-sec" type="button" onclick="closeSheet()">ပိတ်မည်</button>`;
+  }
+
+  /* =====================================================================
+     Updates (optimistic — နှိပ်တာနဲ့ ချက်ချင်းပြောင်း၊ မအောင်မြင်လျှင် ပြန်ပြန်)
+  ===================================================================== */
+  async function patch(id, fields, apply, revert, okMsg, closeAfter) {
+    const o = findOrder(id);
+    if (!o || busy) return;
+    busy = true;
+    apply(o);
+    confirmCancel = false;
+    refresh();
+    try {
+      await apiFetch(`/api/admin/orders/${id}`, { method: "PATCH", body: JSON.stringify(fields) });
+      if (okMsg) showToast(okMsg);
+      if (closeAfter) closeSheet();
+    } catch (err) {
+      console.error(err);
+      revert(o);
+      refresh();
+    } finally {
+      busy = false;
+    }
+    loadOrders(true);
+  }
+
+  function setStatus(id, newStatus) {
+    const o = findOrder(id); if (!o) return;
+    const prev = o.status;
+    return patch(id, { status: newStatus }, x => { x.status = newStatus; }, x => { x.status = prev; },
+      DONE_MSG[newStatus], newStatus === "Completed" || newStatus === "Cancelled");
+  }
+
+  function setPay(id, newPay) {
+    const o = findOrder(id); if (!o) return;
+    const prev = o.payment_status;
+    return patch(id, { payment_status: newPay }, x => { x.payment_status = newPay; }, x => { x.payment_status = prev; },
+      newPay === "Paid" ? "ငွေရရှိပြီး မှတ်သားပါပြီ 💰" : "ပြန်ပြောင်းပြီးပါပြီ", false);
+  }
+
+  /* =====================================================================
+     Boot
+  ===================================================================== */
+  window.onload = async function () {
+    if (typeof renderAdminLayout === "function") renderAdminLayout("orders");
+
+    // Dashboard မှ လာသော link များ: orders.html#cooking (tab) သို့မဟုတ် orders.html#o12 (အော်ဒါတစ်ခု)
+    const h = (location.hash || "").replace("#", "");
+    if (["new", "cooking", "ready", "done", "all"].includes(h)) currentStatus = h;
+    const m = h.match(/^o(\d+)$/);
+    if (m) currentStatus = "all";
+
+    await loadOrders();
+    if (m && findOrder(m[1])) openOrder(m[1]);
+    // ၁၅ စက္ကန့်တစ်ခါ အော်ဒါအသစ် အလိုအလျောက် စစ်မည်
+    setInterval(() => { if (!document.hidden && !busy) loadOrders(true); }, 15000);
+    // "x မိနစ်က" စာသားများ ပြန်ပြင်ရန် (တစ်မိနစ်တစ်ခါ)
+    setInterval(() => { if (!document.hidden && rawOrders.length) refresh(); }, 60000);
+  };
+</script>
+
+</body>
+</html>

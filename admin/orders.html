@@ -248,6 +248,7 @@
             <small id="subTitle">အော်ဒါများ</small>
           </div>
           <button class="ibtn" id="filterBtn" onclick="toggleFilters()" aria-label="ရှာဖွေရန်" type="button"><i class="fa-solid fa-magnifying-glass"></i><span class="dot"></span></button>
+          <button class="ibtn" id="soundBtn" onclick="toggleSoundBtn()" aria-label="အသံ" type="button"><i class="fa-solid fa-bell"></i></button>
           <button class="ibtn" id="refreshBtn" onclick="manualRefresh()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
         </div>
 
@@ -297,7 +298,7 @@
   let selectedId = null;
   let confirmCancel = false;
   let busy = false;
-  let lastNewCount = -1;
+  let lastMaxId = 0;
   let historyPushed = false;
   let searchingNow = false;
 
@@ -396,12 +397,16 @@
       const res = await apiFetch("/api/admin/orders?pageSize=50");
       rawOrders = Array.isArray(res) ? res : ((res && res.orders) || []);
 
-      const newCount = rawOrders.filter(o => statusOf(o) === "new").length;
-      if (silent === true && lastNewCount !== -1 && newCount > lastNewCount) {
+      // id ပိုကြီးသော "အသစ်" အော်ဒါ ရှိလာလျှင် (တစ်ခုလက်ခံပြီး တစ်ခုဝင်လာတာမျိုးကိုပါ မလွတ်စေရန်)
+      const maxId = Math.max(0, ...rawOrders.map(o => Number(o.id) || 0));
+      const arrived = rawOrders.some(o => Number(o.id) > lastMaxId && statusOf(o) === "new");
+      if (silent === true && lastMaxId > 0 && arrived) {
         showToast("🔔 အော်ဒါအသစ် ရောက်ရှိလာပါသည်");
-        try { navigator.vibrate && navigator.vibrate(200); } catch (_) {}
+        playBeep();
+        try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (_) {}
       }
-      lastNewCount = newCount;
+      lastMaxId = Math.max(lastMaxId, maxId);
+      setTitleBadge(rawOrders.filter(o => statusOf(o) === "new").length, "Orders • YNS Kitchen");
       refresh();
     } catch (err) {
       console.error("Load orders error:", err);
@@ -411,6 +416,17 @@
         <button class="lnk" type="button" onclick="loadOrders()">ပြန်ကြိုးစားမည်</button> ·
         <button class="lnk" type="button" onclick="changeAdminKey()">Admin Key ပြန်ထည့်ရန်</button></div>`;
     }
+  }
+
+  function syncSoundBtn() {
+    const b = document.getElementById("soundBtn");
+    if (b) b.innerHTML = `<i class="fa-solid ${soundOn() ? "fa-bell" : "fa-bell-slash"}"></i>`;
+  }
+  function toggleSoundBtn() {
+    setSound(!soundOn());
+    syncSoundBtn();
+    if (soundOn()) { playBeep(); showToast("အော်ဒါအသစ်ဝင်လာလျှင် အသံမြည်ပါမည် 🔔"); }
+    else showToast("အသံ ပိတ်ထားသည်");
   }
 
   async function manualRefresh() {
@@ -704,6 +720,7 @@
   ===================================================================== */
   window.onload = async function () {
     if (typeof renderAdminLayout === "function") renderAdminLayout("orders");
+    syncSoundBtn();
 
     // Dashboard မှ လာသော link များ: orders.html#cooking (tab) သို့မဟုတ် orders.html#o12 (အော်ဒါတစ်ခု)
     const h = (location.hash || "").replace("#", "");

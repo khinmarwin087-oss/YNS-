@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Analytics • YNS Kitchen</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --blue: #2a78d6;       /* ရွေးထားသော / အမြင့်ဆုံး */
+      --blue-soft: #8db0e6;  /* ကျန်သော bar များ — hue တူ၊ အလင်းဆုံးအဆင့် */
+      --slate: #94a3b8;      /* ဒုတိယ အစိတ်အပိုင်း (neutral) */
+      --good: #15803d; --bad: #dc2626;
+      --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18);
+    }
+    html, body { overflow-x: hidden; }
+    body { line-height: 1.5; }
+    .main { padding: 0 14px 80px; min-width: 0; }
+    .a-wrap { max-width: 920px; margin: 0 auto; }
+    @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+
+    .a-top { position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px; background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    @media (min-width: 769px) { .a-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+    .a-top-inner { max-width: 920px; margin: 0 auto; }
+    .a-bar { display: flex; align-items: center; gap: 10px; }
+    .a-title { flex: 1; min-width: 0; }
+    .a-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+    .a-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .ibtn { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink); box-shadow: 0 1px 2px rgba(15,23,42,.05); transition: transform .15s; }
+    .ibtn:active { transform: scale(.93); }
+    .ibtn.spin i { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .seg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 11px; background: #e6eaf2; border-radius: 14px; padding: 4px; }
+    .seg button { padding: 8px 2px; border-radius: 11px; font-size: 12.5px; font-weight: 700; color: var(--muted); transition: .2s; white-space: nowrap; }
+    .seg button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 3px rgba(15,23,42,.12); }
+
+    /* ---------- insight ---------- */
+    .insight { margin-top: 12px; padding: 14px 15px; border-radius: 20px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #e2e8f0; box-shadow: var(--card-shadow); }
+    .insight h3 { margin: 0 0 7px; font-size: 12px; font-weight: 800; color: #94a3b8; letter-spacing: .3px; display: flex; align-items: center; gap: 6px; }
+    .insight ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .insight li { font-size: 13.5px; line-height: 1.7; display: flex; gap: 8px; }
+    .insight li b { color: #fff; }
+
+    /* ---------- KPI ---------- */
+    .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+    @media (min-width: 769px) { .kpis { grid-template-columns: repeat(4, 1fr); } }
+    .kpi { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 14px; box-shadow: var(--card-shadow); min-width: 0; }
+    .kpi span { display: block; font-size: 11.5px; color: var(--muted); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kpi b { display: block; font-size: 22px; font-weight: 800; color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; letter-spacing: -.5px; margin: 2px 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kpi b small { font-size: 12px; color: var(--muted); font-weight: 700; margin-left: 2px; letter-spacing: 0; }
+    .delta { font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; color: var(--muted); }
+    .delta.up { color: var(--good); } .delta.down { color: var(--bad); }
+
+    /* ---------- cards ---------- */
+    .grid2 { display: grid; gap: 12px; margin-top: 12px; }
+    @media (min-width: 860px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 22px; padding: 16px 16px 14px; box-shadow: var(--card-shadow); margin-top: 12px; min-width: 0; }
+    .grid2 .card { margin-top: 0; }
+    .card-h { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+    .card-h h2 { margin: 0; font-size: 14.5px; font-weight: 800; color: var(--ink); line-height: 1.4; }
+    .card-h small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .mini { display: inline-flex; background: #eef1f6; border-radius: 10px; padding: 3px; gap: 2px; flex-shrink: 0; }
+    .mini button { padding: 5px 9px; border-radius: 8px; font-size: 11.5px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .mini button.on { background: #fff; color: var(--ink); box-shadow: 0 1px 2px rgba(15,23,42,.12); }
+
+    /* ---------- bar chart ---------- */
+    .chart { position: relative; }
+    .plot { position: relative; height: 170px; display: flex; align-items: flex-end; gap: 2px; padding-top: 6px; border-bottom: 1px solid #e2e8f0;
+      background: repeating-linear-gradient(to top, transparent 0, transparent calc(25% - 1px), #f1f5f9 calc(25% - 1px), #f1f5f9 25%); }
+    .col { flex: 1; min-width: 0; height: 100%; position: relative; display: flex; align-items: flex-end; justify-content: center; cursor: pointer; outline: none; }
+    .col i { display: block; width: min(24px, calc(100% - 2px)); min-height: 2px; border-radius: 4px 4px 0 0; background: var(--blue-soft); transition: height .5s cubic-bezier(.2,.8,.2,1), filter .15s; }
+    .col.peak i { background: var(--blue); }
+    .col:hover i, .col:focus-visible i, .col.sel i { filter: brightness(.9); }
+    .col.sel::after, .col:hover::after { content: ""; position: absolute; inset: 0 2%; background: rgba(42,120,214,.07); border-radius: 6px; pointer-events: none; }
+    .axis { display: flex; gap: 2px; margin-top: 5px; }
+    .axis span { flex: 1; min-width: 0; text-align: center; font-size: 10.5px; color: var(--muted); font-weight: 600; white-space: nowrap; }
+    .ymax { position: absolute; right: 0; top: -2px; font-size: 10.5px; color: var(--muted); font-weight: 600; background: #fff; padding: 0 0 0 4px; }
+    .tip { position: absolute; z-index: 5; pointer-events: none; background: #0f172a; color: #fff; padding: 7px 11px; border-radius: 11px; font-size: 12px; font-weight: 700; white-space: nowrap; transform: translate(-50%, -100%); box-shadow: 0 10px 24px -8px rgba(15,23,42,.5); opacity: 0; transition: opacity .12s; }
+    .tip.show { opacity: 1; } .tip small { display: block; font-size: 10.5px; color: #94a3b8; font-weight: 600; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .tbl th { text-align: left; font-size: 11px; color: var(--muted); font-weight: 700; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+    .tbl td { padding: 7px 4px; border-bottom: 1px solid #f1f5f9; } .tbl td:not(:first-child), .tbl th:not(:first-child) { text-align: right; }
+    .tblwrap { max-height: 250px; overflow-y: auto; }
+
+    /* ---------- product rows ---------- */
+    .prod { display: grid; grid-template-columns: 22px 1fr auto; gap: 4px 10px; align-items: center; padding: 8px 0; border-top: 1px solid #f1f5f9; }
+    .prod:first-of-type { border-top: 0; }
+    .prod .rk { font-size: 12px; font-weight: 800; color: var(--muted); font-family: "Plus Jakarta Sans", sans-serif; }
+    .prod .nm { font-size: 13.5px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .prod .q { font-size: 13px; font-weight: 800; color: var(--ink); white-space: nowrap; } .prod .q small { font-weight: 600; color: var(--muted); }
+    .prod .bar { grid-column: 2 / 4; height: 6px; border-radius: 99px; background: #eef1f6; overflow: hidden; }
+    .prod .bar i { display: block; height: 100%; border-radius: 99px; background: var(--blue); }
+    .prod .rv { grid-column: 2 / 4; font-size: 11.5px; color: var(--muted); font-weight: 600; margin-top: -2px; }
+
+    /* ---------- split bars ---------- */
+    .split { display: flex; gap: 2px; height: 14px; margin: 4px 0 12px; }
+    .split i { display: block; height: 100%; min-width: 4px; }
+    .split i:first-child { border-radius: 99px 0 0 99px; background: var(--blue); } .split i:last-child { border-radius: 0 99px 99px 0; background: var(--slate); }
+    .split i:only-child { border-radius: 99px; }
+    .lg { display: flex; flex-direction: column; gap: 8px; }
+    .lg div { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); }
+    .lg div::before { content: ""; width: 10px; height: 10px; border-radius: 3px; background: var(--blue); flex-shrink: 0; }
+    .lg div.b::before { background: var(--slate); }
+    .lg span { flex: 1; } .lg b { font-weight: 800; font-family: "Plus Jakarta Sans", sans-serif; } .lg small { color: var(--muted); font-weight: 600; margin-left: 4px; }
+
+    .empty { text-align: center; padding: 28px 10px; color: var(--muted); font-size: 13px; }
+    .state { text-align: center; padding: 50px 20px; color: var(--muted); font-size: 13.5px; }
+    .state b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+    .state button { margin-top: 12px; background: var(--navy); color: #fff; padding: 9px 16px; border-radius: 12px; font-weight: 700; font-size: 13px; }
+    .sk { height: 96px; border-radius: 20px; margin-top: 12px; background: linear-gradient(90deg, #e8ecf4 25%, #f3f5fa 50%, #e8ecf4 75%); background-size: 200% 100%; animation: sh 1.2s infinite; }
+    @keyframes sh { to { background-position: -200% 0; } }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
+    </div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="a-top">
+      <div class="a-top-inner">
+        <div class="a-bar">
+          <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+          <div class="a-title"><h1>Analytics</h1><small id="subTitle">အရောင်း ခွဲခြမ်းစိတ်ဖြာချက်</small></div>
+          <button class="ibtn" id="refreshBtn" onclick="load()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+        <div class="seg" id="seg">
+          <button data-d="7" type="button">၇ ရက်</button>
+          <button data-d="30" type="button" class="on">၃၀ ရက်</button>
+          <button data-d="90" type="button">၃ လ</button>
+          <button data-d="365" type="button">၁ နှစ်</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="a-wrap" id="root"><div class="sk"></div><div class="sk"></div><div class="sk" style="height:220px"></div></div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const num = v => Number(v) || 0;
+  const fmt = n => Math.round(num(n)).toLocaleString();
+  const short = n => { n = num(n); return n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1) + "M" : n >= 1e4 ? Math.round(n / 1e3) + "K" : fmt(n); };
+  const WD = ["တနင်္ဂနွေ", "တနင်္လာ", "အင်္ဂါ", "ဗုဒ္ဓဟူး", "ကြာသပတေး", "သောကြာ", "စနေ"];
+  const WDS = ["နွေ", "လာ", "ဂါ", "ဟူး", "ကြာ", "သော", "နေ"];
+  const MON = ["ဇန်", "ဖေ", "မတ်", "ဧပြီ", "မေ", "ဇွန်", "ဇူ", "ဩ", "စက်", "အောက်", "နို", "ဒီ"];
+
+  let days = 30, D = null, metric = "revenue", view = "chart", reqId = 0;
+
+  // ---- ရက်စွဲ ကူညီသူများ (MMT ရက်စွဲကို string အဖြစ်သာ တွက်၊ timezone မပြောင်း) ----
+  const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(Date.UTC(y, m - 1, d)); };
+  const iso = d => d.toISOString().slice(0, 10);
+  const addDays = (s, n) => { const d = parse(s); d.setUTCDate(d.getUTCDate() + n); return iso(d); };
+  const lbl = s => { const d = parse(s); return d.getUTCDate() + " " + MON[d.getUTCMonth()]; };
+
+  async function load() {
+    const my = ++reqId, btn = $("refreshBtn"); btn.classList.add("spin");
+    if (!D) $("root").innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk" style="height:220px"></div>';
+    try {
+      const r = await apiFetch("/api/admin/analytics?days=" + days);
+      if (my !== reqId) return;           // ပိုနောက်ကျသော request က အသာစီးရသည်
+      if (!r || r.ok === false || !r.current) throw new Error("bad");
+      D = r; render();
+    } catch (e) {
+      if (my !== reqId) return;
+      if (!D) $("root").innerHTML = '<div class="state"><b>Analytics ရယူ၍ မရပါ</b>Worker ကို နောက်ဆုံးဗားရှင်း (analytics ပါသော worker.js) ပြန်တင်ထားခြင်း ရှိမရှိ စစ်ပါ<br><button type="button" onclick="load()">ပြန်ကြိုးစားမည်</button></div>';
+    } finally { if (my === reqId) btn.classList.remove("spin"); }
+  }
+
+  // ---- ကာလအလိုက် စုပေါင်း (၃၁ ရက်ထက်များလျှင် အပတ်/လ အလိုက်) ----
+  function buildSeries() {
+    const map = {}; D.daily.forEach(r => map[r.day] = r);
+    const start = addDays(D.today, -(D.days - 1)), out = [];
+    if (D.days <= 31) {
+      for (let i = 0; i < D.days; i++) { const d = addDays(start, i), r = map[d]; out.push({ key: d, label: lbl(d), full: lbl(d) + " (" + WD[parse(d).getUTCDay()] + ")", revenue: num(r?.revenue), orders: num(r?.orders) }); }
+      return { unit: "ရက်", pts: out };
+    }
+    if (D.days <= 90) {  // အပတ်စဉ် (၇ ရက်တစ်ခု)
+      for (let i = 0; i < D.days; i += 7) {
+        let rev = 0, ord = 0; const a = addDays(start, i), b = addDays(start, Math.min(i + 6, D.days - 1));
+        for (let j = i; j < Math.min(i + 7, D.days); j++) { const r = map[addDays(start, j)]; rev += num(r?.revenue); ord += num(r?.orders); }
+        out.push({ key: a, label: lbl(a), full: lbl(a) + " – " + lbl(b), revenue: rev, orders: ord });
+      }
+      return { unit: "အပတ်", pts: out };
+    }
+    const mm = {};  // လစဉ်
+    for (let i = 0; i < D.days; i++) { const d = addDays(start, i), k = d.slice(0, 7), r = map[d]; (mm[k] ||= { revenue: 0, orders: 0 }); mm[k].revenue += num(r?.revenue); mm[k].orders += num(r?.orders); }
+    Object.keys(mm).sort().forEach(k => { const m = Number(k.slice(5)) - 1; out.push({ key: k, label: MON[m], full: k.slice(0, 4) + " " + MON[m], revenue: mm[k].revenue, orders: mm[k].orders }); });
+    return { unit: "လ", pts: out };
+  }
+
+  const pct = (a, b) => b ? Math.round((a - b) / b * 1000) / 10 : (a > 0 ? null : 0);   // null = နှိုင်းယှဉ်စရာမရှိ
+  function delta(a, b, invert) {
+    const p = pct(a, b);
+    if (p === null) return '<span class="delta">ယခင်ကာလ မရှိ</span>';
+    if (p === 0) return '<span class="delta">ပြောင်းလဲမှု မရှိ</span>';
+    const good = invert ? p < 0 : p > 0;
+    return `<span class="delta ${good ? "up" : "down"}"><i class="fa-solid fa-arrow-${p > 0 ? "up" : "down"}"></i>${Math.abs(p)}% <span style="font-weight:500;color:var(--muted)">ယခင်ကာလထက်</span></span>`;
+  }
+
+  function render() {
+    const c = D.current, p = D.previous;
+    const aov = c.orders ? c.revenue / c.orders : 0, paov = p.orders ? p.revenue / p.orders : 0;
+    const allOrd = c.orders + c.cancelled, cr = allOrd ? Math.round(c.cancelled / allOrd * 1000) / 10 : 0;
+    const pAll = p.orders + p.cancelled, pcr = pAll ? Math.round(p.cancelled / pAll * 1000) / 10 : 0;
+    const label = { 7: "ပြီးခဲ့သော ၇ ရက်", 30: "ပြီးခဲ့သော ၃၀ ရက်", 90: "ပြီးခဲ့သော ၃ လ", 365: "ပြီးခဲ့သော ၁ နှစ်" }[D.days];
+    $("subTitle").textContent = label;
+
+    if (!c.orders && !c.cancelled) {
+      $("root").innerHTML = '<div class="state"><b>ဤကာလအတွက် အော်ဒါ မရှိသေးပါ</b>အခြားကာလကို ရွေးကြည့်ပါ</div>';
+      return;
+    }
+
+    $("root").innerHTML = `
+      ${insightHtml(aov)}
+      <div class="kpis">
+        <div class="kpi"><span>ရောင်းရငွေ</span><b>${short(c.revenue)}<small>Ks</small></b>${delta(c.revenue, p.revenue)}</div>
+        <div class="kpi"><span>အော်ဒါ အရေအတွက်</span><b>${fmt(c.orders)}</b>${delta(c.orders, p.orders)}</div>
+        <div class="kpi"><span>ပျမ်းမျှ အော်ဒါတန်ဖိုး</span><b>${short(aov)}<small>Ks</small></b>${delta(aov, paov)}</div>
+        <div class="kpi"><span>ပယ်ဖျက်နှုန်း</span><b>${cr}<small>%</small></b>${delta(cr, pcr, true)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <div><h2 id="trTitle"></h2><small id="trSub"></small></div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+            <div class="mini" id="mMetric"><button data-m="revenue" type="button">ငွေ</button><button data-m="orders" type="button">အော်ဒါ</button></div>
+            <div class="mini" id="mView"><button data-v="chart" type="button"><i class="fa-solid fa-chart-column"></i></button><button data-v="table" type="button"><i class="fa-solid fa-table-list"></i></button></div>
+          </div>
+        </div>
+        <div id="trend"></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><div class="card-h"><div><h2>အရောင်းသွက်သော အချိန်</h2><small>နာရီအလိုက် အော်ဒါအရေအတွက် (မြန်မာစံတော်ချိန်)</small></div></div><div id="hours"></div></div>
+        <div class="card"><div class="card-h"><div><h2>အပတ်ထဲ ရောင်းကောင်းသောနေ့</h2><small>နေ့အလိုက် အော်ဒါအရေအတွက်</small></div></div><div id="wdays"></div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card"><div class="card-h"><div><h2>ရောင်းအကောင်းဆုံး ပစ္စည်း</h2><small>အရေအတွက်အလိုက်</small></div></div><div id="prods"></div></div>
+        <div>
+          <div class="card" style="margin-top:0"><div class="card-h"><div><h2>ဝယ်သူ</h2><small>ဤကာလတွင် မှာခဲ့သူ ${fmt(D.customers.new + D.customers.returning)} ယောက်</small></div></div><div id="custs"></div></div>
+          <div class="card"><div class="card-h"><div><h2>ငွေပေးချေမှု</h2><small>အော်ဒါတန်ဖိုးအလိုက်</small></div></div><div id="pays"></div></div>
+        </div>
+      </div>`;
+
+    $("mMetric").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { metric = b.dataset.m; drawTrend(); } });
+    $("mView").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { view = b.dataset.v; drawTrend(); } });
+    drawTrend(); drawHours(); drawWdays(); drawProds(); drawCusts(); drawPays();
+  }
+
+  // ---- အလိုအလျောက် အကြံပြုချက် ----
+  function insightHtml(aov) {
+    const L = [];
+    const h = D.hourly.slice().sort((a, b) => b.orders - a.orders)[0];
+    if (h && h.orders > 0) L.push(`<li>⏰ <span>အော်ဒါ အများဆုံးချိန်က <b>${String(h.hour).padStart(2, "0")}:00 – ${String((h.hour + 1) % 24).padStart(2, "0")}:00</b> (${h.orders} ခု) — ထိုအချိန်မတိုင်မီ ပစ္စည်းအဆင်သင့်ထားပါ</span></li>`);
+    const w = D.weekday.slice().sort((a, b) => b.revenue - a.revenue)[0];
+    if (w && w.revenue > 0 && D.days >= 14) L.push(`<li>📅 <span>ရောင်းအကောင်းဆုံးနေ့က <b>${WD[w.dow]}</b> (${short(w.revenue)} Ks)</span></li>`);
+    if (D.topProducts[0]) L.push(`<li>🍗 <span>အရောင်းဆုံးပစ္စည်းက <b>${esc(D.topProducts[0].name)}</b> (${fmt(D.topProducts[0].qty)} ခု)</span></li>`);
+    const t = D.customers.new + D.customers.returning;
+    if (t >= 5) L.push(`<li>🔁 <span>ဝယ်သူ <b>${Math.round(D.customers.returning / t * 100)}%</b> က ပြန်ဝယ်သူ${D.customers.returning / t < 0.25 ? " — ပြန်ဝယ်ခိုင်းရန် ကမ်းလှမ်းချက် စဉ်းစားနိုင်" : ""}</span></li>`);
+    const pend = D.payment.find(x => x.payment_status === "Pending");
+    if (pend && pend.revenue > 0) L.push(`<li>💰 <span>ငွေမရသေးသော အော်ဒါ <b>${fmt(pend.orders)} ခု (${short(pend.revenue)} Ks)</b> ရှိသည်</span></li>`);
+    if (!L.length) return "";
+    return `<div class="insight"><h3><i class="fa-solid fa-lightbulb"></i> သိထားသင့်သည်များ</h3><ul>${L.join("")}</ul></div>`;
+  }
+
+  // ---- generic bar chart (flex bars · tooltip · peak highlight) ----
+  function barChart(el, pts, o) {
+    const max = Math.max(1, ...pts.map(x => x.v)), top = pts.reduce((m, x, i) => x.v > pts[m].v ? i : m, 0);
+    const every = Math.ceil(pts.length / (o.maxLabels || 8));
+    el.innerHTML = `<div class="chart">
+        <div class="plot">${pts.map((x, i) => `<div class="col${i === top && x.v > 0 ? " peak" : ""}" tabindex="0" data-i="${i}"><i style="height:${x.v ? Math.max(2, x.v / max * 100) : 0}%"></i></div>`).join("")}</div>
+        <div class="axis">${pts.map((x, i) => `<span>${i % every === 0 ? esc(x.label) : ""}</span>`).join("")}</div>
+        <div class="tip"></div>
+      </div>`;
+    const wrap = el.querySelector(".chart"), tip = el.querySelector(".tip");
+    const show = col => {
+      const x = pts[Number(col.dataset.i)];
+      wrap.querySelectorAll(".col.sel").forEach(c => c.classList.remove("sel")); col.classList.add("sel");
+      tip.innerHTML = `<small>${esc(x.full || x.label)}</small>${o.tip(x)}`;
+      const w = wrap.getBoundingClientRect(), b = col.getBoundingClientRect(), bar = col.querySelector("i").getBoundingClientRect(), half = tip.offsetWidth / 2 || 50;
+      tip.style.left = Math.max(half, Math.min(w.width - half, b.left - w.left + b.width / 2)) + "px";
+      tip.style.top = Math.max(26, bar.top - w.top - 6) + "px"; tip.classList.add("show");
+    };
+    const hide = () => { tip.classList.remove("show"); wrap.querySelectorAll(".col.sel").forEach(c => c.classList.remove("sel")); };
+    wrap.querySelectorAll(".col").forEach(c => { c.addEventListener("mouseenter", () => show(c)); c.addEventListener("focus", () => show(c)); c.addEventListener("click", () => show(c)); c.addEventListener("mouseleave", hide); });
+    document.addEventListener("click", e => { if (!wrap.contains(e.target)) hide(); }, { passive: true });
+  }
+
+  function drawTrend() {
+    const S = buildSeries(), isRev = metric === "revenue";
+    $("trTitle").textContent = isRev ? "ရောင်းရငွေ" : "အော်ဒါ အရေအတွက်";
+    $("trSub").textContent = S.unit + "အလိုက် (ပယ်ဖျက်ထားသည်များ မပါ)";
+    document.querySelectorAll("#mMetric button").forEach(b => b.classList.toggle("on", b.dataset.m === metric));
+    document.querySelectorAll("#mView button").forEach(b => b.classList.toggle("on", b.dataset.v === view));
+    const el = $("trend");
+    if (view === "table") {
+      el.innerHTML = `<div class="tblwrap"><table class="tbl"><thead><tr><th>${S.unit}</th><th>အော်ဒါ</th><th>ရောင်းရငွေ (Ks)</th></tr></thead><tbody>${S.pts.slice().reverse().map(x => `<tr><td>${esc(x.full)}</td><td>${fmt(x.orders)}</td><td>${fmt(x.revenue)}</td></tr>`).join("")}</tbody></table></div>`;
+      return;
+    }
+    const pts = S.pts.map(x => ({ ...x, v: isRev ? x.revenue : x.orders }));
+    const total = pts.reduce((a, x) => a + x.v, 0);
+    barChart(el, pts, { maxLabels: D.days <= 7 ? 7 : 6, tip: x => isRev ? fmt(x.revenue) + " Ks<small>" + fmt(x.orders) + " အော်ဒါ</small>" : fmt(x.orders) + " အော်ဒါ<small>" + fmt(x.revenue) + " Ks</small>" });
+    el.insertAdjacentHTML("beforeend", `<div style="margin-top:10px;font-size:12px;color:var(--muted);font-weight:600">စုစုပေါင်း <b style="color:var(--ink)">${isRev ? fmt(total) + " Ks" : fmt(total) + " ခု"}</b> · အမြင့်ဆုံးကို အရောင်ရင့်ဖြင့် ပြထားသည်</div>`);
+  }
+
+  function drawHours() {
+    const m = {}; D.hourly.forEach(r => m[r.hour] = r);
+    const pts = Array.from({ length: 24 }, (_, h) => ({ v: num(m[h]?.orders), label: String(h), full: String(h).padStart(2, "0") + ":00 – " + String((h + 1) % 24).padStart(2, "0") + ":00", revenue: num(m[h]?.revenue) }));
+    barChart($("hours"), pts, { maxLabels: 8, tip: x => fmt(x.v) + " အော်ဒါ<small>" + fmt(x.revenue) + " Ks</small>" });
+  }
+  function drawWdays() {
+    const m = {}; D.weekday.forEach(r => m[r.dow] = r);
+    const pts = [1, 2, 3, 4, 5, 6, 0].map(d => ({ v: num(m[d]?.orders), label: WDS[d], full: WD[d], revenue: num(m[d]?.revenue) }));
+    barChart($("wdays"), pts, { maxLabels: 7, tip: x => fmt(x.v) + " အော်ဒါ<small>" + fmt(x.revenue) + " Ks</small>" });
+  }
+
+  function drawProds() {
+    const t = D.topProducts, max = Math.max(1, ...t.map(x => num(x.qty)));
+    $("prods").innerHTML = t.length ? t.map((x, i) => `<div class="prod"><span class="rk">${i + 1}</span><span class="nm">${esc(x.name)}</span><span class="q">${fmt(x.qty)}<small> ခု</small></span><div class="bar"><i style="width:${num(x.qty) / max * 100}%"></i></div><div class="rv">${fmt(x.revenue)} Ks</div></div>`).join("") : '<div class="empty">ပစ္စည်းစာရင်း မရှိပါ</div>';
+  }
+
+  function splitHtml(a, b, la, lb, ua, ub) {
+    const t = a + b;
+    if (!t) return '<div class="empty">အချက်အလက် မရှိပါ</div>';
+    return `<div class="split">${a ? `<i style="flex:${a}"></i>` : ""}${b ? `<i style="flex:${b}"></i>` : ""}</div>
+      <div class="lg"><div><span>${la}</span><b>${ua}</b><small>${Math.round(a / t * 100)}%</small></div><div class="b"><span>${lb}</span><b>${ub}</b><small>${Math.round(b / t * 100)}%</small></div></div>`;
+  }
+  function drawCusts() { const n = D.customers.new, r = D.customers.returning; $("custs").innerHTML = splitHtml(n, r, "ဝယ်သူအသစ်", "ပြန်ဝယ်သူ", fmt(n), fmt(r)); }
+  function drawPays() {
+    const g = s => D.payment.find(x => x.payment_status === s) || { revenue: 0, orders: 0 };
+    const a = num(g("Paid").revenue), b = D.payment.filter(x => x.payment_status !== "Paid").reduce((s, x) => s + num(x.revenue), 0);
+    $("pays").innerHTML = splitHtml(a, b, "ငွေရပြီး", "ငွေမရသေးသော", short(a) + " Ks", short(b) + " Ks");
+  }
+
+  $("seg").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    days = Number(b.dataset.d); D = null;
+    document.querySelectorAll("#seg button").forEach(x => x.classList.toggle("on", x === b));
+    load();
+  });
+  window.onload = function () { if (typeof renderAdminLayout === "function") renderAdminLayout("analytics"); load(); };
+</script>
+</body>
+</html>

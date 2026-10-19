@@ -556,7 +556,7 @@ body { background: var(--bg); color: var(--ink); }
                             <button type="button" class="chip" onclick="setTimeIn(120)">၂ နာရီအကြာ</button>
                         </div>
 
-                        <label for="in-note">မှတ်ချက် <span>(ထုပ်ပိုးပုံ၊ အချဉ်ရည်၊ စပ်/ဆားနည်း စသည် — မရှိလည်း ရပါသည်)</span></label>
+                        <label for="in-note">မှတ်ချက် <span>(ထုပ်ပိုးပုံ၊ အချဉ်ရည်၊ )</span></label>
                         <textarea id="in-note" class="order-note" maxlength="300" placeholder="ဥပမာ - ကြက်ခြေထောက် ၂ ခုနဲ့ တောင်ပံ ၁ ခု အချဉ်ရည်တစ်ခါတည်း စမ်းပေးပါ" oninput="renderNoteChips()"></textarea>
                         <div class="onote-chips note-chips" id="note-chips"></div>
 
@@ -822,7 +822,7 @@ function setTimeIn(mins) {
 function loadCust() { try { return JSON.parse(localStorage.getItem('yns_cust') || '{}'); } catch (_) { return {}; } }
 
 /* ===== ဝယ်သူ၏ မှတ်ချက် (အော်ဒါတစ်ခုလုံးအတွက် — ထုပ်ပိုးပုံ၊ အချဉ်ရည်၊ စပ်/ဆားနည်း ...) ===== */
-const ONOTE_CHIPS = ['တစ်မျိုးစီ သက်သက်ထုပ်ပါ', 'အချဉ်ရည် တစ်ခါတည်း စမ်းပေးပါ', 'အချဉ်ရည် သက်သက်ထုပ်ပါ', 'စပ်စပ်', 'ဆားနည်း'];
+const ONOTE_CHIPS = ['အချဉ်ရည် တစ်ခါတည်း စမ်းပေးပါ', 'အချဉ်ရည် သက်သက်ထုပ်ပါ'];
 function nameOf(id) { const m = menuData.find(x => x.id == id); return m ? m.name : '?'; }
 function noteVal() { const el = document.getElementById('in-note'); return el ? el.value.trim() : ''; }
 function renderNoteChips() {
@@ -932,7 +932,7 @@ function renderPacks() {
         </div>`;
 
     if (!packMode) {
-        h += `<p class="pack-help">အော်ဒါအားလုံးကို တစ်ထုပ်တည်း သန့်ရှင်းပြီး လုံခြုံစွာ ထုပ်ပေးပါမည်။ သီးခြားခွဲချင်မှသာ အပေါ်က <b>“ပစ္စည်းတွေကို ထုပ်ခွဲမည်”</b> ကို ရွေးပါ။</p>`;
+        h += `<p class="pack-help">အော်ဒါအားလုံးကို တစ်ထုပ်တည်း ထုပ်ပေးပါမည်။ သီးခြားခွဲချင်မှသာ အပေါ်က <b>“ပစ္စည်းတွေကို ထုပ်ခွဲမည်”</b> ကို ရွေးပါ။</p>`;
     } else {
         const rem = packRemaining(), remIds = Object.keys(rem);
         const assignedQty = totalQty - remIds.reduce((sum, id) => sum + rem[id], 0);
@@ -952,7 +952,7 @@ function renderPacks() {
                 : `<p class="pack-help">အောက်က ပစ္စည်းကို နှိပ်ပြီး ဒီထုပ်ထဲ ထည့်ပါ</p>`;
             if (remIds.length) h += `<div class="pk-add">${remIds.map(id => `<button type="button" class="chip" onclick="packAdd(${i},${id})">＋ ${esc(nameOf(id))} <small>(ကျန် ${rem[id]})</small></button>`).join('')}</div>`;
             h += `<div class="pk-lbl">ဤထုပ်အတွက် မှတ်ချက် <small>(မရေးလည်းရပါသည်)</small></div><input type="text" class="note-in" style="margin-top:4px;" maxlength="80" placeholder="ဥပမာ - အချဉ်ရည် သီးခြားထည့်ပေးပါ" value="${esc(p.note)}" oninput="packNote(${i}, this.value)">`;
-            h += `<div class="pk-sauce" style="margin-top:10px">အရသာအပိုဆောင်း — အစပ် / ဆား မရနိုင်ပါ</div></div>`;
+            h += `<div class="pk-sauce" style="margin-top:10px">Thank You</div></div>`;
         });
 
         h += `<div class="pk-actions"><button type="button" class="pk-btn" onclick="addPack()">＋ ထုပ်အသစ်</button>` +

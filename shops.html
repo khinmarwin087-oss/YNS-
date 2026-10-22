@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ဆိုင်အားလုံး | မြင်သာ Marketplace</title>
+<meta name="description" content="မြင်သာ Marketplace — ဆိုင်များကို ရွေးပြီး အော်ဒါမှာနိုင်ပါသည်">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root { --bg:#F3F5F2; --ink:#18231F; --muted:#62706A; --line:#E2E8E3; --brand:#0D5C49; --brand-d:#083D31; --brand-soft:#E3F1EB; --gold:#F0A033; --red:#D64545; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body { margin:0; font-family:'Noto Sans Myanmar',sans-serif; background:var(--bg); color:var(--ink); font-size:14px; line-height:1.6; }
+.hero { color:#fff; padding:calc(14px + env(safe-area-inset-top)) 0 56px; background:radial-gradient(120% 90% at 100% 0%,rgba(240,160,51,.22),transparent 55%),repeating-linear-gradient(115deg,rgba(255,255,255,.028) 0 2px,transparent 2px 14px),linear-gradient(160deg,#0B4F3F,#083D31); }
+.in { max-width:1120px; margin:0 auto; padding:0 18px; }
+.brand { font-family:'Bricolage Grotesque','Noto Sans Myanmar',sans-serif; font-weight:800; font-size:15px; letter-spacing:.2px; color:#F7D58F; }
+h1 { margin:14px 0 4px; font-size:27px; line-height:1.35; font-weight:800; }
+.sub { margin:0; color:rgba(255,255,255,.75); font-size:13px; }
+.search { margin:-28px auto 0; max-width:1120px; padding:0 18px; position:relative; z-index:2; }
+.sbox { display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line); border-radius:16px; padding:0 14px; box-shadow:0 10px 28px -14px rgba(8,61,49,.35); }
+.sbox input { flex:1; border:0; outline:0; padding:15px 0; font-size:15px; background:transparent; font-family:inherit; min-width:0; }
+.sbox i { color:var(--muted); }
+.chips { display:flex; gap:8px; overflow-x:auto; padding:14px 0 4px; scrollbar-width:none; }
+.chips::-webkit-scrollbar { display:none; }
+.chips button { flex-shrink:0; border:1px solid var(--line); background:#fff; border-radius:99px; padding:7px 14px; font-weight:700; font-size:13px; color:var(--ink); font-family:inherit; }
+.chips button.on { background:var(--brand); color:#fff; border-color:var(--brand); }
+.grid { display:grid; grid-template-columns:1fr; gap:12px; padding:8px 0 50px; }
+@media (min-width:640px) { .grid { grid-template-columns:repeat(2,1fr); } }
+@media (min-width:980px) { .grid { grid-template-columns:repeat(3,1fr); } }
+.card { display:flex; gap:14px; background:#fff; border:1px solid var(--line); border-radius:20px; padding:14px; text-decoration:none; color:inherit; box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 26px -18px rgba(15,23,42,.25); transition:transform .15s; }
+.card:active { transform:scale(.985); }
+.logo { width:68px; height:68px; border-radius:18px; flex-shrink:0; background:var(--brand-soft) center/cover no-repeat; display:grid; place-items:center; font-size:30px; overflow:hidden; }
+.body { flex:1; min-width:0; }
+.top { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+.name { font-weight:800; font-size:16px; line-height:1.4; color:var(--ink); }
+.cat { font-size:12px; color:var(--brand); font-weight:700; }
+.desc { margin:4px 0 0; font-size:12.5px; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.addr { margin-top:6px; font-size:11.5px; color:var(--muted); }
+.badge { flex-shrink:0; font-size:11px; font-weight:800; padding:3px 9px; border-radius:99px; }
+.badge.o { background:var(--brand-soft); color:var(--brand); } .badge.c { background:#FDECEC; color:var(--red); }
+.card.closed { opacity:.62; }
+.sk { height:96px; border-radius:20px; background:linear-gradient(90deg,#e9eeea 25%,#f4f7f4 37%,#e9eeea 63%); background-size:400% 100%; animation:sh 1.3s infinite; }
+@keyframes sh { 0%{background-position:100% 0} 100%{background-position:0 0} }
+.empty { text-align:center; color:var(--muted); padding:50px 10px; }
+.empty b { display:block; font-size:34px; }
+.foot { text-align:center; color:var(--muted); font-size:12px; padding:0 0 40px; }
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <div class="brand">မြင်သာ Marketplace</div>
+  <h1>ဒီနေ့ ဘယ်ဆိုင်ကနေ မှာမလဲ?</h1>
+  <p class="sub">ကြိုက်တဲ့ဆိုင်ကို ရွေးပြီး အော်ဒါတင်လိုက်ပါ</p>
+</div></header>
+<div class="search"><div class="sbox"><i class="fa-solid fa-magnifying-glass"></i><input id="q" type="search" placeholder="ဆိုင်အမည်၊ အမျိုးအစား ရှာပါ" autocomplete="off"></div></div>
+<main class="in">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="grid"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+</main>
+<div class="foot">အော်ဒါများကို ဆိုင်တစ်ဆိုင်စီက တိုက်ရိုက် လက်ခံပြီး ပြင်ဆင်ပေးပါမည်</div>
+<script>
+const API = 'https://yns.khinmarwin087.workers.dev';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let SHOPS = [], cat = '', q = '';
+const href = s => s.id === 1 || s.slug === 'main' ? 'index.html' : 'index.html?shop=' + encodeURIComponent(s.slug);
+function render() {
+  const cats = [...new Set(SHOPS.map(s => s.category).filter(Boolean))];
+  document.getElementById('chips').innerHTML = cats.length > 1
+    ? `<button class="${cat ? '' : 'on'}" data-c="">အားလုံး</button>` + cats.map(c => `<button class="${cat === c ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('') : '';
+  const t = q.trim().toLowerCase();
+  const list = SHOPS.filter(s => (!cat || s.category === cat) && (!t || [s.name, s.category, s.description, s.address].join(' ').toLowerCase().includes(t)))
+    .sort((a, b) => (b.is_open ? 1 : 0) - (a.is_open ? 1 : 0));   // ဖွင့်ထားသောဆိုင် အရင်
+  document.getElementById('grid').innerHTML = list.length ? list.map(s => `
+    <a class="card ${s.is_open ? '' : 'closed'}" href="${href(s)}">
+      <div class="logo" ${s.logo ? `style="background-image:url('${esc(s.logo)}')"` : ''}>${s.logo ? '' : '🏪'}</div>
+      <div class="body">
+        <div class="top"><div><div class="name">${esc(s.name)}</div>${s.category ? `<div class="cat">${esc(s.category)}</div>` : ''}</div>
+          <span class="badge ${s.is_open ? 'o' : 'c'}">${s.is_open ? 'ဖွင့်ထား' : 'ပိတ်ထား'}</span></div>
+        ${s.description ? `<p class="desc">${esc(s.description)}</p>` : ''}
+        ${s.address ? `<div class="addr"><i class="fa-solid fa-location-dot"></i> ${esc(s.address)}</div>` : ''}
+      </div>
+    </a>`).join('') : `<div class="empty" style="grid-column:1/-1"><b>🔎</b>ဆိုင် မတွေ့ပါ</div>`;
+}
+document.getElementById('chips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { cat = b.dataset.c; render(); } });
+document.getElementById('q').addEventListener('input', e => { q = e.target.value; render(); });
+(async () => {
+  try {
+    const r = await fetch(API + '/api/shops'); const d = await r.json();
+    SHOPS = d.ok ? d.shops || [] : []; render();
+  } catch (_) { document.getElementById('grid').innerHTML = '<div class="empty" style="grid-column:1/-1"><b>📡</b>ချိတ်ဆက်၍ မရပါ၊ အင်တာနက် စစ်ပြီး ပြန်ကြိုးစားပါ</div>'; }
+})();
+</script>
+</body>
+</html>

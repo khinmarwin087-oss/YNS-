@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>ဆိုင်မျက်နှာစာ • Content</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+  :root { --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18); }
+  html, body { overflow-x: hidden; } body { line-height: 1.5; }
+  .main { padding: 0 14px 90px; min-width: 0; } .p-wrap { max-width: 760px; margin: 0 auto; }
+  @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+  .p-top { position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px; background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  @media (min-width: 769px) { .p-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+  .p-top-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+  .p-title { flex: 1; min-width: 0; } .p-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+  .p-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+  .ibtn { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink); cursor: pointer; }
+  .sec { margin: 22px 2px 8px; font-size: 13px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 8px; }
+  .sec i { color: #0D5C49; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--card-shadow); margin-bottom: 10px; }
+  .help { margin: 0 0 10px; font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .fld { margin-bottom: 10px; } .fld label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .fld input, .fld textarea, .row input { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 10px 11px; font-size: 14px; background: #f8fafc; outline: none; font-family: inherit; }
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 13px; font-weight: 800; font-size: 14.5px; background: #0D5C49; color: #fff; cursor: pointer; }
+  .btn.ghost { background: #E3F1EB; color: #083D31; } .btn:disabled { opacity: .5; }
+  .sw-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; } .sw-row .t { flex: 1; } .sw-row b { font-size: 14px; } .sw-row small { display: block; color: var(--muted); font-size: 11.5px; }
+  .sw { position: relative; width: 50px; height: 30px; flex-shrink: 0; border-radius: 99px; background: #cbd5e1; border: 0; padding: 0; cursor: pointer; transition: .2s; }
+  .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: .2s; }
+  .sw.on { background: #16a34a; } .sw.on::after { left: 23px; }
+
+  /* banner preview + slides */
+  .prev { position: relative; border-radius: 18px; overflow: hidden; min-height: 130px; color: #fff; background: linear-gradient(155deg,#0B4F3F,#083D31) center/cover no-repeat; margin-bottom: 12px; display: flex; flex-direction: column; justify-content: center; padding: 16px; }
+  .prev::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.05)); }
+  .prev > * { position: relative; }
+  .prev small { font-size: 11px; font-weight: 700; opacity: .85; } .prev h4 { margin: 2px 0 8px; font-size: 17px; max-width: 75%; line-height: 1.45; }
+  .prev span { align-self: flex-start; background: #fff; color: #083D31; font-weight: 800; font-size: 12px; padding: 6px 13px; border-radius: 99px; }
+  .slide { display: flex; gap: 10px; align-items: flex-start; padding: 10px; border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px; background: #fafbfc; }
+  .thumb { width: 84px; height: 62px; border-radius: 12px; background: #E3F1EB center/cover no-repeat; flex-shrink: 0; display: grid; place-items: center; color: #0D5C49; font-size: 20px; cursor: pointer; border: 1.5px dashed #9fc9ba; position: relative; overflow: hidden; }
+  .thumb.has { border: 0; } .thumb .ov { position: absolute; inset: auto 0 0 0; background: rgba(0,0,0,.55); color: #fff; font-size: 10px; text-align: center; padding: 2px 0; }
+  .slide .f { flex: 1; min-width: 0; display: grid; gap: 6px; } .slide input { padding: 8px 10px; font-size: 13px; border: 1px solid var(--line); border-radius: 10px; width: 100%; box-sizing: border-box; font-family: inherit; }
+  .slide .ac { display: flex; flex-direction: column; gap: 4px; } .slide .ac button { width: 30px; height: 28px; border: 1px solid var(--line); background: #fff; border-radius: 8px; font-size: 12px; cursor: pointer; }
+  .busy { opacity: .55; pointer-events: none; }
+
+  /* menu */
+  .mi { display: flex; gap: 10px; padding: 11px 0; border-bottom: 1px solid #eef1ef; align-items: flex-start; }
+  .mi:last-child { border-bottom: 0; }
+  .mi .thumb { width: 64px; height: 64px; font-size: 18px; }
+  .mi .f { flex: 1; min-width: 0; display: grid; gap: 6px; } .mi .r2 { display: grid; grid-template-columns: 1fr 1.2fr; gap: 6px; }
+  .mi input { padding: 8px 10px; font-size: 13.5px; border: 1px solid var(--line); border-radius: 10px; width: 100%; box-sizing: border-box; font-family: inherit; background: #fff; }
+  .mi .ok { font-size: 11px; color: #16a34a; font-weight: 700; height: 14px; }
+  .cats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cats button { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 13px; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main">
+    <div class="p-top"><div class="p-top-inner">
+      <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="p-title"><h1>ဆိုင်မျက်နှာစာ</h1><small>Banner · အသိပေးချက် · မီနူး ကိုယ်တိုင်ပြင်ရန်</small></div>
+      <a class="ibtn" href="../" target="_blank" rel="noopener" aria-label="ကြည့်မည်" title="ဝယ်သူ စာမျက်နှာ ကြည့်မည်"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+    </div></div>
+
+    <div class="p-wrap">
+      <h2 class="sec"><i class="fa-regular fa-image"></i> ထိပ်ဆုံး Banner</h2>
+      <div class="card">
+        <div class="prev" id="prev"><small id="pvK"></small><h4 id="pvT"></h4><span id="pvB"></span></div>
+        <div class="fld"><label>အပေါ်ကဆောင်းစာ (သေးသေး)</label><input id="bK" maxlength="40" placeholder="ဒီနေ့အတွက်" oninput="pv()"></div>
+        <div class="fld"><label>ခေါင်းစဉ်</label><input id="bT" maxlength="60" placeholder="ဒီနေ့ ဘာစားမလဲ?" oninput="pv()"></div>
+        <div class="fld"><label>ခလုတ်စာသား</label><input id="bB" maxlength="30" placeholder="မီနူး ကြည့်မည်" oninput="pv()"></div>
+        <p class="help" style="margin-top:14px"><b>Banner ပုံများ</b> — ဖုန်းထဲက ပုံကို တိုက်ရိုက်ရွေးပါ (အလိုအလျောက် ကျုံ့ပေးပါမယ်)။ ပုံတစ်ပုံထက်ပိုရင် အလိုအလျောက် ဆလိုက်ပြောင်းပါမယ်။ ပုံမထည့်ရင် အစိမ်းရောင်နောက်ခံ သုံးပါမယ်။</p>
+        <div id="slides"></div>
+        <button class="btn ghost" type="button" id="addSlide" onclick="addSlide()"><i class="fa-solid fa-plus"></i> Banner ပုံ ထည့်မည်</button>
+        <div style="height:10px"></div>
+        <button class="btn" type="button" onclick="saveBanner()">Banner သိမ်းမည်</button>
+      </div>
+
+      <h2 class="sec"><i class="fa-solid fa-bullhorn"></i> အသိပေးဘား (Notice Bar)</h2>
+      <div class="card">
+        <p class="help">ဆိုင်ပိတ်ချိန်/ဖွင့်ချိန်ကို Settings ထဲက အချိန်အတိုင်း အလိုအလျောက် ပြပါမယ်။ ဒီမှာ သင့်ကိုယ်ပိုင် စာသားတွေ ထပ်ထည့်နိုင်ပါတယ်။</p>
+        <div class="sw-row"><div class="t"><b>ကိုယ်ပိုင် အသိပေးစာ ပြမည်</b><small>ဝယ်သူ စာမျက်နှာ ထိပ်ဆုံးမှာ ပြမည်</small></div><button class="sw" id="nOn" type="button" onclick="this.classList.toggle('on')"></button></div>
+        <div class="fld"><label>အသိပေးစာ</label><input id="nT" maxlength="160" placeholder="ဥပမာ — ယနေ့ ကြက်ကင် ည ၈ နာရီအထိသာ ရောင်းမည်"></div>
+        <div class="fld"><label>ဆိုင်ပိတ်ချိန်/ကြိုမှာရန် စာ (ဆိုင်ပိတ်ထားချိန်မှာ ပြမည်)</label><input id="nC" maxlength="160" placeholder="ဥပမာ — ကြိုမှာထားနိုင်ပါသည်၊ မနက် ၁၀ နာရီမှ စ၍ ပြင်ဆင်ပေးပါမည်"></div>
+        <button class="btn" type="button" onclick="saveNotice()">အသိပေးဘား သိမ်းမည်</button>
+      </div>
+
+      <h2 class="sec"><i class="fa-solid fa-utensils"></i> မီနူး (အမည်၊ ဈေး၊ အမျိုးအစား၊ ပုံ)</h2>
+      <div class="card">
+        <p class="help">ပုံပေါ်ကို နှိပ်ပြီး ဖုန်းထဲက ပုံရွေးပါ။ စာသား/ဈေးပြင်ပြီး အပြင်ဘက်ကို နှိပ်လိုက်ရင် အလိုအလျောက် သိမ်းပါမယ်။</p>
+        <div class="cats" id="cats"></div>
+      </div>
+      <div class="card" id="menu"></div>
+      <div class="card">
+        <b style="font-size:14px">+ ပစ္စည်းအသစ်</b>
+        <div class="mi" style="border:0;padding-bottom:0">
+          <div class="thumb" id="nThumb" onclick="newPhoto()"><i class="fa-solid fa-camera"></i></div>
+          <div class="f"><input id="nN" placeholder="ပစ္စည်းအမည်" maxlength="100"><div class="r2"><input id="nP" type="number" inputmode="numeric" placeholder="ဈေး (Ks)"><input id="nCat" list="catList" placeholder="အမျိုးအစား"></div></div>
+        </div>
+        <div style="height:8px"></div><button class="btn" type="button" onclick="addItem()">ထည့်မည်</button>
+      </div>
+      <datalist id="catList"></datalist>
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/upload.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  let slides = [], items = [], newImg = "";
+  const cssUrl = u => "url('" + String(u).replace(/['"\\()\s]/g, encodeURIComponent) + "')";
+
+  async function load() {
+    try {
+      const a = await apiFetch("/api/admin/app-settings"); const c = a.content || {};
+      $("bK").value = c.kicker || ""; $("bT").value = c.title || ""; $("bB").value = c.btn || "";
+      slides = (c.slides || []).map(x => ({ img: x.img || "", title: x.title || "", sub: x.sub || "" }));
+      $("nOn").classList.toggle("on", !!c.notice_on); $("nT").value = c.notice_text || ""; $("nC").value = c.notice_closed || "";
+      renderSlides(); pv();
+    } catch (_) {}
+    try { const p = await apiFetch("/api/admin/products"); items = p.products || []; renderMenu(); } catch (_) {}
+  }
+
+  /* ---------- Banner ---------- */
+  function pv() {
+    $("pvK").textContent = $("bK").value || "ဒီနေ့အတွက်";
+    $("pvT").textContent = $("bT").value || "ဒီနေ့ ဘာစားမလဲ?";
+    $("pvB").textContent = $("bB").value || "မီနူး ကြည့်မည်";
+    const f = slides.find(s => s.img); $("prev").style.backgroundImage = f ? cssUrl(f.img) : "";
+  }
+  function renderSlides() {
+    $("slides").innerHTML = slides.map((s, i) => `
+      <div class="slide" data-i="${i}">
+        <div class="thumb ${s.img ? "has" : ""}" ${s.img ? `style="background-image:${cssUrl(s.img)}"` : ""} onclick="slidePhoto(${i})">${s.img ? '<span class="ov">ပြောင်းမည်</span>' : '<i class="fa-solid fa-camera"></i>'}</div>
+        <div class="f"><input placeholder="ဆလိုက်ခေါင်းစဉ် (မထည့်လည်းရ)" maxlength="60" value="${esc(s.title)}" oninput="slides[${i}].title=this.value"><input placeholder="ဖော်ပြချက်အတို (မထည့်လည်းရ)" maxlength="100" value="${esc(s.sub)}" oninput="slides[${i}].sub=this.value"></div>
+        <div class="ac"><button type="button" onclick="mv(${i},-1)" aria-label="အပေါ်">▲</button><button type="button" onclick="mv(${i},1)" aria-label="အောက်">▼</button><button type="button" onclick="rmSlide(${i})" aria-label="ဖျက်" style="color:#b42318">✕</button></div>
+      </div>`).join("");
+    $("addSlide").style.display = slides.length >= 6 ? "none" : "";
+  }
+  async function withBusy(el, fn) {
+    el && el.classList.add("busy");
+    try { return await fn(); } catch (e) { showToast(e.message || "မအောင်မြင်ပါ"); } finally { el && el.classList.remove("busy"); }
+  }
+  async function addSlide() {
+    await withBusy($("addSlide"), async () => {
+      showToast("ပုံ ကျုံ့ပြီး တင်နေသည်...");
+      const r = await YNSUpload.pickAndUpload({ maxDim: 1400, maxKB: 300 }); if (!r) return;
+      slides.push({ img: r.url, title: "", sub: "" }); renderSlides(); pv(); showToast("ပုံတင်ပြီး ✓ (" + Math.round(r.bytes / 1024) + " KB)");
+    });
+  }
+  async function slidePhoto(i) {
+    await withBusy(document.querySelector(`.slide[data-i="${i}"]`), async () => {
+      const r = await YNSUpload.pickAndUpload({ maxDim: 1400, maxKB: 300 }); if (!r) return;
+      slides[i].img = r.url; renderSlides(); pv(); showToast("ပုံတင်ပြီး ✓");
+    });
+  }
+  function mv(i, d) { const j = i + d; if (j < 0 || j >= slides.length) return; [slides[i], slides[j]] = [slides[j], slides[i]]; renderSlides(); pv(); }
+  function rmSlide(i) { slides.splice(i, 1); renderSlides(); pv(); }
+  async function saveBanner() {
+    try { await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ banner_kicker: $("bK").value, banner_title: $("bT").value, banner_btn: $("bB").value, banner_slides: slides }) }); showToast("Banner သိမ်းပြီး ✅"); } catch (_) {}
+  }
+  async function saveNotice() {
+    try { await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ notice_on: $("nOn").classList.contains("on"), notice_text: $("nT").value, notice_closed: $("nC").value }) }); showToast("အသိပေးဘား သိမ်းပြီး ✅"); } catch (_) {}
+  }
+
+  /* ---------- Menu ---------- */
+  function cats() { return [...new Set(items.map(p => p.category).filter(Boolean))]; }
+  function renderMenu() {
+    $("catList").innerHTML = cats().map(c => `<option value="${esc(c)}">`).join("");
+    $("cats").innerHTML = cats().map(c => `<button type="button" onclick="renameCat(this.dataset.c)" data-c="${esc(c)}"><i class="fa-solid fa-pen" style="font-size:11px"></i> ${esc(c)}</button>`).join("") || '<small style="color:#62706A">အမျိုးအစား မရှိသေးပါ</small>';
+    $("menu").innerHTML = items.length ? items.map(p => `
+      <div class="mi" data-id="${p.id}">
+        <div class="thumb ${p.image ? "has" : ""}" ${p.image ? `style="background-image:${cssUrl(p.image)}"` : ""} onclick="itemPhoto(${p.id})">${p.image ? '<span class="ov">ပြောင်း</span>' : '<i class="fa-solid fa-camera"></i>'}</div>
+        <div class="f"><input value="${esc(p.name)}" maxlength="100" onchange="saveItem(${p.id},{name:this.value},this)">
+          <div class="r2"><input type="number" inputmode="numeric" value="${p.price}" onchange="saveItem(${p.id},{price:this.value},this)"><input list="catList" value="${esc(p.category || "")}" maxlength="40" onchange="saveItem(${p.id},{category:this.value},this)"></div>
+          <div class="ok" id="ok${p.id}"></div></div>
+      </div>`).join("") : '<small style="color:#62706A">ပစ္စည်း မရှိသေးပါ — အောက်မှာ ထည့်ပါ</small>';
+  }
+  function flash(id) { const e = $("ok" + id); if (e) { e.textContent = "သိမ်းပြီး ✓"; setTimeout(() => { e.textContent = ""; }, 1600); } }
+  async function saveItem(id, patch, el) {
+    try { await apiFetch("/api/admin/products/" + id, { method: "PATCH", body: JSON.stringify(patch) }); Object.assign(items.find(p => p.id === id), patch); flash(id); if (patch.category !== undefined) { $("catList").innerHTML = cats().map(c => `<option value="${esc(c)}">`).join(""); } }
+    catch (_) { renderMenu(); }
+  }
+  async function itemPhoto(id) {
+    await withBusy(document.querySelector(`.mi[data-id="${id}"]`), async () => {
+      const r = await YNSUpload.pickAndUpload({ maxDim: 900, maxKB: 200 }); if (!r) return;
+      await apiFetch("/api/admin/products/" + id, { method: "PATCH", body: JSON.stringify({ image: r.url }) });
+      items.find(p => p.id === id).image = r.url; renderMenu(); showToast("ပုံတင်ပြီး ✓ (" + Math.round(r.bytes / 1024) + " KB)");
+    });
+  }
+  async function renameCat(from) {
+    const to = prompt('"' + from + '" အမျိုးအစားကို အမည်အသစ် ပြောင်းမလား?', from); if (to === null || !to.trim() || to.trim() === from) return;
+    try { const r = await apiFetch("/api/admin/categories/rename", { method: "POST", body: JSON.stringify({ from, to: to.trim() }) }); items.forEach(p => { if (p.category === from) p.category = to.trim(); }); renderMenu(); showToast(r.changed + " မျိုး ပြောင်းပြီး ✓"); } catch (_) {}
+  }
+  async function newPhoto() {
+    await withBusy($("nThumb"), async () => {
+      const r = await YNSUpload.pickAndUpload({ maxDim: 900, maxKB: 200 }); if (!r) return;
+      newImg = r.url; $("nThumb").style.backgroundImage = cssUrl(r.url); $("nThumb").innerHTML = ""; $("nThumb").classList.add("has");
+    });
+  }
+  async function addItem() {
+    const name = $("nN").value.trim(), price = Number($("nP").value);
+    if (!name || !(price >= 0) || $("nP").value === "") return showToast("အမည်နဲ့ ဈေး ဖြည့်ပါ");
+    try {
+      await apiFetch("/api/admin/products", { method: "POST", body: JSON.stringify({ name, price, category: $("nCat").value.trim(), image: newImg, available: 1 }) });
+      $("nN").value = ""; $("nP").value = ""; $("nCat").value = ""; newImg = ""; $("nThumb").style.backgroundImage = ""; $("nThumb").classList.remove("has"); $("nThumb").innerHTML = '<i class="fa-solid fa-camera"></i>';
+      const p = await apiFetch("/api/admin/products"); items = p.products || []; renderMenu(); showToast("ထည့်ပြီး ✓");
+    } catch (_) {}
+  }
+
+  window.addEventListener("DOMContentLoaded", () => { if (typeof renderAdminLayout === "function") renderAdminLayout("content"); load(); });
+</script>
+</body>
+</html>

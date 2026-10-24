@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ဆုများ & Promo</title>
+<meta name="theme-color" content="#0A4A3B">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700;800&family=Bricolage+Grotesque:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+:root{--brand:#0D5C49;--brand-d:#083D31;--soft:#E3F1EB;--amber:#F0A033;--ink:#17231E;--sub:#62706A;--line:#E5EAE7;--num:'Bricolage Grotesque','Noto Sans Myanmar',sans-serif}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#F6F7F5;color:var(--ink);font-family:'Noto Sans Myanmar',system-ui,sans-serif;line-height:1.6;padding-bottom:calc(40px + env(safe-area-inset-bottom))}
+button,input{font:inherit}
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(165deg,#12705A,#0A4A3B 55%,#072F26);border-radius:0 0 34px 34px;padding:calc(14px + env(safe-area-inset-top)) 20px 78px}
+.hero::before{content:"";position:absolute;inset:-40% -30% auto auto;width:120%;height:160%;background:repeating-radial-gradient(circle at 80% 20%,rgba(255,255,255,.07) 0 1.5px,transparent 1.5px 24px)}
+.hero::after{content:"";position:absolute;right:-50px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(240,160,51,.3),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.top{display:flex;align-items:center;gap:12px}
+.back{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:#fff;display:grid;place-items:center;text-decoration:none;backdrop-filter:blur(6px)}
+.top h1{margin:0;font-size:21px;font-weight:800;line-height:1.3}.top small{display:block;opacity:.8;font-size:12px}
+.hero p{margin:16px 2px 0;font-size:13.5px;opacity:.9;max-width:320px}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px}
+.vcard{position:relative;z-index:3;margin:-52px 0 0;background:#fff;border-radius:26px;padding:18px;box-shadow:0 24px 38px -24px rgba(6,40,31,.55)}
+.vcard h2{margin:0 0 4px;font-size:16px;font-weight:800}.vcard .hint{margin:0 0 12px;font-size:12px;color:var(--sub)}
+.fld{position:relative;margin-bottom:10px}
+.fld i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--brand);font-size:15px}
+.fld input{width:100%;height:50px;border-radius:16px;border:1.5px solid var(--line);background:#F7F9F8;padding:0 14px 0 42px;font-size:15px;outline:0;transition:.15s}
+.fld input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 4px rgba(13,92,73,.12)}
+.go{width:100%;height:52px;border:0;border-radius:16px;background:linear-gradient(145deg,#12705A,#0A4A3B);color:#fff;font-weight:800;font-size:15px;box-shadow:0 14px 22px -12px rgba(13,92,73,.95);transition:transform .12s}
+.go:active{transform:scale(.97)}.go:disabled{opacity:.6}
+.err{display:none;margin:10px 0 0;background:#FFF1F0;color:#B42318;border-radius:12px;padding:9px 12px;font-size:12.5px;font-weight:600}
+.lock{margin:12px 0 0;font-size:11.5px;color:var(--sub);display:flex;gap:7px;align-items:flex-start}
+.lock i{color:var(--brand);margin-top:4px}
+.sec{display:flex;align-items:center;justify-content:space-between;margin:26px 2px 12px}
+.sec h3{margin:0;font-size:18px;font-weight:800}.sec span{font-size:12px;color:var(--brand);background:var(--soft);border-radius:99px;padding:2px 10px;font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.st{background:#fff;border-radius:20px;padding:14px 16px;box-shadow:0 12px 24px -20px rgba(8,40,31,.5)}
+.st small{color:var(--sub);font-size:12px}.st b{display:block;font:800 24px var(--num);color:var(--brand)}
+.rw{background:#fff;border-radius:24px;padding:16px;margin-bottom:12px;box-shadow:0 14px 28px -22px rgba(8,40,31,.55);animation:up .4s both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.rw-h{display:flex;gap:12px;align-items:center}
+.ic{width:46px;height:46px;border-radius:16px;background:var(--soft);color:var(--brand);display:grid;place-items:center;font-size:19px;flex-shrink:0}
+.ic.sp{background:#FFF1DA;color:#C77712}
+.rw-h b{display:block;font-size:14.5px}.rw-h small{color:var(--sub);font-size:12px}
+.badge{margin-left:auto;background:var(--amber);color:#fff;font-weight:800;font-size:12.5px;padding:5px 12px;border-radius:99px;white-space:nowrap}
+.bar{height:11px;border-radius:99px;background:#EAF0EC;margin:14px 0 8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#1E9C7B,#0D5C49);transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.rw-f{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}.rw-f b{color:var(--brand)}
+.cp{position:relative;display:flex;background:#fff;border-radius:22px;margin-bottom:14px;box-shadow:0 14px 28px -22px rgba(8,40,31,.55);overflow:hidden;animation:up .4s both}
+.cp-l{width:112px;flex-shrink:0;background:linear-gradient(150deg,#12705A,#083D31);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 6px;text-align:center}
+.cp-l b{font:800 22px/1.2 var(--num)}.cp-l small{font-size:11px;opacity:.85}
+.cp-r{flex:1;min-width:0;padding:14px 14px 14px 18px;border-left:2px dashed #DDE5E0;position:relative}
+.cp-r::before,.cp-r::after{content:"";position:absolute;left:-9px;width:16px;height:16px;border-radius:50%;background:#F6F7F5}
+.cp-r::before{top:-8px}.cp-r::after{bottom:-8px}
+.code{font:800 17px var(--num);letter-spacing:1px;color:var(--ink)}
+.meta{font-size:11.5px;color:var(--sub);margin:2px 0 10px}
+.acts{display:flex;gap:8px}
+.acts button{flex:1;height:38px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:12.5px;color:var(--ink)}
+.acts .use{background:var(--amber);border-color:var(--amber);color:#fff;box-shadow:0 10px 16px -10px rgba(240,160,51,.9)}
+.cp.dim{opacity:.55;filter:grayscale(.6)}.cp.dim .acts{display:none}
+.tag{display:inline-block;font-size:11px;font-weight:800;border-radius:99px;padding:1px 9px;margin-left:6px}
+.tag.used{background:#EEE;color:#666}.tag.expired{background:#FFE9E6;color:#B42318}.tag.paused{background:#FFF1DA;color:#8A4B00}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tabs button{height:36px;padding:0 16px;border-radius:99px;border:1.5px solid #E2E7E4;background:#fff;font-weight:700;font-size:12.5px;color:#4B5853}
+.tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.empty{text-align:center;color:var(--sub);background:#fff;border-radius:22px;padding:28px 18px;font-size:13.5px}
+.empty i{font-size:34px;color:#C4D3CC;display:block;margin-bottom:8px}
+.pub{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin:0 -18px;padding:2px 18px 10px}.pub::-webkit-scrollbar{display:none}
+.pc{flex:0 0 78%;border-radius:24px;padding:18px;color:#fff;background:radial-gradient(90% 120% at 95% 10%,rgba(240,160,51,.5),transparent 60%),linear-gradient(150deg,#26302C,#121816);box-shadow:0 20px 30px -20px rgba(0,0,0,.6)}
+.pc.g{background:radial-gradient(90% 120% at 95% 10%,rgba(240,160,51,.35),transparent 60%),linear-gradient(150deg,#12705A,#083D31)}
+.pc .k{display:inline-block;background:#fff;color:#17231E;border-radius:99px;font-size:11px;font-weight:800;padding:2px 11px}
+.pc h4{margin:10px 0 2px;font-size:18px;line-height:1.5}.pc p{margin:0;font-size:12.5px;opacity:.85}
+.pc b{display:block;margin-top:10px;font:800 26px var(--num);color:#FFC46B}
+.cta{display:block;text-align:center;margin:22px 0 0;background:var(--brand);color:#fff;text-decoration:none;font-weight:800;border-radius:18px;padding:15px}
+.toast{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));transform:translate(-50%,30px);background:#0C1F19;color:#fff;border-radius:99px;padding:11px 20px;font-size:13px;font-weight:700;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.skel{height:92px;border-radius:24px;background:linear-gradient(90deg,#EEF1EF,#F7F8F7,#EEF1EF);background-size:200% 100%;animation:sk 1.2s infinite;margin-bottom:12px}
+@keyframes sk{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="top">
+    <a class="back" id="back" href="./" aria-label="နောက်သို့"><i class="fa-solid fa-chevron-left"></i></a>
+    <div><h1>ဆုများ & Promo</h1><small id="shopname"></small></div>
+  </div>
+  <p>မှာယူမှုအလိုက် ရရှိထားသော ဆုများ၊ voucher များနှင့် တိုးတက်မှုကို ကြည့်ပါ</p>
+</section>
+
+<div class="wrap">
+  <div class="vcard" id="vcard">
+    <h2>🎁 ကိုယ့်ဆုများ ကြည့်ရန်</h2>
+    <p class="hint">ဖုန်းနံပါတ်နှင့် သင့်အော်ဒါ ဘောက်ချာပေါ်က နံပါတ် ထည့်ပါ</p>
+    <div class="fld"><i class="fa-solid fa-phone"></i><input id="ph" type="tel" inputmode="tel" placeholder="ဖုန်းနံပါတ် (09...)" autocomplete="tel"></div>
+    <div class="fld"><i class="fa-solid fa-receipt"></i><input id="vc" type="text" autocapitalize="characters" placeholder="ဘောက်ချာနံပါတ် (ဥပမာ #MS-1234)" autocomplete="off"></div>
+    <button class="go" id="go" type="button" onclick="verify()">ကြည့်မည်</button>
+    <div class="err" id="err"></div>
+    <div class="lock"><i class="fa-solid fa-lock"></i><span>SMS၊ Login မလိုပါ။ သင့်ဖုန်းနံပါတ်ကို သိရုံနဲ့ မကြည့်နိုင်ဘဲ၊ သင်ကိုယ်တိုင်မှာဖူးသော အော်ဒါ ဘောက်ချာနံပါတ်ပါမှ ပြပါမည်။</span></div>
+  </div>
+
+  <div id="me"></div>
+  <div id="pubsec"></div>
+  <a class="cta" id="shopbtn" href="./"><i class="fa-solid fa-bag-shopping"></i> မီနူးသို့ သွားမည်</a>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'https://yns.khinmarwin087.workers.dev';
+const SHOP_Q = (new URLSearchParams(location.search).get('shop') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30);
+const SHOP_QS = SHOP_Q && SHOP_Q !== 'main' ? '?shop=' + SHOP_Q : '';
+const SK = SHOP_QS ? ':' + SHOP_Q : '';
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => Number(n || 0).toLocaleString('en-US');
+const toast = m => { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2000); };
+const L = (k, v) => { try { return v === undefined ? localStorage.getItem(k + SK) : (v === null ? localStorage.removeItem(k + SK) : localStorage.setItem(k + SK, v)); } catch (_) { return null; } };
+let DATA = null, TAB = 'ready';
+const home = './' + SHOP_QS;
+$('back').href = home; $('shopbtn').href = home;
+
+function ruleCard(r, i) {
+  const sp = r.type === 'spend';
+  return `<div class="pc ${i % 2 ? 'g' : ''}"><span class="k">${sp ? 'ဝယ်ယူငွေပြည့်ဆု' : 'အော်ဒါအကြိမ်ပြည့်ဆု'}</span><h4>${esc(r.name)}</h4><p>${sp ? fmt(r.target) + ' Ks ပြည့်တိုင်း' : 'အော်ဒါ ' + r.target + ' ကြိမ်ပြည့်တိုင်း'}${r.valid_days ? ' • ' + r.valid_days + ' ရက်အတွင်းသုံးရန်' : ''}</p><b>${esc(r.label)}</b></div>`;
+}
+function renderPublic(d) {
+  const cards = (d.rules || []).map(ruleCard);
+  if (d.loyal) cards.push(`<div class="pc"><span class="k">ဖောက်သည်လက်ဆောင်</span><h4>အော်ဒါ ${d.loyal.every} ကြိမ်မြောက်တိုင်း</h4><p>အလိုအလျောက် လျှော့ပေးပါသည်</p><b>${esc(d.loyal.text)}</b></div>`);
+  $('pubsec').innerHTML = cards.length ? `<div class="sec"><h3>ရရှိနိုင်သော ဆုများ</h3><span>${cards.length} မျိုး</span></div><div class="pub">${cards.join('')}</div>` : '';
+}
+function bar(p) { return `<div class="bar"><i data-w="${Math.round(p)}"></i></div>`; }
+function renderMe() {
+  const d = DATA; if (!d) return;
+  let h = `<div class="stats"><div class="st"><small>ပြီးစီးသော အော်ဒါ</small><b>${fmt(d.orders)}</b></div><div class="st"><small>စုစုပေါင်း ဝယ်ယူငွေ</small><b>${fmt(d.spent)}<small> Ks</small></b></div></div>`;
+  const prog = (d.progress || []).map(p => {
+    const sp = p.type === 'spend', cur = sp ? p.in_cycle : p.in_cycle;
+    const txt = sp ? `${fmt(cur)} / ${fmt(p.target)} Ks` : `${cur} / ${p.target}`;
+    const left = sp ? `နောက် ${fmt(p.left)} Ks ဝယ်ပါက` : `နောက် ${p.left} ကြိမ် မှာပါက`;
+    return `<div class="rw"><div class="rw-h"><div class="ic ${sp ? 'sp' : ''}"><i class="fa-solid ${sp ? 'fa-coins' : 'fa-bag-shopping'}"></i></div><div><b>${esc(p.name)}</b><small>${left} ဆုရမည်</small></div><span class="badge">${esc(p.label)}</span></div>${bar(cur / p.target * 100)}<div class="rw-f"><span>တိုးတက်မှု</span><b>${txt}</b></div></div>`;
+  });
+  if (d.loyal) {
+    const c = d.loyal.every - d.loyal.left;
+    prog.push(`<div class="rw"><div class="rw-h"><div class="ic"><i class="fa-solid fa-heart"></i></div><div><b>ဖောက်သည်လက်ဆောင်</b><small>နောက် ${d.loyal.left} ကြိမ် မှာပါက အလိုအလျောက် လျှော့မည်</small></div><span class="badge">${esc(d.loyal.text)}</span></div>${bar(c / d.loyal.every * 100)}<div class="rw-f"><span>တိုးတက်မှု</span><b>${c} / ${d.loyal.every}</b></div></div>`);
+  }
+  if (prog.length) h += `<div class="sec"><h3>ဆုရရှိရန် တိုးတက်မှု</h3></div>` + prog.join('');
+  const vs = d.vouchers || [], ready = vs.filter(v => v.state === 'ready'), past = vs.filter(v => v.state !== 'ready');
+  h += `<div class="sec"><h3>ကျွန်ုပ်၏ Voucher များ</h3><span>${ready.length} ခု သုံးနိုင်</span></div><div class="tabs"><button class="${TAB === 'ready' ? 'on' : ''}" onclick="setTab('ready')">သုံးနိုင်သော</button><button class="${TAB === 'past' ? 'on' : ''}" onclick="setTab('past')">သုံးပြီး / ကုန်ဆုံး</button></div>`;
+  const list = TAB === 'ready' ? ready : past;
+  h += list.length ? list.map((v, i) => cpn(v, i)).join('') : `<div class="empty"><i class="fa-solid fa-ticket"></i>${TAB === 'ready' ? 'ယခု သုံးနိုင်သော voucher မရှိသေးပါ။<br>အော်ဒါ ဆက်မှာပြီး ဆုရယူလိုက်ပါ 🎉' : 'မရှိသေးပါ'}</div>`;
+  $('me').innerHTML = h;
+  setTimeout(() => document.querySelectorAll('.bar i').forEach(e => e.style.width = e.dataset.w + '%'), 60);
+}
+function cpn(v, i) {
+  const tag = v.state === 'used' ? '<span class="tag used">သုံးပြီး</span>' : v.state === 'expired' ? '<span class="tag expired">သက်တမ်းကုန်</span>' : v.state === 'paused' ? '<span class="tag paused">ခေတ္တပိတ်</span>' : '';
+  const m = [v.from === 'reward' ? 'ဆုရ voucher' : (v.name || 'လက်ဆောင် voucher'), v.min_total ? 'အနည်းဆုံး ' + fmt(v.min_total) + ' Ks' : '', v.expires ? 'ကုန်ရက် ' + v.expires : ''].filter(Boolean).map(esc).join(' • ');
+  return `<div class="cp ${v.state === 'ready' ? '' : 'dim'}" style="animation-delay:${i * .05}s"><div class="cp-l"><b>${esc(v.label.replace(' လျှော့', ''))}</b><small>လျှော့</small></div><div class="cp-r"><div class="code">${esc(v.code)}${tag}</div><div class="meta">${m}</div><div class="acts"><button onclick="copyC('${esc(v.code)}')"><i class="fa-regular fa-copy"></i> ကူးမည်</button><button class="use" onclick="useC('${esc(v.code)}')">သုံးမည် →</button></div></div></div>`;
+}
+function setTab(t) { TAB = t; renderMe(); }
+function copyC(c) { (navigator.clipboard ? navigator.clipboard.writeText(c) : Promise.reject()).then(() => toast('ကူးယူပြီး ✓')).catch(() => toast(c)); }
+function useC(c) { L('use_promo', c); location.href = home; }
+async function verify(auto) {
+  const phone = $('ph').value.trim(), voucher = $('vc').value.trim();
+  const e = $('err'); e.style.display = 'none';
+  if (!phone || !voucher) { e.textContent = 'ဖုန်းနံပါတ်နှင့် ဘောက်ချာနံပါတ် နှစ်ခုလုံး ဖြည့်ပါ'; e.style.display = 'block'; return; }
+  const b = $('go'); b.disabled = true; b.textContent = 'စစ်နေသည်...';
+  try {
+    const r = await fetch(API + '/api/my-promos' + SHOP_QS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ phone, voucher }) });
+    const d = await r.json();
+    if (!d.ok) { e.textContent = d.error || 'မအောင်မြင်ပါ'; e.style.display = 'block'; if (auto) L('mp', null); return; }
+    DATA = d; L('mp', JSON.stringify({ phone, voucher }));
+    $('vcard').innerHTML = `<h2>✅ အတည်ပြုပြီး</h2><p class="hint" style="margin:0">${esc(phone)} <a href="#" onclick="L('mp',null);location.reload();return false" style="color:var(--brand);font-weight:700;margin-left:6px">ပြောင်းမည်</a></p>`;
+    renderPublic(d); renderMe();
+  } catch (_) { e.textContent = 'အင်တာနက် စစ်ပြီး ပြန်ကြိုးစားပါ'; e.style.display = 'block'; }
+  finally { b.disabled = false; b.textContent = 'ကြည့်မည်'; }
+}
+(async function init() {
+  try {
+    const s = await (await fetch(API + '/api/shop-status' + SHOP_QS)).json();
+    if (s && s.shop && s.shop.name) { $('shopname').textContent = s.shop.name; document.title = 'ဆုများ • ' + s.shop.name; }
+  } catch (_) {}
+  $('pubsec').innerHTML = '<div class="skel"></div>';
+  try { const d = await (await fetch(API + '/api/my-promos' + SHOP_QS)).json(); if (d.ok) renderPublic(d); else $('pubsec').innerHTML = ''; } catch (_) { $('pubsec').innerHTML = ''; }
+  try {
+    const saved = JSON.parse(L('mp') || 'null');
+    if (saved && saved.phone && saved.voucher) { $('ph').value = saved.phone; $('vc').value = saved.voucher; verify(true); }
+  } catch (_) {}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Orders • YNS Kitchen</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root {
+      --c-new: #2563eb;      --c-new-bg: #eff6ff;
+      --c-cooking: #ea580c;  --c-cooking-bg: #fff4ec;
+      --c-ready: #16a34a;    --c-ready-bg: #ecfdf3;
+      --c-completed: #64748b;--c-completed-bg: #f1f5f9;
+      --c-cancelled: #dc2626;--c-cancelled-bg: #fef2f2;
+      --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18);
+    }
+
+    html, body { overflow-x: hidden; }
+    body { line-height: 1.5; }
+    .main { padding: 0 14px 96px; min-width: 0; }
+    .o-wrap { max-width: 860px; margin: 0 auto; }
+    @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+
+    /* ============ Sticky top area ============ */
+    .o-top {
+      position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px 10px;
+      background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    @media (min-width: 769px) { .o-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+    .o-top-inner { max-width: 860px; margin: 0 auto; }
+
+    .o-bar { display: flex; align-items: center; gap: 10px; }
+    .o-title { flex: 1; min-width: 0; }
+    .o-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+    .o-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; margin-top: 1px; }
+
+    .ibtn {
+      position: relative; width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff;
+      border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink);
+      box-shadow: 0 1px 2px rgba(15,23,42,.05); transition: transform .15s, background .2s;
+    }
+    .ibtn:active { transform: scale(.93); }
+    .ibtn.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .ibtn .dot { position: absolute; top: 8px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #ef4444; border: 2px solid #fff; display: none; }
+    .ibtn.has-filter .dot { display: block; }
+    .ibtn.spin i { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .o-filters { display: none; gap: 8px; margin-top: 10px; }
+    .o-filters.show { display: flex; }
+    .f-search { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; background: #fff; border: 1px solid var(--line); border-radius: 13px; padding: 0 12px; }
+    .f-search i { color: #94a3b8; font-size: 13px; }
+    .f-search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; padding: 11px 0; font-size: 14px; }
+    .f-date { flex: 0 0 auto; width: 150px; border: 1px solid var(--line); border-radius: 13px; background: #fff; padding: 0 10px; font-size: 13px; outline: none; min-width: 0; }
+    .f-clear { flex: 0 0 auto; width: 42px; border-radius: 13px; background: #fee2e2; color: #dc2626; font-size: 14px; }
+    @media (max-width: 480px) { .o-filters.show { flex-wrap: wrap; } .f-search { flex: 1 1 100%; } .f-date { flex: 1; width: auto; height: 42px; } }
+
+    /* ============ Tabs (fit width — no sideways scroll) ============ */
+    .o-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 12px; }
+    .t {
+      min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+      padding: 7px 2px 6px; border-radius: 14px; background: #fff; border: 1px solid var(--line); color: var(--muted);
+      transition: background .2s, color .2s, transform .15s; box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    }
+    .t:active { transform: scale(.96); }
+    .t b { font-size: 17px; font-weight: 800; line-height: 1.25; color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; }
+    .t span { font-size: 10.5px; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .t.active { background: var(--navy); border-color: var(--navy); color: #cbd5e1; }
+    .t.active b { color: #fff; }
+    .t.alert:not(.active) b { color: #2563eb; }
+    .t.alert:not(.active) { border-color: #bfdbfe; background: #f5f9ff; }
+    .t.alert b::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 4px; vertical-align: super; border-radius: 50%; background: #ef4444; animation: blink 1.4s infinite; }
+    @keyframes blink { 50% { opacity: .25; } }
+
+    /* ============ Order rows ============ */
+    .o-note { font-size: 12px; color: var(--muted); font-weight: 600; margin: 14px 4px 0; }
+    .o-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+    .o-note + .o-list { margin-top: 8px; }
+
+    .row {
+      position: relative; width: 100%; text-align: left; display: flex; align-items: stretch; gap: 12px;
+      background: #fff; border: 1px solid #e8edf5; border-radius: 18px; padding: 13px 14px 13px 18px;
+      box-shadow: var(--card-shadow); overflow: hidden; transition: transform .15s, box-shadow .2s, border-color .2s;
+      animation: rise .35s both;
+    }
+    .row:active { transform: scale(.985); }
+    @media (hover: hover) { .row:hover { border-color: #cbd5e1; box-shadow: 0 1px 2px rgba(15,23,42,.05), 0 14px 30px -14px rgba(15,23,42,.25); } }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    .row::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--rc, #94a3b8); }
+    .row.s-new { --rc: var(--c-new); background: linear-gradient(90deg, var(--c-new-bg), #fff 38%); }
+    .row.s-cooking { --rc: var(--c-cooking); }
+    .row.s-ready { --rc: var(--c-ready); }
+    .row.s-completed { --rc: var(--c-completed); }
+    .row.s-cancelled { --rc: var(--c-cancelled); opacity: .72; }
+
+    .r-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+    .r-l1 { display: flex; align-items: baseline; gap: 8px; }
+    .r-name { min-width: 0; font-size: 15.5px; font-weight: 800; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r-v { flex-shrink: 0; margin-right: auto; font-size: 11px; font-weight: 700; color: #94a3b8; font-family: "Plus Jakarta Sans", sans-serif; }
+    .r-total { flex-shrink: 0; font-size: 15px; font-weight: 800; color: var(--ink); font-family: "Plus Jakarta Sans", "Noto Sans Myanmar", sans-serif; }
+    .r-items { font-size: 12.5px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .r-items em { color: #94a3b8; font-style: normal; }
+    .r-l3 { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 3px; }
+
+    .pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; line-height: 1.6; }
+    .pill i { font-size: 10px; }
+    .p-new { background: var(--c-new-bg); color: var(--c-new); }
+    .p-cooking { background: var(--c-cooking-bg); color: var(--c-cooking); }
+    .p-ready { background: var(--c-ready-bg); color: var(--c-ready); }
+    .p-completed { background: var(--c-completed-bg); color: var(--c-completed); }
+    .p-cancelled { background: var(--c-cancelled-bg); color: var(--c-cancelled); }
+    .p-pickup { background: #fffbeb; color: #b45309; }
+    .p-paid { background: #dcfce7; color: #15803d; }
+    .p-pending { background: #fef9c3; color: #a16207; }
+    .p-failed { background: #fee2e2; color: #b91c1c; }
+    .r-ago { margin-left: auto; font-size: 11px; color: #94a3b8; font-weight: 600; white-space: nowrap; }
+    .r-ago.urgent { color: #dc2626; font-weight: 800; }
+    .r-go { align-self: center; color: #cbd5e1; font-size: 13px; flex-shrink: 0; }
+
+    .skel { height: 92px; border-radius: 18px; background: linear-gradient(100deg, #eef2f7 30%, #f8fafc 50%, #eef2f7 70%); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    .o-empty, .o-error { text-align: center; padding: 56px 24px; color: var(--muted); }
+    .o-empty .ico, .o-error .ico { width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 22px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 26px; color: #94a3b8; box-shadow: var(--card-shadow); }
+    .o-empty b, .o-error b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 4px; }
+    .o-error .ico { color: #ef4444; }
+    .o-error a, .o-error button.lnk { color: #0284c7; font-weight: 700; background: none; text-decoration: underline; margin-top: 10px; display: inline-block; }
+
+    /* ============ Detail sheet ============ */
+    .backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 1200; }
+    .backdrop.show { opacity: 1; pointer-events: auto; }
+
+    .sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 1210; display: flex; flex-direction: column;
+      max-height: 92vh; max-height: 92dvh; background: #f4f6fb; border-radius: 26px 26px 0 0;
+      box-shadow: 0 -20px 60px rgba(15,23,42,.3); transform: translateY(105%); transition: transform .32s cubic-bezier(.2,.85,.25,1);
+      visibility: hidden;
+    }
+    .sheet.show { transform: translateY(0); visibility: visible; }
+    @media (min-width: 900px) {
+      .sheet { left: auto; top: 0; width: 470px; max-height: none; border-radius: 26px 0 0 26px; transform: translateX(105%); }
+      .sheet.show { transform: translateX(0); }
+      .grab { display: none; }
+    }
+    .grab { width: 42px; height: 5px; border-radius: 99px; background: #cbd5e1; margin: 9px auto 0; flex-shrink: 0; }
+
+    .sh-head { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px; flex-shrink: 0; }
+    .sh-id { flex: 1; min-width: 0; }
+    .sh-id b { display: block; font-size: 19px; font-weight: 800; letter-spacing: -.2px; color: var(--ink); font-family: "Plus Jakarta Sans", sans-serif; }
+    .sh-id small { color: var(--muted); font-size: 11.5px; font-weight: 500; }
+    .sh-x { width: 38px; height: 38px; border-radius: 12px; background: #fff; border: 1px solid var(--line); color: #475569; font-size: 15px; flex-shrink: 0; }
+
+    .sh-body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding: 2px 16px 18px; display: flex; flex-direction: column; gap: 12px; -webkit-overflow-scrolling: touch; }
+
+    .card { background: #fff; border: 1px solid #e8edf5; border-radius: 18px; padding: 14px; box-shadow: var(--card-shadow); }
+    .card-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; font-weight: 800; color: #475569; margin-bottom: 10px; letter-spacing: .2px; }
+    .card-h i { margin-right: 6px; color: #94a3b8; }
+    .card-h .sub { font-weight: 600; color: #94a3b8; }
+
+    /* stepper */
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .step { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; min-width: 0; }
+    .step::before { content: ""; position: absolute; top: 13px; right: 50%; width: 100%; height: 3px; background: #e2e8f0; z-index: 0; }
+    .step:first-child::before { display: none; }
+    .step .dotc { position: relative; z-index: 1; width: 28px; height: 28px; border-radius: 50%; background: #e2e8f0; color: #94a3b8; display: grid; place-items: center; font-size: 12px; font-weight: 800; border: 3px solid #fff; box-shadow: 0 0 0 1px #e2e8f0; }
+    .step span { font-size: 10.5px; font-weight: 600; color: #94a3b8; line-height: 1.4; }
+    .step.done::before, .step.cur::before { background: var(--navy); }
+    .step.done .dotc { background: var(--navy); color: #fff; box-shadow: 0 0 0 1px var(--navy); }
+    .step.cur .dotc { background: var(--sc); color: #fff; box-shadow: 0 0 0 1px var(--sc), 0 0 0 6px color-mix(in srgb, var(--sc) 18%, transparent); }
+    .step.cur span, .step.done span { color: var(--ink); font-weight: 700; }
+    .cancel-banner { display: flex; align-items: center; gap: 10px; background: var(--c-cancelled-bg); color: var(--c-cancelled); border: 1px solid #fecaca; border-radius: 14px; padding: 12px 14px; font-weight: 700; font-size: 13.5px; }
+
+    /* customer */
+    .cust { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 46px; height: 46px; border-radius: 15px; background: linear-gradient(135deg, #1e293b, #0f172a); color: #fff; display: grid; place-items: center; font-size: 18px; font-weight: 800; flex-shrink: 0; }
+    .cust-i { flex: 1; min-width: 0; }
+    .cust-i b { display: block; font-size: 16px; font-weight: 800; color: var(--ink); word-break: break-word; line-height: 1.4; }
+    .cust-i small { color: var(--muted); font-size: 12.5px; font-weight: 600; word-break: break-all; }
+    .call { width: 44px; height: 44px; border-radius: 14px; background: #ecfdf3; color: #16a34a; display: grid; place-items: center; font-size: 16px; flex-shrink: 0; text-decoration: none; border: 1px solid #bbf7d0; }
+    .call.copy { background: #f1f5f9; color: #475569; border-color: var(--line); }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); }
+    .info-grid .k { font-size: 10.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+    .info-grid .v { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-top: 1px; word-break: break-word; }
+    .info-grid .v.warn { color: #b45309; }
+
+    /* items */
+    .items { list-style: none; margin: 0; padding: 0; }
+    .items li { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f1f5f9; }
+    .items li:last-child { border-bottom: 0; padding-bottom: 2px; }
+    .items li:first-child { padding-top: 2px; }
+    .q { flex-shrink: 0; min-width: 46px; text-align: center; background: var(--navy); color: #fff; border-radius: 11px; padding: 5px 8px; font-size: 15px; font-weight: 800; font-family: "Plus Jakarta Sans", sans-serif; }
+    .n { flex: 1; min-width: 0; font-size: 15px; font-weight: 700; color: var(--ink); word-break: break-word; line-height: 1.45; }
+    .n small { display: block; font-size: 11.5px; font-weight: 500; color: #94a3b8; }
+    .lt { flex-shrink: 0; font-size: 13.5px; font-weight: 800; color: #334155; white-space: nowrap; }
+    .no-items { text-align: center; padding: 14px 6px; color: #64748b; font-size: 13px; line-height: 1.7; background: #f8fafc; border-radius: 12px; }
+
+    .sum { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; padding: 13px 14px; border-radius: 14px; background: linear-gradient(135deg, #fff1f2, #fef2f2); border: 1px solid #fecaca; }
+    .sum .l { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #991b1b; }
+    .sum b { font-size: 21px; font-weight: 800; color: #dc2626; font-family: "Plus Jakarta Sans", "Noto Sans Myanmar", sans-serif; }
+
+    /* footer actions */
+    .sh-foot { flex-shrink: 0; padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; box-shadow: 0 -8px 24px -12px rgba(15,23,42,.15); }
+    .act-main { width: 100%; min-height: 54px; border-radius: 16px; color: #fff; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; transition: transform .15s, filter .2s; box-shadow: 0 10px 20px -10px var(--ac); background: var(--ac); }
+    .act-main:active { transform: scale(.98); }
+    .act-main:disabled { opacity: .6; }
+    .act-new { --ac: var(--c-new); } .act-cooking { --ac: var(--c-ready); } .act-ready { --ac: var(--navy); }
+    .act-row { display: flex; gap: 8px; }
+    .act-sec { flex: 1; min-height: 46px; border-radius: 14px; font-size: 13.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line); background: #fff; color: #334155; }
+    .act-sec.pay { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+    .act-sec.danger { background: #fff; color: #dc2626; border-color: #fecaca; }
+    .act-sec.undo { background: #f8fafc; color: #64748b; font-weight: 700; }
+    .act-sec:active { transform: scale(.97); }
+    .confirm { background: #fef2f2; border: 1px solid #fecaca; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+    .confirm p { margin: 0; text-align: center; font-weight: 800; color: #991b1b; font-size: 14px; }
+    .confirm .act-row .act-sec.yes { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .done-note { text-align: center; color: #64748b; font-size: 13px; font-weight: 700; padding: 6px; }
+  </style>
+
+  <style id="premium-theme">
+    /* ===== Premium theme (emerald + gold) ===== */
+    :root { --bg:#F3F5F2; --ink:#18231F; --muted:#62706A; --line:#E2E8E3; --navy:#0D5C49; --brand-d:#083D31; --gold:#F0A033; --gold-soft:#FFF3DF; --gold-ink:#8A4B00;
+      --c-new:#2755C6; --c-new-bg:#EAF0FD; --c-cooking:#D9780F; --c-cooking-bg:#FFF3DF; --c-ready:#17804F; --c-ready-bg:#E4F5EB; --c-completed:#62706A; --c-completed-bg:#EDF1EE;
+      --card-shadow:0 1px 2px rgba(24,35,31,.04), 0 12px 26px -16px rgba(8,61,49,.28); }
+    body { background:var(--bg); }
+    .sidebar { background:linear-gradient(180deg,#0B4A3B,#06281F); }
+    .brand-icon { background:linear-gradient(135deg,#F7C25B,#E08A12); box-shadow:0 6px 14px rgba(240,160,51,.35); }
+    .nav button { color:#A9C4B9; } .nav button.active, .nav button:hover { background:rgba(255,255,255,.1); color:#fff; }
+    .nav button.active { box-shadow:inset 3px 0 0 var(--gold); }
+    .nav-title { color:#5E8577; }
+    .o-top { background:rgba(243,245,242,.9); }
+    .o-title h1 { font-size:23px; letter-spacing:-.4px; color:var(--brand-d); }
+    .ibtn { border-radius:14px; border-color:var(--line); box-shadow:0 2px 6px rgba(24,35,31,.06); }
+    .ibtn.on { background:linear-gradient(135deg,#0D5C49,#083D31); border-color:#083D31; }
+    .f-search, .f-date { border-radius:14px; box-shadow:0 2px 6px rgba(24,35,31,.05); }
+    .o-tabs { gap:7px; }
+    .t { border-radius:16px; padding:9px 2px 8px; border-color:var(--line); box-shadow:0 2px 6px rgba(24,35,31,.05); }
+    .t.active { background:linear-gradient(135deg,#0D5C49,#083D31); border-color:#083D31; color:#BFE0D3; box-shadow:0 8px 18px -8px rgba(8,61,49,.6); }
+    .t.active b { color:#fff; }
+    .t.alert:not(.active) { background:#EAF0FD; border-color:#C5D5F7; }
+    .row { border-radius:20px; border-color:#E4EAE5; padding:14px 14px 14px 20px; }
+    .row::before { width:6px; border-radius:0 6px 6px 0; }
+    .row.s-new { background:linear-gradient(90deg,#EAF0FD,#fff 45%); }
+    .r-name { font-size:16px; color:var(--brand-d); }
+    .r-total { font-size:16px; color:var(--ink); }
+    .pill { padding:3px 10px; }
+    .p-pickup { background:var(--gold-soft); color:var(--gold-ink); }
+    .p-paid { background:#DDF3E6; color:#17653F; } .p-pending { background:#FFF3DF; color:var(--gold-ink); }
+    .skel { border-radius:20px; background:linear-gradient(100deg,#E9EEEA 30%,#F6F8F6 50%,#E9EEEA 70%); background-size:200% 100%; }
+    .o-empty .ico, .o-error .ico { border-radius:24px; }
+    .sheet { background:var(--bg); border-radius:28px 28px 0 0; }
+    .grab { background:#C9D4CD; }
+    .sh-id b { color:var(--brand-d); }
+    .sh-x { border-radius:13px; }
+    .card { border-radius:20px; border-color:#E4EAE5; }
+    .card-h { color:var(--brand-d); } .card-h i { color:var(--gold); }
+    .step.done::before, .step.cur::before { background:var(--navy); }
+    .avatar { background:linear-gradient(135deg,#0D5C49,#083D31); border-radius:16px; }
+    .call { background:#E4F5EB; border-color:#BFE5CD; color:#17804F; }
+    .info-grid .k { color:#8A978F; }
+    .q { background:linear-gradient(135deg,#0D5C49,#083D31); border-radius:12px; }
+    .lt { color:var(--ink); }
+    .sum { background:linear-gradient(135deg,#FFF6E4,#FFEBC6); border:1px solid #F3D59B !important; border-radius:16px; }
+    .sum .l { color:var(--gold-ink); } .sum b { color:var(--brand-d); font-size:23px; }
+    .sh-foot { border-radius:20px 20px 0 0; box-shadow:0 -10px 28px -14px rgba(8,61,49,.3); }
+    .act-main { min-height:56px; border-radius:18px; box-shadow:0 10px 20px -10px color-mix(in srgb, var(--ac,#0D5C49) 70%, transparent); background:linear-gradient(135deg, color-mix(in srgb, var(--ac,#0D5C49) 85%, #fff), var(--ac,#0D5C49)); }
+    .act-ready { --ac:#083D31; }
+    .act-sec { border-radius:15px; }
+    .act-sec.pay { background:#E4F5EB; color:#17653F; border-color:#BFE5CD; }
+    .act-sec.undo { background:#F3F5F2; }
+  
+    /* ===== v2: hero header + pack / note cards ===== */
+    .o-top { margin:0 -14px; padding:14px 14px 16px; background:linear-gradient(160deg,#0F6B55 0%,#083D31 70%); border-radius:0 0 28px 28px; box-shadow:0 14px 30px -18px rgba(8,61,49,.7); backdrop-filter:none; }
+    @media (min-width:769px) { .o-top { margin:0 -28px; padding:22px 28px 18px; } }
+    .o-title h1 { color:#fff; font-size:24px; }
+    .o-title small { color:#BFE0D3; font-weight:600; }
+    .ibtn { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); color:#fff; box-shadow:none; }
+    .ibtn.on { background:var(--gold); color:#3b2200; border-color:var(--gold); }
+    .ibtn .dot { border-color:#0B4A3B; }
+    .o-tabs { margin-top:14px; gap:6px; }
+    .t { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.14); color:#BFE0D3; box-shadow:none; }
+    .t b { color:#fff; }
+    .t.active { background:#fff; border-color:#fff; color:var(--brand-d); box-shadow:0 8px 18px -8px rgba(0,0,0,.5); }
+    .t.active b { color:var(--brand-d); }
+    .t.alert:not(.active) { background:rgba(240,160,51,.22); border-color:rgba(240,160,51,.6); }
+    .t.alert:not(.active) b { color:#FFD58A; }
+    .f-search, .f-date { border:0; }
+    .o-list { gap:12px; margin-top:18px; }
+    .row { padding:15px 14px 15px 22px; }
+    .r-name { font-size:16.5px; }
+    .r-items { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:13px; color:#3E4C45; line-height:1.55; }
+    .pill.p-pack { background:#E3F1EB; color:#0D5C49; }
+    .pill.p-note { background:var(--gold-soft); color:var(--gold-ink); }
+    .pill.p-disc { background:#FDECEC; color:#B3261E; }
+    .sh-note { background:linear-gradient(135deg,#FFF6E4,#FFEBC6); border:1px solid #F3D59B; border-radius:18px; padding:13px 14px; }
+    .sh-note .h { font-size:12px; font-weight:800; color:var(--gold-ink); margin-bottom:5px; letter-spacing:.2px; }
+    .sh-note p { margin:0; font-size:15px; font-weight:700; color:#4A2A00; line-height:1.65; white-space:pre-wrap; word-break:break-word; }
+    .pkc { border:1px solid #D5E2DA; border-radius:16px; overflow:hidden; margin-top:10px; background:#fff; }
+    .pkc:first-of-type { margin-top:0; }
+    .pkc-h { display:flex; align-items:center; gap:9px; background:linear-gradient(135deg,#0D5C49,#083D31); color:#fff; padding:9px 12px; font-weight:800; font-size:13.5px; }
+    .pkc-h i { font-style:normal; width:24px; height:24px; border-radius:50%; background:var(--gold); color:#3b2200; display:grid; place-items:center; font:800 12px "Plus Jakarta Sans",sans-serif; }
+    .pkc-h span { margin-left:auto; font-size:11.5px; font-weight:700; color:#BFE0D3; }
+    .pkc-r { display:flex; align-items:center; gap:10px; padding:10px 12px; border-top:1px solid #EEF2EF; font-size:14.5px; font-weight:700; }
+    .pkc-r:first-of-type { border-top:0; }
+    .pkc-r b { margin-left:auto; background:#E3F1EB; color:#0D5C49; border-radius:10px; padding:2px 10px; font:800 14px "Plus Jakarta Sans",sans-serif; }
+    .pkc-s { padding:8px 12px; background:#FFF3DF; color:#8A4B00; font-size:13px; font-weight:700; border-top:1px solid #F3DDB0; }
+    .pkc-n { padding:8px 12px; background:#F6F8F6; color:#3E4C45; font-size:13px; font-weight:600; border-top:1px solid #EEF2EF; }
+    .sum-lines { margin-top:12px; font-size:13px; font-weight:600; color:var(--muted); }
+    .sum-lines div { display:flex; justify-content:space-between; padding:3px 2px; }
+    .sum-lines .disc { color:#17804F; font-weight:800; }
+    .it-note { display:block; margin-top:3px; font-size:12px; font-weight:700; color:var(--gold-ink); }
+
+    /* ===== print ===== */
+    .sh-print { width:38px; height:38px; border-radius:12px; background:var(--gold); color:#3b2200; border:0; font-size:15px; flex-shrink:0; box-shadow:0 4px 10px rgba(240,160,51,.4); }
+    .pv-back { position:fixed; inset:0; background:rgba(8,20,16,.7); backdrop-filter:blur(3px); z-index:1300; display:none; align-items:flex-end; justify-content:center; }
+    .pv-back.show { display:flex; }
+    .pv { width:100%; max-width:520px; max-height:94vh; background:var(--bg); border-radius:26px 26px 0 0; display:flex; flex-direction:column; overflow:hidden; }
+    @media (min-width:700px) { .pv-back { align-items:center; } .pv { border-radius:26px; max-height:90vh; } }
+    .pv-h { display:flex; align-items:center; gap:10px; padding:16px 18px 8px; font-weight:800; font-size:17px; color:var(--brand-d); }
+    .pv-h button { margin-left:auto; width:36px; height:36px; border-radius:12px; background:#fff; border:1px solid var(--line); }
+    .pv-body { overflow:auto; padding:6px 18px 12px; flex:1; min-height:0; }
+    .pv-paper { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; display:flex; justify-content:center; box-shadow:inset 0 0 0 6px #F3F5F2; }
+    .pv-paper canvas { max-width:100%; height:auto; image-rendering:auto; }
+    .pv-opt { display:flex; align-items:center; gap:10px; margin:12px 0 0; font-size:13px; font-weight:700; color:var(--muted); }
+    .pv-seg { display:inline-grid; grid-template-columns:1fr 1fr; background:#EDF2EE; border-radius:12px; padding:3px; gap:3px; }
+    .pv-seg button { padding:8px 14px; border-radius:10px; background:transparent; font-weight:800; font-size:13px; color:var(--muted); }
+    .pv-seg button.on { background:#fff; color:var(--brand-d); box-shadow:0 1px 4px rgba(24,35,31,.18); }
+    .pv-foot { padding:12px 18px calc(14px + env(safe-area-inset-bottom)); background:#fff; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:8px; }
+    .pv-go { min-height:54px; border-radius:16px; color:#fff; font-weight:800; font-size:16px; display:flex; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,#0D5C49,#083D31); box-shadow:0 10px 20px -10px rgba(8,61,49,.7); }
+    .pv-go:disabled { opacity:.6; }
+    .pv-row { display:flex; gap:8px; }
+    .pv-alt { flex:1; min-height:46px; border-radius:14px; border:1px solid var(--line); background:#fff; font-weight:800; font-size:13px; color:var(--ink); display:flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; }
+    .pv-msg { font-size:12.5px; font-weight:700; text-align:center; min-height:18px; color:var(--muted); }
+    .pv-msg.err { color:#B3261E; } .pv-msg.ok { color:#17804F; }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
+    </div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+
+    <!-- Sticky: header + filters + tabs -->
+    <div class="o-top">
+      <div class="o-top-inner">
+        <div class="o-bar">
+          <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+          <div class="o-title">
+            <h1>Orders</h1>
+            <small id="subTitle">အော်ဒါများ</small>
+          </div>
+          <button class="ibtn" id="filterBtn" onclick="toggleFilters()" aria-label="ရှာဖွေရန်" type="button"><i class="fa-solid fa-magnifying-glass"></i><span class="dot"></span></button>
+          <button class="ibtn" id="soundBtn" onclick="toggleSoundBtn()" aria-label="အသံ" type="button"><i class="fa-solid fa-bell"></i></button>
+          <button class="ibtn" id="refreshBtn" onclick="manualRefresh()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+        </div>
+
+        <div class="o-filters" id="filters">
+          <label class="f-search"><i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" oninput="applyFilters()" placeholder="Voucher / အမည် / ဖုန်း">
+          </label>
+          <input type="date" class="f-date" id="filterDate" onchange="applyFilters()" aria-label="ရက်စွဲ">
+          <button class="f-clear" type="button" onclick="clearFilters()" aria-label="ရှင်းမည်"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="o-tabs" id="tabs">
+          <button class="t active" data-s="new" onclick="filterStatus('new')" type="button"><b id="cnt-new">0</b><span>အသစ်</span></button>
+          <button class="t" data-s="cooking" onclick="filterStatus('cooking')" type="button"><b id="cnt-cooking">0</b><span>ချက်နေ</span></button>
+          <button class="t" data-s="ready" onclick="filterStatus('ready')" type="button"><b id="cnt-ready">0</b><span>အဆင်သင့်</span></button>
+          <button class="t" data-s="done" onclick="filterStatus('done')" type="button"><b id="cnt-done">0</b><span>ပြီးစီး</span></button>
+          <button class="t" data-s="all" onclick="filterStatus('all')" type="button"><b id="cnt-all">0</b><span>အားလုံး</span></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="o-wrap">
+      <div id="ordersListContainer">
+        <div class="o-list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Detail sheet -->
+<div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Order အသေးစိတ်">
+  <div class="grab"></div>
+  <div class="sh-head" id="shHead"></div>
+  <div class="sh-body" id="shBody"></div>
+  <div class="sh-foot" id="shFoot"></div>
+</section>
+
+<!-- Print preview -->
+<div class="pv-back" id="pvBack" onclick="if(event.target===this)closePrint()">
+  <div class="pv" role="dialog" aria-modal="true" aria-label="ဘောက်ချာ ပရင့်">
+    <div class="pv-h"><i class="fa-solid fa-print"></i> ဘောက်ချာ ပရင့်<button type="button" onclick="closePrint()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="pv-body">
+      <div class="pv-paper"><canvas id="pvCanvas"></canvas></div>
+      <div class="pv-opt">စက္ကူအကျယ်
+        <div class="pv-seg"><button type="button" id="pw58" onclick="setPaper(58)">58mm</button><button type="button" id="pw80" onclick="setPaper(80)">80mm</button></div>
+      </div>
+    </div>
+    <div class="pv-foot">
+      <div class="pv-msg" id="pvMsg"></div>
+      <button class="pv-go" id="pvGo" type="button" onclick="printBluetooth()"><i class="fa-brands fa-bluetooth-b"></i> Bluetooth ပရင်တာဖြင့် ထုတ်မည်</button>
+      <div class="pv-row">
+        <a class="pv-alt" id="pvRaw" href="#" onclick="return printRawBT(event)"><i class="fa-solid fa-mobile-screen"></i> RawBT ဖြင့်</a>
+        <button class="pv-alt" type="button" onclick="savePrintImg()"><i class="fa-solid fa-image"></i> ပုံသိမ်းမည်</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+
+<script>
+  /* =====================================================================
+     State
+  ===================================================================== */
+  let rawOrders = [];
+  let currentStatus = "new";
+  let selectedId = null;
+  let confirmCancel = false;
+  let busy = false;
+  let lastMaxId = 0;
+  let historyPushed = false;
+  let searchingNow = false;
+
+  const STATUS_LABEL = { new: "အသစ်", cooking: "ချက်နေသည်", ready: "အဆင်သင့်", completed: "ပြီးစီး", cancelled: "ပယ်ဖျက်" };
+  const STATUS_ICON  = { new: "fa-bell", cooking: "fa-fire", ready: "fa-bag-shopping", completed: "fa-circle-check", cancelled: "fa-ban" };
+  const STATUS_COLOR = { new: "#2563eb", cooking: "#ea580c", ready: "#16a34a", completed: "#64748b", cancelled: "#dc2626" };
+  const DONE_MSG = { Processing: "လက်ခံပြီးပါပြီ ✅", Ready: "အဆင်သင့် ဖြစ်ပါပြီ ✅", Completed: "ပြီးစီးပါပြီ ✅", Cancelled: "ပယ်ဖျက်ပြီးပါပြီ" };
+
+  /* =====================================================================
+     Helpers
+  ===================================================================== */
+  function esc(v) {
+    return String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function toNum(v) {
+    const n = Number(String(v ?? 0).replace(/[^\d.\-]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  function fmtMoney(n) { return typeof money === "function" ? money(n) : Number(n).toLocaleString() + " Ks"; }
+
+  function parseItems(o) {
+    let raw = o.items_json ?? o.items ?? o.order_items ?? o.cart ?? [];
+    if (typeof raw === "string") { try { raw = JSON.parse(raw); } catch (_) { raw = []; } }
+    if (raw && !Array.isArray(raw)) raw = Array.isArray(raw.items) ? raw.items : (typeof raw === "object" ? Object.values(raw) : []);
+    return Array.isArray(raw) ? raw : [];
+  }
+  const iName  = i => i.name ?? i.title ?? i.product_name ?? i.item_name ?? "Unknown Item";
+  const iPrice = i => toNum(i.price ?? i.unit_price ?? i.unitPrice ?? i.item_price ?? i.amount ?? i.cost ?? 0);
+  const iQty   = i => toNum(i.qty ?? i.quantity ?? i.count ?? 1) || 1;
+  const iLine  = i => { const t = toNum(i.total); return t > 0 ? t : iPrice(i) * iQty(i); };
+
+  const custName = o => o.customer_name ?? o.customerName ?? o.name ?? "Guest";
+  const custPhone = o => o.phone ?? o.customer_phone ?? "";
+
+  function orderTotal(o, items) {
+    let t = toNum(o.total ?? o.grand_total ?? o.total_amount ?? 0);
+    if (!t && items.length && !(toNum(o.discount) > 0)) t = items.reduce((s, i) => s + iLine(i), 0);
+    return t;
+  }
+
+  function statusOf(o) {
+    const v = String(o.status || "new").trim().toLowerCase();
+    if (v === "pending" || v === "new") return "new";
+    if (v === "processing" || v === "cooking") return "cooking";
+    if (v === "canceled" || v === "cancelled") return "cancelled";
+    return STATUS_LABEL[v] ? v : "new";
+  }
+
+  function voucherOf(o) {
+    const v = String(o.voucher_code || "").trim().replace(/^#+/, "");
+    return "#" + (v || o.id || "N/A");
+  }
+
+  function telHref(p) {
+    const d = String(p || "").replace(/[\s\-()]/g, "");
+    return /^(\+?95|0)\d{6,}$/.test(d) ? "tel:" + d : "";
+  }
+
+  function createdMs(o) {
+    const v = o.created_at ?? o.createdAt ?? "";
+    if (!v) return NaN;
+    const s = String(v);
+    return new Date(/[zZ]$|[+-]\d\d:?\d\d$/.test(s) ? s : s.replace(" ", "T") + "Z").getTime();
+  }
+
+  function orderDateMMT(o) {
+    const t = createdMs(o);
+    if (isNaN(t)) return "";
+    return new Date(t + 390 * 60000).toISOString().split("T")[0];
+  }
+
+  function ago(o) {
+    const t = createdMs(o);
+    if (isNaN(t)) return { text: "", mins: 0 };
+    const mins = Math.max(0, Math.floor((Date.now() - t) / 60000));
+    let text;
+    if (mins < 1) text = "ယခုလေးတင်";
+    else if (mins < 60) text = mins + " မိနစ်က";
+    else if (mins < 1440) text = Math.floor(mins / 60) + " နာရီက";
+    else text = typeof fmtDate === "function" ? fmtDate(o.created_at) : String(o.created_at);
+    return { text, mins };
+  }
+
+  function pickupText(o) {
+    return [String(o.pickup_date || "").trim(), String(o.pickup_time || "").trim()].filter(Boolean).join(" ");
+  }
+
+  function payClass(p) { return p === "Paid" ? "p-paid" : p === "Failed" ? "p-failed" : "p-pending"; }
+
+  /* =====================================================================
+     Load
+  ===================================================================== */
+  async function loadOrders(silent) {
+    const box = document.getElementById("ordersListContainer");
+    try {
+      const res = await apiFetch("/api/admin/orders?pageSize=50");
+      rawOrders = Array.isArray(res) ? res : ((res && res.orders) || []);
+
+      // id ပိုကြီးသော "အသစ်" အော်ဒါ ရှိလာလျှင် (တစ်ခုလက်ခံပြီး တစ်ခုဝင်လာတာမျိုးကိုပါ မလွတ်စေရန်)
+      const maxId = Math.max(0, ...rawOrders.map(o => Number(o.id) || 0));
+      const arrived = rawOrders.some(o => Number(o.id) > lastMaxId && statusOf(o) === "new");
+      if (silent === true && lastMaxId > 0 && arrived) {
+        showToast("🔔 အော်ဒါအသစ် ရောက်ရှိလာပါသည်");
+        playBeep();
+        try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch (_) {}
+      }
+      lastMaxId = Math.max(lastMaxId, maxId);
+      setTitleBadge(rawOrders.filter(o => statusOf(o) === "new").length, "Orders • YNS Kitchen");
+      refresh();
+    } catch (err) {
+      console.error("Load orders error:", err);
+      if (silent === true) return;
+      box.innerHTML = `<div class="o-error"><div class="ico"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <b>အော်ဒါ ဒေတာ ရယူ၍ မရပါ</b><small>${esc(err && err.message || "")}</small><br>
+        <button class="lnk" type="button" onclick="loadOrders()">ပြန်ကြိုးစားမည်</button> ·
+        <button class="lnk" type="button" onclick="changeAdminKey()">Admin Key ပြန်ထည့်ရန်</button></div>`;
+    }
+  }
+
+  function syncSoundBtn() {
+    const b = document.getElementById("soundBtn");
+    if (b) b.innerHTML = `<i class="fa-solid ${soundOn() ? "fa-bell" : "fa-bell-slash"}"></i>`;
+  }
+  function toggleSoundBtn() {
+    setSound(!soundOn());
+    syncSoundBtn();
+    if (soundOn()) { playBeep(); showToast("အော်ဒါအသစ်ဝင်လာလျှင် အသံမြည်ပါမည် 🔔"); }
+    else showToast("အသံ ပိတ်ထားသည်");
+  }
+
+  async function manualRefresh() {
+    const b = document.getElementById("refreshBtn");
+    b.classList.add("spin");
+    await loadOrders();
+    setTimeout(() => b.classList.remove("spin"), 300);
+  }
+
+  function refresh() {
+    applyFilters();
+    if (selectedId !== null) renderSheet();
+  }
+
+  /* =====================================================================
+     Filters / tabs
+  ===================================================================== */
+  function toggleFilters() {
+    const f = document.getElementById("filters");
+    const on = f.classList.toggle("show");
+    document.getElementById("filterBtn").classList.toggle("on", on);
+    if (on) document.getElementById("searchInput").focus();
+  }
+  function clearFilters() {
+    document.getElementById("searchInput").value = "";
+    document.getElementById("filterDate").value = "";
+    applyFilters();
+  }
+  function filterStatus(s) { currentStatus = s; applyFilters(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+  function updateTabs() {
+    const c = { new: 0, cooking: 0, ready: 0, done: 0, all: rawOrders.length };
+    rawOrders.forEach(o => {
+      const s = statusOf(o);
+      if (s === "completed" || s === "cancelled") c.done++; else c[s]++;
+    });
+    for (const k in c) document.getElementById("cnt-" + k).textContent = c[k];
+    document.querySelectorAll(".t").forEach(b => {
+      b.classList.toggle("active", b.dataset.s === currentStatus);
+      b.classList.toggle("alert", b.dataset.s === "new" && c.new > 0);
+    });
+    document.getElementById("subTitle").textContent =
+      c.new ? `အသစ် ${c.new} ခု စောင့်နေသည်` : "အော်ဒါအသစ် မရှိပါ";
+  }
+
+  function applyFilters() {
+    const q = document.getElementById("searchInput").value.toLowerCase().trim();
+    const d = document.getElementById("filterDate").value;
+    searchingNow = !!(q || d);
+    document.getElementById("filterBtn").classList.toggle("has-filter", searchingNow);
+    updateTabs();
+
+    const list = rawOrders.filter(o => {
+      const s = statusOf(o);
+      if (!q && currentStatus !== "all") {
+        if (currentStatus === "done") { if (s !== "completed" && s !== "cancelled") return false; }
+        else if (s !== currentStatus) return false;
+      }
+      if (q) {
+        const hay = (String(o.voucher_code || "") + " " + custName(o) + " " + custPhone(o)).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (d && orderDateMMT(o) !== d) return false;
+      return true;
+    });
+    renderList(list, !!(q || d));
+  }
+
+  /* =====================================================================
+     List (compact rows)
+  ===================================================================== */
+  function previewHtml(items) {
+    if (!items.length) return "<em>ပစ္စည်းစာရင်း မသိမ်းထားပါ</em>";
+    const shown = items.slice(0, 3).map(i => `${esc(iName(i))} ×${iQty(i)}`).join(" · ");
+    return shown + (items.length > 3 ? ` · +${items.length - 3}` : "");
+  }
+
+  function rowHtml(o, idx) {
+    const items = parseItems(o);
+    const s = statusOf(o);
+    const pay = o.payment_status || "Pending";
+    const a = ago(o);
+    const urgent = s === "new" && a.mins >= 5;
+    const pk = pickupText(o);
+    const showStatus = currentStatus === "all" || currentStatus === "done" || searchingNow;
+    return `
+      <button class="row s-${s}" type="button" onclick="openOrder(${Number(o.id)})" style="animation-delay:${Math.min(idx, 8) * 35}ms">
+        <div class="r-main">
+          <div class="r-l1"><span class="r-name">${esc(custName(o))}</span><span class="r-v">${esc(voucherOf(o))}</span><span class="r-total">${fmtMoney(orderTotal(o, items))}</span></div>
+          <div class="r-items">${previewHtml(items)}</div>
+          <div class="r-l3">
+            ${showStatus ? `<span class="pill p-${s}"><i class="fa-solid ${STATUS_ICON[s]}"></i>${STATUS_LABEL[s]}</span>` : ""}
+            ${parsePacks(o).length ? `<span class="pill p-pack"><i class="fa-solid fa-boxes-packing"></i>ထုပ်ခွဲ ${parsePacks(o).length}</span>` : ""}
+            ${String(o.customer_note || "").trim() ? `<span class="pill p-note"><i class="fa-regular fa-note-sticky"></i>မှတ်ချက်</span>` : ""}
+            ${toNum(o.discount) > 0 ? `<span class="pill p-disc" style="background:#FFF1D6;color:#8A4B00;font-weight:800;"><i class="fa-solid fa-tag"></i>လျှော့ဈေးပါ -${fmtMoney(toNum(o.discount))}</span>` : ""}
+            ${pk ? `<span class="pill p-pickup"><i class="fa-regular fa-clock"></i>${esc(pk)}</span>` : ""}
+            <span class="pill ${payClass(pay)}">${esc(pay)}</span>
+            <span class="r-ago ${urgent ? "urgent" : ""}">${urgent ? "⏱ " : ""}${esc(a.text)}</span>
+          </div>
+        </div>
+        <i class="fa-solid fa-chevron-right r-go"></i>
+      </button>`;
+  }
+
+  function renderList(list, searching) {
+    const box = document.getElementById("ordersListContainer");
+    if (!list.length) {
+      const msg = searching ? "ရှာဖွေမှုနှင့် ကိုက်ညီသော အော်ဒါ မရှိပါ" : "ဤအမျိုးအစားတွင် အော်ဒါ မရှိသေးပါ";
+      box.innerHTML = `<div class="o-empty"><div class="ico"><i class="fa-regular fa-folder-open"></i></div><b>${msg}</b><small>အော်ဒါအသစ်ဝင်လာပါက ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်</small></div>`;
+      return;
+    }
+    const note = searching ? `<div class="o-note">ရှာဖွေမှုရလဒ် ${list.length} ခု (အားလုံးထဲမှ)</div>` : "";
+    box.innerHTML = note + `<div class="o-list">${list.map(rowHtml).join("")}</div>`;
+  }
+
+  /* =====================================================================
+     Detail sheet
+  ===================================================================== */
+  function findOrder(id) { return rawOrders.find(o => Number(o.id) === Number(id)); }
+
+  function openOrder(id) {
+    selectedId = Number(id);
+    confirmCancel = false;
+    renderSheet();
+    document.getElementById("backdrop").classList.add("show");
+    document.getElementById("sheet").classList.add("show");
+    document.body.style.overflow = "hidden";
+    document.getElementById("shBody").scrollTop = 0;
+    try { history.pushState({ sheet: 1 }, ""); historyPushed = true; } catch (_) {}
+  }
+
+  function closeSheet(fromPop) {
+    if (selectedId === null) return;
+    selectedId = null;
+    confirmCancel = false;
+    document.getElementById("backdrop").classList.remove("show");
+    document.getElementById("sheet").classList.remove("show");
+    document.body.style.overflow = "";
+    if (!fromPop && historyPushed) { historyPushed = false; try { history.back(); } catch (_) {} }
+    historyPushed = fromPop ? false : historyPushed;
+  }
+
+  window.addEventListener("popstate", () => { if (selectedId !== null) { historyPushed = false; closeSheet(true); } });
+  window.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+
+  function stepperHtml(s) {
+    if (s === "cancelled") {
+      return `<div class="cancel-banner"><i class="fa-solid fa-ban"></i> ဤအော်ဒါကို ပယ်ဖျက်ထားသည်</div>`;
+    }
+    const keys = ["new", "cooking", "ready", "completed"];
+    const idx = keys.indexOf(s);
+    return `<div class="steps">${keys.map((k, i) => {
+      const cls = i < idx ? "done" : i === idx ? "cur" : "";
+      const inner = i < idx ? '<i class="fa-solid fa-check"></i>' : `<i class="fa-solid ${STATUS_ICON[k]}"></i>`;
+      return `<div class="step ${cls}" style="--sc:${STATUS_COLOR[k]}"><div class="dotc">${inner}</div><span>${STATUS_LABEL[k]}</span></div>`;
+    }).join("")}</div>`;
+  }
+
+  function parsePacks(o) {
+    let raw = o.packs_json || o.packs || [];
+    if (typeof raw === "string") { try { raw = JSON.parse(raw); } catch (_) { raw = []; } }
+    return Array.isArray(raw) ? raw : [];
+  }
+  const SAUCE_LBL = { with: "🥣 အချဉ်ရည် ပါမည် (တစ်ခါတည်းစမ်း)", separate: "🥣 အချဉ်ရည် သက်သက်ထုပ်" };
+  function packsCardHtml(o) {
+    const packs = parsePacks(o); if (!packs.length) return "";
+    return `<div class="card"><div class="card-h"><span><i class="fa-solid fa-boxes-packing"></i>ထုပ်ခွဲပေးရန်</span><span class="sub">${packs.length} ထုပ်</span></div>` +
+      packs.map((p, i) => {
+        const its = Array.isArray(p.items) ? p.items : [];
+        const cnt = its.reduce((s, x) => s + (Number(x.qty) || 0), 0);
+        return `<div class="pkc"><div class="pkc-h"><i>${esc(p.no || i + 1)}</i>ထုပ် ${esc(p.no || i + 1)}<span>${cnt} ခု</span></div>` +
+          its.map(x => `<div class="pkc-r">${esc(x.name)}<b>× ${esc(x.qty)}</b></div>`).join("") +
+          (SAUCE_LBL[p.sauce] ? `<div class="pkc-s">${SAUCE_LBL[p.sauce]}</div>` : "") +
+          (p.note ? `<div class="pkc-n">📝 ${esc(p.note)}</div>` : "") + `</div>`;
+      }).join("") + `</div>`;
+  }
+  function noteCardHtml(o) {
+    const n = String(o.customer_note || "").trim(); if (!n) return "";
+    return `<div class="sh-note"><div class="h">📝 ဝယ်သူ၏ မှတ်ချက်</div><p>${esc(n)}</p></div>`;
+  }
+
+  function itemsCardHtml(items, total, pay, o) {
+    const qty = items.reduce((s, i) => s + iQty(i), 0);
+    const list = items.length
+      ? `<ul class="items">${items.map(i => {
+          const p = iPrice(i), l = iLine(i);
+          return `<li><span class="q">×${iQty(i)}</span><div class="n">${esc(iName(i))}${i.note ? `<span class="it-note">📝 ${esc(i.note)}</span>` : ""}${p > 0 ? `<small>${fmtMoney(p)} / ခု</small>` : ""}</div><span class="lt">${l > 0 ? fmtMoney(l) : "-"}</span></li>`;
+        }).join("")}</ul>`
+      : `<div class="no-items"><i class="fa-regular fa-circle-question"></i> ပစ္စည်းစာရင်း မသိမ်းထားပါ<br>(အော်ဒါဟောင်း ဖြစ်နိုင်သည် — Telegram မက်ဆေ့ချ်တွင် ကြည့်ပါ)</div>`;
+    return `<div class="card">
+        <div class="card-h"><span><i class="fa-solid fa-bag-shopping"></i>မှာယူထားသည့် ပစ္စည်းများ</span><span class="sub">${items.length ? `${items.length} မျိုး · ${qty} ခု` : ""}</span></div>
+        ${list}
+        ${(() => { const d = toNum(o && o.discount); if (!(d > 0)) return ""; return `<div style="margin:12px 0 0;background:#FFF1D6;border:1.5px solid #F0A033;border-radius:14px;padding:11px 14px;color:#6B3A00;font-weight:700;font-size:13px;line-height:1.6;">⚠️ <b>လျှော့ဈေးပါသော အော်ဒါ</b> (${esc(o.promo_code || "လျှော့ဈေး")} -${fmtMoney(d)})<br>ဝယ်သူဆီက <b style="font-size:17px;">${fmtMoney(total)}</b> သာ ယူပါ${total === 0 ? " (အခမဲ့ 🎁)" : ""}</div>`; })()}
+        ${(() => { const d = toNum(o && o.discount); if (!(d > 0)) return ""; const sub = items.reduce((x, i) => x + iLine(i), 0) || (total + d); return `<div class="sum-lines"><div><span>ပစ္စည်းစုစုပေါင်း</span><span>${fmtMoney(sub)}</span></div><div class="disc"><span>🎟 ${esc(o.promo_code || "လျှော့ဈေး")}</span><span>-${fmtMoney(d)}</span></div></div>`; })()}
+        <div class="sum"><div class="l">${toNum(o && o.discount) > 0 ? "ဝယ်သူပေးရန်" : "စုစုပေါင်း"} <span class="pill ${payClass(pay)}">${esc(pay)}</span></div><b>${fmtMoney(total)}</b></div>
+      </div>`;
+  }
+
+  function copyText(t) {
+    try { navigator.clipboard.writeText(t); showToast("ကူးယူပြီးပါပြီ"); } catch (_) {}
+  }
+
+  function renderSheet() {
+    const o = findOrder(selectedId);
+    if (!o) { closeSheet(); return; }
+
+    const items = parseItems(o);
+    const s = statusOf(o);
+    const pay = o.payment_status || "Pending";
+    const total = orderTotal(o, items);
+    const a = ago(o);
+    const phone = custPhone(o);
+    const href = telHref(phone);
+    const pd = String(o.pickup_date || "").trim(), pt = String(o.pickup_time || "").trim();
+    const when = typeof fmtDate === "function" ? fmtDate(o.created_at) : (o.created_at || "");
+
+    document.getElementById("shHead").innerHTML = `
+      <div class="sh-id"><b>${esc(voucherOf(o))}</b><small>${esc(a.text)}${when ? " · " + esc(when) : ""}</small></div>
+      <span class="pill p-${s}" style="font-size:12px;padding:4px 12px;"><i class="fa-solid ${STATUS_ICON[s]}"></i>${STATUS_LABEL[s]}</span>
+      <button class="sh-print" type="button" onclick="openPrint(${Number(o.id)})" aria-label="ဘောက်ချာ ပရင့်"><i class="fa-solid fa-print"></i></button>
+      <button class="sh-x" type="button" onclick="closeSheet()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button>`;
+
+    const initial = esc(String(custName(o)).trim().charAt(0).toUpperCase() || "?");
+    const contactBtn = !phone ? "" : href
+      ? `<a class="call" href="${esc(href)}" aria-label="ဖုန်းခေါ်မည်"><i class="fa-solid fa-phone"></i></a>`
+      : `<button class="call copy" type="button" onclick="copyText(${esc(JSON.stringify(String(phone)))})" aria-label="ကူးယူမည်"><i class="fa-regular fa-copy"></i></button>`;
+
+    const pickupGrid = (pd || pt) ? `
+        <div class="info-grid">
+          <div><div class="k">ယူမည့်ရက်</div><div class="v warn">${esc(pd || "-")}</div></div>
+          <div><div class="k">ယူမည့်အချိန်</div><div class="v warn">${esc(pt || "-")}</div></div>
+        </div>` : "";
+
+    document.getElementById("shBody").innerHTML = `
+      <div class="card">${stepperHtml(s)}</div>
+      <div class="card">
+        <div class="cust">
+          <div class="avatar">${initial}</div>
+          <div class="cust-i"><b>${esc(custName(o))}</b><small>${esc(phone || "ဖုန်း မရှိပါ")}</small></div>
+          ${contactBtn}
+        </div>
+        ${pickupGrid}
+      </div>
+      ${noteCardHtml(o)}
+      ${packsCardHtml(o)}
+      ${itemsCardHtml(items, total, pay, o)}`;
+
+    document.getElementById("shFoot").innerHTML = footHtml(o, s, pay);
+  }
+
+
+  /* =====================================================================
+     Bluetooth thermal printer (ESC/POS raster — မြန်မာစာကို ပုံအဖြစ် ပရင့်)
+  ===================================================================== */
+  let printId = null, paperMM = 58, btChar = null, btDev = null;
+  try { paperMM = Number(localStorage.getItem("yns_paper")) === 80 ? 80 : 58; } catch (_) {}
+  const PAPER_DOTS = { 58: 384, 80: 576 };
+
+  function maskPhone(p) {
+    const d = String(p || "").replace(/\s/g, "");
+    return d.length >= 7 ? d.slice(0, 3) + "****" + d.slice(-3) : d;
+  }
+
+  async function drawReceipt(o) {
+    try { await document.fonts.load('bold 20px "Noto Sans Myanmar"', "မြင်သာကြက်ကင်"); } catch (_) {}
+    const W = PAPER_DOTS[paperMM], PAD = 12, FS = paperMM === 80 ? 24 : 22, LH = Math.round(FS * 1.55);
+    const FONT = '"Noto Sans Myanmar","Plus Jakarta Sans",sans-serif';
+    const mc = document.createElement("canvas").getContext("2d");
+    const seg = t => { try { return Array.from(new Intl.Segmenter("my", { granularity: "grapheme" }).segment(t), x => x.segment); } catch (_) { return Array.from(t); } };
+    const wrap = (txt, font, maxW) => {
+      mc.font = font; const out = [];
+      for (const para of String(txt).split(/\n/)) {
+        let line = "";
+        for (const w of para.split(" ")) {
+          const t = line ? line + " " + w : w;
+          if (mc.measureText(t).width <= maxW) { line = t; continue; }
+          if (line) { out.push(line); line = ""; }
+          if (mc.measureText(w).width <= maxW) { line = w; continue; }
+          for (const g of seg(w)) { if (mc.measureText(line + g).width > maxW && line) { out.push(line); line = g; } else line += g; }
+        }
+        out.push(line);
+      }
+      return out;
+    };
+    // ---- content ops ----
+    const ops = [];
+    const NOEMO = x => String(x).replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\uFE0F]/gu, "").replace(/^\s+(?=\S)/, m => m).trim() === "" ? "" : String(x).replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27BF}\uFE0F]/gu, "").replace(/(^|\s)\s+/g, "$1 ").trimEnd();
+    const T = (text, o2 = {}) => ops.push({ k: "t", text: NOEMO(text).trim(), ...o2 });
+    const LR = (l, r, o2 = {}) => ops.push({ k: "lr", l: NOEMO(l), r: NOEMO(r), ...o2 });
+    const HR = (dash = true) => ops.push({ k: "hr", dash });
+    const GAP = h => ops.push({ k: "gap", h });
+
+    const items = parseItems(o), packs = parsePacks(o), s = statusOf(o), pay = o.payment_status || "Pending";
+    const items_total = items.reduce((x, i) => x + iLine(i), 0), total = orderTotal(o, items), disc = toNum(o.discount);
+    const when = (typeof fmtDate === "function" ? fmtDate(o.created_at) : (o.created_at || ""));
+    const pd = String(o.pickup_date || "").trim(), pt = String(o.pickup_time || "").trim();
+
+    T(((typeof curShopName === "function" && curShopName()) || "မြင်သာကြက်ကင်"), { size: FS + 8, bold: 1, c: 1 });
+    GAP(6); HR();
+    T("Voucher", { size: FS - 4, c: 1 });
+    T(voucherOf(o), { size: FS + 14, bold: 1, c: 1, num: 1 });
+    GAP(2); HR();
+    LR("ဝယ်သူ", custName(o), { bold: 1 });
+    if (custPhone(o)) LR("ဖုန်း", maskPhone(custPhone(o)));
+    if (when) LR("မှာချိန်", when);
+    if (pd || pt) LR("လာယူရန်", [pd, pt].filter(Boolean).join(" "), { bold: 1 });
+    HR();
+    items.forEach(i => {
+      LR(`${iName(i)}`, `×${iQty(i)}`, { bold: 1 });
+      if (i.note) T("  📝 " + i.note, { size: FS - 3 });
+      const l = iLine(i); if (l > 0) T(fmtMoney(l), { size: FS - 3, r: 1 });
+    });
+    if (packs.length) {
+      HR(); T("📦 ထုပ်ခွဲပေးရန်", { bold: 1 });
+      packs.forEach((p, n) => {
+        T(`── ထုပ် ${p.no || n + 1} ──`, { bold: 1, c: 1, size: FS - 1 });
+        (p.items || []).forEach(x => LR(`  ${x.name}`, `×${x.qty}`));
+        if (SAUCE_LBL[p.sauce]) T("  " + SAUCE_LBL[p.sauce].replace("🥣 ", "• "), { size: FS - 3 });
+        if (p.note) T("  📝 " + p.note, { size: FS - 3 });
+      });
+    }
+    const note = String(o.customer_note || "").trim();
+    if (note) { HR(); T("📝 မှတ်ချက်", { bold: 1 }); T(note, { size: FS - 1 }); }
+    HR(false);
+    if (disc > 0) { LR("ပစ္စည်းစုစုပေါင်း", fmtMoney(items_total || total + disc)); LR("🎟 " + (o.promo_code || "လျှော့ဈေး"), "-" + fmtMoney(disc)); }
+    LR("စုစုပေါင်း", fmtMoney(total), { bold: 1, size: FS + 6, num: 1 });
+    GAP(4);
+    T(pay === "Paid" ? "✔ ငွေရှင်းပြီး" : "ငွေမရှင်းရသေးပါ", { bold: 1, c: 1, size: FS + 2, box: 1 });
+    GAP(8); HR();
+    T("ဤဘောက်ချာကို ပြသမှသာ ပစ္စည်းထုတ်ပေးပါမည်", { c: 1, size: FS - 3 });
+    T("ကျေးဇူးတင်ပါသည် 🙏", { c: 1, size: FS - 2 });
+    GAP(10);
+
+    // ---- measure ----
+    const fontOf = o2 => `${o2.bold ? "bold " : ""}${o2.size || FS}px ${FONT}`;
+    const lay = [];
+    let H = 10;
+    for (const op of ops) {
+      if (op.k === "gap") { lay.push({ ...op, y: H }); H += op.h; }
+      else if (op.k === "hr") { lay.push({ ...op, y: H + 6 }); H += 14; }
+      else if (op.k === "t") {
+        const f = fontOf(op), lines = wrap(op.text, f, W - PAD * 2), lh = Math.round((op.size || FS) * 1.5);
+        lay.push({ ...op, f, lines, lh, y: H }); H += lines.length * lh + (op.box ? 14 : 0);
+      } else {
+        const f = fontOf(op); mc.font = f;
+        const rw = Math.ceil(mc.measureText(op.r).width) + 10, lines = wrap(op.l, f, W - PAD * 2 - rw), lh = Math.round((op.size || FS) * 1.5);
+        lay.push({ ...op, f, lines, lh, rw, y: H }); H += lines.length * lh;
+      }
+    }
+    H += 10;
+    const cv = document.getElementById("pvCanvas"); cv.width = W; cv.height = H;
+    const c = cv.getContext("2d"); c.fillStyle = "#fff"; c.fillRect(0, 0, W, H); c.fillStyle = "#000"; c.textBaseline = "alphabetic";
+    for (const L of lay) {
+      if (L.k === "hr") {
+        c.lineWidth = 2; c.strokeStyle = "#000"; c.setLineDash(L.dash ? [6, 5] : []); c.beginPath(); c.moveTo(PAD, L.y); c.lineTo(W - PAD, L.y); c.stroke(); c.setLineDash([]);
+      } else if (L.k === "t") {
+        c.font = L.f; let y = L.y;
+        if (L.box) { c.lineWidth = 3; c.strokeRect(PAD + 4, y + 2, W - PAD * 2 - 8, L.lines.length * L.lh + 8); y += 6; }
+        L.lines.forEach((ln, i) => {
+          c.textAlign = L.c ? "center" : L.r ? "right" : "left";
+          const x = L.c ? W / 2 : L.r ? W - PAD : PAD;
+          c.fillText(ln, x, y + (i + 1) * L.lh - Math.round(L.lh * .22));
+        });
+      } else if (L.k === "lr") {
+        c.font = L.f;
+        L.lines.forEach((ln, i) => { c.textAlign = "left"; c.fillText(ln, PAD, L.y + (i + 1) * L.lh - Math.round(L.lh * .22)); });
+        c.textAlign = "right"; c.fillText(L.r, W - PAD, L.y + L.lh - Math.round(L.lh * .22));
+      }
+    }
+    // thermal: pure black / white
+    const img = c.getImageData(0, 0, W, H), d = img.data;
+    for (let i = 0; i < d.length; i += 4) { const v = (d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11) < 150 ? 0 : 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; }
+    c.putImageData(img, 0, 0);
+    return cv;
+  }
+
+  function escposBytes(cv) {
+    const W = cv.width, H = cv.height, bpr = Math.ceil(W / 8), px = cv.getContext("2d").getImageData(0, 0, W, H).data;
+    const out = [0x1B, 0x40];                              // ESC @
+    const BAND = 96;
+    for (let y0 = 0; y0 < H; y0 += BAND) {
+      const h = Math.min(BAND, H - y0);
+      out.push(0x1D, 0x76, 0x30, 0x00, bpr & 255, bpr >> 8, h & 255, h >> 8);   // GS v 0
+      for (let y = 0; y < h; y++) for (let bx = 0; bx < bpr; bx++) {
+        let b = 0;
+        for (let k = 0; k < 8; k++) { const x = bx * 8 + k; if (x < W && px[((y0 + y) * W + x) * 4] < 128) b |= 0x80 >> k; }
+        out.push(b);
+      }
+    }
+    out.push(0x1B, 0x64, 0x04);                            // feed 4 lines
+    out.push(0x1D, 0x56, 0x42, 0x00);                      // partial cut (မပါသည့်စက်တွင် ကျော်သွားမည်)
+    return new Uint8Array(out);
+  }
+
+  function pvMsg(t, cls) { const m = document.getElementById("pvMsg"); m.textContent = t || ""; m.className = "pv-msg " + (cls || ""); }
+
+  async function openPrint(id) {
+    printId = Number(id); const o = findOrder(printId); if (!o) return;
+    document.getElementById("pvBack").classList.add("show"); pvMsg("");
+    document.getElementById("pw58").classList.toggle("on", paperMM === 58); document.getElementById("pw80").classList.toggle("on", paperMM === 80);
+    const ok = !!(navigator.bluetooth);
+    document.getElementById("pvGo").style.display = ok ? "" : "none";
+    if (!ok) pvMsg("ဤ browser တွင် Bluetooth တိုက်ရိုက်မရပါ — Android Chrome သုံးပါ (သို့) RawBT နှိပ်ပါ", "err");
+    await drawReceipt(o);
+  }
+  function closePrint() { document.getElementById("pvBack").classList.remove("show"); }
+  async function setPaper(mm) {
+    paperMM = mm; try { localStorage.setItem("yns_paper", String(mm)); } catch (_) {}
+    document.getElementById("pw58").classList.toggle("on", mm === 58); document.getElementById("pw80").classList.toggle("on", mm === 80);
+    const o = findOrder(printId); if (o) await drawReceipt(o);
+  }
+
+  async function btConnect() {
+    if (btChar && btDev && btDev.gatt.connected) return btChar;
+    const OPT = ["000018f0-0000-1000-8000-00805f9b34fb", "0000ff00-0000-1000-8000-00805f9b34fb", "0000ffe0-0000-1000-8000-00805f9b34fb", "0000fee7-0000-1000-8000-00805f9b34fb",
+      "e7810a71-73ae-499d-8c15-faa9aef0c3f2", "49535343-fe7d-4ae5-8fa9-9fafd205e455", "0000ae30-0000-1000-8000-00805f9b34fb", "0000fff0-0000-1000-8000-00805f9b34fb"];
+    if (!btDev) btDev = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: OPT });
+    btDev.addEventListener("gattserverdisconnected", () => { btChar = null; });
+    const server = await btDev.gatt.connect();
+    const services = await server.getPrimaryServices();
+    for (const sv of services) {
+      const chars = await sv.getCharacteristics();
+      const w = chars.find(c => c.properties.writeWithoutResponse) || chars.find(c => c.properties.write);
+      if (w) { btChar = w; return w; }
+    }
+    throw new Error("ပရင်တာ၏ ရေးလို့ရသော channel ရှာမတွေ့ပါ");
+  }
+
+  async function printBluetooth() {
+    const o = findOrder(printId); if (!o) return;
+    const go = document.getElementById("pvGo"); go.disabled = true;
+    try {
+      pvMsg("ပရင်တာ ရွေးပါ / ချိတ်ဆက်နေသည်…");
+      const ch = await btConnect();
+      const bytes = escposBytes(await drawReceipt(o));
+      let size = 100, i = 0;
+      const noResp = !!ch.properties.writeWithoutResponse;
+      while (i < bytes.length) {
+        const part = bytes.slice(i, i + size);
+        try { noResp ? await ch.writeValueWithoutResponse(part) : await ch.writeValue(part); }
+        catch (e) { if (size > 20) { size = 20; continue; } throw e; }
+        i += size;
+        if (i % 2000 < size) { pvMsg(`ပရင့်နေသည်… ${Math.min(100, Math.round(i / bytes.length * 100))}%`); await new Promise(r => setTimeout(r, 8)); }
+      }
+      pvMsg("ပရင့်ပြီးပါပြီ ✅", "ok");
+    } catch (e) {
+      if (e && e.name === "NotFoundError") pvMsg("ပရင်တာ မရွေးထားပါ", "err");
+      else { btChar = null; pvMsg("မအောင်မြင်ပါ — " + (e && e.message || e) + " (ပရင်တာဖွင့်ထားမလား၊ Bluetooth ဖွင့်ထားမလား စစ်ပါ)", "err"); }
+    } finally { go.disabled = false; }
+  }
+
+  async function printRawBT(ev) {
+    ev.preventDefault();
+    const o = findOrder(printId); if (!o) return false;
+    const bytes = escposBytes(await drawReceipt(o));
+    let bin = ""; for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+    location.href = "intent:base64," + btoa(bin) + "#Intent;scheme=rawbt;package=ru.a402d.rawbtprinter;end;";
+    pvMsg("RawBT app ကို ဖွင့်နေသည် (မထည့်ရသေးလျှင် Play Store မှ RawBT ထည့်ပါ)");
+    return false;
+  }
+
+  function savePrintImg() {
+    const cv = document.getElementById("pvCanvas"), o = findOrder(printId);
+    const a = document.createElement("a"); a.download = "Voucher-" + String(voucherOf(o)).replace("#", "") + ".png"; a.href = cv.toDataURL("image/png"); a.click();
+  }
+  window.addEventListener("keydown", e => { if (e.key === "Escape") closePrint(); });
+
+  function footHtml(o, s, pay) {
+    const id = Number(o.id);
+    if (confirmCancel) {
+      return `<div class="confirm"><p>ဤအော်ဒါကို ပယ်ဖျက်မှာ သေချာပါသလား?</p>
+        <div class="act-row">
+          <button class="act-sec" type="button" onclick="confirmCancel=false;renderSheet()">မဟုတ်ပါ</button>
+          <button class="act-sec yes" type="button" onclick="setStatus(${id}, 'Cancelled')"><i class="fa-solid fa-ban"></i> ပယ်ဖျက်မည်</button>
+        </div></div>`;
+    }
+    let html = "";
+    if (s === "new")
+      html += `<button class="act-main act-new" type="button" onclick="setStatus(${id}, 'Processing')"><i class="fa-solid fa-fire"></i> လက်ခံမည် (ချက်မည်)</button>`;
+    else if (s === "cooking")
+      html += `<button class="act-main act-cooking" type="button" onclick="setStatus(${id}, 'Ready')"><i class="fa-solid fa-check"></i> အဆင်သင့် ဖြစ်ပြီ</button>`;
+    else if (s === "ready")
+      html += `<button class="act-main act-ready" type="button" onclick="setStatus(${id}, 'Completed')"><i class="fa-solid fa-circle-check"></i> ပေးအပ်ပြီး / ပြီးစီး</button>`;
+    else if (s === "completed")
+      html += `<div class="done-note"><i class="fa-solid fa-circle-check"></i> ဤအော်ဒါ ပြီးစီးပြီး ဖြစ်ပါသည်</div>`;
+
+    const sec = [];
+    if (s !== "cancelled") {
+      sec.push(pay !== "Paid"
+        ? `<button class="act-sec pay" type="button" onclick="setPay(${id}, 'Paid')"><i class="fa-solid fa-money-bill-wave"></i> ငွေရပြီ</button>`
+        : `<button class="act-sec undo" type="button" onclick="setPay(${id}, 'Pending')"><i class="fa-solid fa-rotate-left"></i> ငွေမရသေးသို့ ပြန်ပြောင်း</button>`);
+    }
+    if (s === "new" || s === "cooking" || s === "ready")
+      sec.push(`<button class="act-sec danger" type="button" onclick="confirmCancel=true;renderSheet()"><i class="fa-solid fa-xmark"></i> ပယ်ဖျက်</button>`);
+    if (sec.length) html += `<div class="act-row">${sec.join("")}</div>`;
+    return html || `<button class="act-sec" type="button" onclick="closeSheet()">ပိတ်မည်</button>`;
+  }
+
+  /* =====================================================================
+     Updates (optimistic — နှိပ်တာနဲ့ ချက်ချင်းပြောင်း၊ မအောင်မြင်လျှင် ပြန်ပြန်)
+  ===================================================================== */
+  async function patch(id, fields, apply, revert, okMsg, closeAfter) {
+    const o = findOrder(id);
+    if (!o || busy) return;
+    busy = true;
+    apply(o);
+    confirmCancel = false;
+    refresh();
+    try {
+      await apiFetch(`/api/admin/orders/${id}`, { method: "PATCH", body: JSON.stringify(fields) });
+      if (okMsg) showToast(okMsg);
+      if (closeAfter) closeSheet();
+    } catch (err) {
+      console.error(err);
+      revert(o);
+      refresh();
+    } finally {
+      busy = false;
+    }
+    loadOrders(true);
+  }
+
+  function setStatus(id, newStatus) {
+    const o = findOrder(id); if (!o) return;
+    const prev = o.status;
+    return patch(id, { status: newStatus }, x => { x.status = newStatus; }, x => { x.status = prev; },
+      DONE_MSG[newStatus], newStatus === "Completed" || newStatus === "Cancelled");
+  }
+
+  function setPay(id, newPay) {
+    const o = findOrder(id); if (!o) return;
+    const prev = o.payment_status;
+    return patch(id, { payment_status: newPay }, x => { x.payment_status = newPay; }, x => { x.payment_status = prev; },
+      newPay === "Paid" ? "ငွေရရှိပြီး မှတ်သားပါပြီ 💰" : "ပြန်ပြောင်းပြီးပါပြီ", false);
+  }
+
+  /* =====================================================================
+     Boot
+  ===================================================================== */
+  window.onload = async function () {
+    if (typeof renderAdminLayout === "function") renderAdminLayout("orders");
+    syncSoundBtn();
+
+    // Dashboard မှ လာသော link များ: orders.html#cooking (tab) သို့မဟုတ် orders.html#o12 (အော်ဒါတစ်ခု)
+    const h = (location.hash || "").replace("#", "");
+    if (["new", "cooking", "ready", "done", "all"].includes(h)) currentStatus = h;
+    const m = h.match(/^o(\d+)$/);
+    if (m) currentStatus = "all";
+
+    await loadOrders();
+    if (m && findOrder(m[1])) openOrder(m[1]);
+    // ၁၅ စက္ကန့်တစ်ခါ အော်ဒါအသစ် အလိုအလျောက် စစ်မည်
+    setInterval(() => { if (!document.hidden && !busy) loadOrders(true); }, 15000);
+    // "x မိနစ်က" စာသားများ ပြန်ပြင်ရန် (တစ်မိနစ်တစ်ခါ)
+    setInterval(() => { if (!document.hidden && rawOrders.length) refresh(); }, 60000);
+  };
+</script>
+
+</body>
+</html>

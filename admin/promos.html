@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Promos • YNS Kitchen</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    :root { --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18); }
+    html, body { overflow-x: hidden; }
+    body { line-height: 1.5; }
+    .main { padding: 0 14px 90px; min-width: 0; }
+    .p-wrap { max-width: 860px; margin: 0 auto; }
+    @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+
+    .p-top { position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px; background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+    @media (min-width: 769px) { .p-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+    .p-top-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+    .p-title { flex: 1; min-width: 0; }
+    .p-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+    .p-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+    .ibtn { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink); box-shadow: 0 1px 2px rgba(15,23,42,.05); }
+    .ibtn.add { width: auto; padding: 0 14px; background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 800; font-size: 13px; gap: 6px; display: inline-flex; align-items: center; }
+    .ibtn.spin i { animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .sec { margin: 16px 2px 8px; font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .3px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--card-shadow); margin-bottom: 10px; }
+    .card p.help { margin: 6px 0 0; font-size: 12px; color: var(--muted); line-height: 1.7; }
+
+    /* switch */
+    .seg { display: inline-flex; flex-shrink: 0; background: #e2e8f0; border-radius: 99px; padding: 3px; }
+    .seg button { border: 0; background: transparent; color: #64748b; font-weight: 800; font-size: 13px; padding: 8px 16px; border-radius: 99px; min-width: 56px; cursor: pointer; }
+    .seg button.act-on { background: #16a34a; color: #fff; }
+    .seg button.act-off { background: #475569; color: #fff; }
+    .loy-grid { display: block; margin-top: 12px; }
+    .lrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+    .lrow .lt { flex: 1; min-width: 0; } .lrow .lt b { display: block; font-size: 13px; color: var(--ink); } .lrow .lt small { font-size: 11px; color: var(--muted); }
+    .stp { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .stp button { width: 38px; height: 38px; border-radius: 12px; background: #f1f5f9; color: var(--ink); font-size: 20px; font-weight: 800; border: 0; }
+    .stp input { width: 72px; text-align: center; border: 1px solid var(--line); border-radius: 12px; padding: 9px 4px; font-size: 16px; font-weight: 800; background: #fff; outline: none; }
+    .stp.wide input { width: 130px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0; }
+    .chips button { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 6px 12px; font-weight: 700; font-size: 12px; color: var(--ink); }
+    .chips button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .loy-grid.dim { opacity: .45; }
+    .sw-row { display: flex; align-items: center; gap: 12px; }
+    .sw-row .t { flex: 1; min-width: 0; }
+    .sw-row .t b { display: block; font-size: 14px; font-weight: 800; color: var(--ink); }
+    .sw-row .t small { display: block; font-size: 11.5px; color: var(--muted); }
+    .sw { position: relative; width: 50px; height: 30px; flex-shrink: 0; border-radius: 99px; background: #cbd5e1; transition: .2s; cursor: pointer; border: 0; padding: 0; }
+    .sw::after { content: ""; position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: .2s; }
+    .sw.on { background: #16a34a; } .sw.on::after { left: 23px; }
+
+    .fld label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+    .fld input, .fld select { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 10px 11px; font-size: 14px; background: #f8fafc; outline: none; min-width: 0; }
+    .fld input:focus { border-color: #94a3b8; background: #fff; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 11px 16px; border-radius: 13px; font-weight: 800; font-size: 13.5px; background: var(--navy); color: #fff; }
+    .btn.sec2 { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+    .btn.green { background: #16a34a; } .btn.viber { background: #7360f2; }
+    .btn.full { width: 100%; }
+    .btn:disabled { opacity: .55; }
+
+    /* top customers */
+    .chips { display: flex; gap: 6px; }
+    .chip { padding: 6px 12px; border-radius: 99px; background: #fff; border: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 700; }
+    .chip.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .cust { display: flex; align-items: center; gap: 11px; padding: 11px 12px; background: #fff; border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--card-shadow); margin-bottom: 8px; }
+    .cust .av { width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .cust .m { flex: 1; min-width: 0; }
+    .cust .m b { display: block; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cust .m small { color: var(--muted); font-size: 11.5px; }
+    .give { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 8px 11px; font-size: 12px; font-weight: 800; white-space: nowrap; }
+    .given { font-size: 11px; font-weight: 800; color: #15803d; background: #ecfdf3; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+
+    /* promo list */
+    .pr { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 13px; box-shadow: var(--card-shadow); margin-bottom: 9px; }
+    .pr.off { opacity: .68; }
+    .pr-h { display: flex; align-items: center; gap: 9px; }
+    .code { font-family: "Plus Jakarta Sans", ui-monospace, monospace; font-weight: 800; font-size: 16px; letter-spacing: .6px; color: var(--ink); background: #f1f5f9; padding: 5px 10px; border-radius: 10px; word-break: break-all; }
+    .st { font-size: 10.5px; font-weight: 800; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+    .st.ok { background: #ecfdf3; color: #15803d; } .st.off { background: #f1f5f9; color: #64748b; } .st.bad { background: #fef2f2; color: #dc2626; } .st.warn { background: #fff7ed; color: #c2410c; }
+    .pr .val { margin-left: auto; font-weight: 800; font-size: 15px; color: #b45309; white-space: nowrap; }
+    .pr .meta { margin-top: 8px; font-size: 12px; color: var(--muted); line-height: 1.8; }
+    .pr .meta span { display: inline-block; background: #f8fafc; border: 1px solid #eef2f7; border-radius: 8px; padding: 0 8px; margin: 0 4px 4px 0; }
+    .pr-a { display: flex; gap: 8px; margin-top: 10px; align-items: center; }
+    .pr-a .mini { padding: 8px 12px; border-radius: 11px; background: #f1f5f9; color: var(--ink); font-size: 12px; font-weight: 800; }
+    .pr-a .mini.del { background: #fef2f2; color: #dc2626; margin-left: auto; }
+    .state { text-align: center; padding: 34px 20px; color: var(--muted); font-size: 13.5px; }
+    .state b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 3px; }
+
+    /* sheet */
+    .backdrop { position: fixed; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 1200; }
+    .backdrop.show { opacity: 1; pointer-events: auto; }
+    .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1210; display: flex; flex-direction: column; max-height: 92vh; max-height: 92dvh; background: #f4f6fb; border-radius: 26px 26px 0 0; box-shadow: 0 -20px 60px rgba(15,23,42,.3); transform: translateY(105%); transition: transform .32s cubic-bezier(.2,.85,.25,1); visibility: hidden; }
+    .sheet.show { transform: translateY(0); visibility: visible; }
+    @media (min-width: 900px) { .sheet { left: auto; top: 0; width: 450px; max-height: none; border-radius: 26px 0 0 26px; transform: translateX(105%); } .sheet.show { transform: translateX(0); } .grab { display: none; } }
+    .grab { width: 42px; height: 5px; border-radius: 99px; background: #cbd5e1; margin: 9px auto 0; flex-shrink: 0; }
+    .s-head { display: flex; align-items: center; gap: 10px; padding: 14px 18px 8px; }
+    .s-head b { flex: 1; font-size: 17px; font-weight: 800; }
+    .s-close { width: 38px; height: 38px; border-radius: 12px; background: #fff; border: 1px solid var(--line); color: #64748b; font-size: 15px; }
+    .s-body { flex: 1; overflow-y: auto; padding: 6px 18px 22px; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+    .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .seg button { padding: 11px; border-radius: 12px; background: #fff; border: 1px solid var(--line); font-weight: 800; font-size: 13px; color: var(--muted); }
+    .seg button.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .fld { margin-bottom: 10px; }
+    .qk { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 0; }
+    .qk button { padding: 5px 11px; border-radius: 99px; background: #fff; border: 1px solid var(--line); font-size: 11.5px; font-weight: 700; color: var(--ink); }
+    .done { background: #fff; border: 1px solid #bbf7d0; border-radius: 18px; padding: 16px; text-align: center; }
+    .done .code { font-size: 22px; display: inline-block; margin: 8px 0 6px; }
+    .done p { font-size: 12.5px; color: var(--muted); margin: 4px 0 12px; line-height: 1.7; }
+    .done .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  
+    /* ရိုးရှင်းသော "ကုဒ်ပေးမည်" */
+    .how { background: linear-gradient(135deg,#fffbeb,#fff); border: 1.5px solid #fde68a; }
+    .how h3 { margin: 0 0 8px; font-size: 15px; font-weight: 800; color: #92400e; }
+    .how ol { margin: 0 0 12px; padding-left: 20px; font-size: 13px; line-height: 1.95; color: #44403c; font-weight: 600; }
+    .how .btn { width: 100%; background: #f59e0b; padding: 14px; font-size: 15px; }
+    .safe { margin-top: 10px; font-size: 12px; font-weight: 700; color: #15803d; background: #ecfdf3; border: 1px solid #bbf7d0; border-radius: 12px; padding: 8px 11px; line-height: 1.8; }
+    .pickg { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pick { padding: 14px 4px; border-radius: 14px; background: #fff; border: 1.5px solid var(--line); font-weight: 800; font-size: 15px; color: var(--ink); }
+    .pick.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .gl { display: block; font-size: 12.5px; font-weight: 800; color: var(--ink); margin: 14px 0 7px; }
+    .gl:first-child { margin-top: 2px; }
+    .who { display: flex; align-items: center; gap: 10px; background: #fff; border: 1.5px solid #86efac; border-radius: 14px; padding: 10px 12px; }
+    .who .m { flex: 1; min-width: 0; } .who .m b { display: block; font-size: 14px; } .who .m small { color: var(--muted); font-size: 12px; }
+    .who button { font-size: 12px; font-weight: 800; color: #2563eb; padding: 6px 8px; }
+    .res { margin-top: 6px; max-height: 230px; overflow-y: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+    .res button { display: flex; width: 100%; align-items: center; gap: 10px; text-align: left; padding: 10px 12px; border-bottom: 1px solid #f1f5f9; font-size: 13.5px; }
+    .res button:last-child { border-bottom: 0; }
+    .res button small { margin-left: auto; color: var(--muted); font-size: 11.5px; white-space: nowrap; }
+    .res .none { padding: 12px; font-size: 12.5px; color: var(--muted); }
+    .glink { display: block; text-align: center; margin-top: 12px; font-size: 12px; font-weight: 700; color: var(--muted); text-decoration: underline; background: none; width: 100%; }
+    details.adv { margin-top: 18px; }
+    details.adv > summary { cursor: pointer; list-style: none; padding: 13px 14px; background: #fff; border: 1px solid var(--line); border-radius: 16px; font-weight: 800; font-size: 13px; color: var(--muted); }
+    details.adv > summary::-webkit-details-marker { display: none; }
+    details.adv[open] > summary { margin-bottom: 10px; }
+    .warnbox { margin-top: 10px; font-size: 12px; font-weight: 700; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 8px 11px; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🍗</div>
+      <div><b>YNS Kitchen</b><small>Admin Panel</small></div>
+    </div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="p-top">
+      <div class="p-top-inner">
+        <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="p-title"><h1>Promos</h1><small>လျှော့ဈေးကုဒ် / ဖောက်သည်လက်ဆောင်</small></div>
+        <button class="ibtn" id="refreshBtn" onclick="loadAll()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+        <button class="ibtn add" onclick="openCreate()" type="button"><i class="fa-solid fa-plus"></i> ကုဒ်အသစ်</button>
+      </div>
+    </div>
+
+    <div class="p-wrap">
+      <!-- Promo Feature Controls + ဆုစည်းမျဉ်း (v16) -->
+      <div class="sec"><span>🎛 Promo အမျိုးအစား ဖွင့်/ပိတ်</span><span id="pfCount"></span></div>
+      <div class="card" id="pfBox"></div>
+      <div class="sec"><span>🏆 ဆုစည်းမျဉ်းများ (အော်ဒါအကြိမ် / ဝယ်ယူငွေ)</span><button class="btn" type="button" style="padding:7px 14px;font-size:12px;" onclick="$('rwForm').style.display = $('rwForm').style.display==='block'?'none':'block'"><i class="fa-solid fa-plus"></i> အသစ်</button></div>
+      <div class="card" id="rwForm" style="display:none;">
+        <div class="seg" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;"><button type="button" id="rwT1" class="act-on" onclick="rwType('orders')">အော်ဒါ အကြိမ်ရေ</button><button type="button" id="rwT2" onclick="rwType('spend')">ဝယ်ယူငွေ</button></div>
+        <div class="lrow"><div class="lt"><b id="rwTL">အော်ဒါ ဘယ်နှကြိမ်ပြည့်ရင်</b><small>ပြည့်တိုင်း ဆုတစ်ခု (ထပ်ကာထပ်ကာ ရမည်)</small></div><div class="stp wide"><input type="number" id="rwTarget" inputmode="numeric" min="1" value="10"></div></div>
+        <div class="lrow"><div class="lt"><b>ဆုပုံစံ</b></div><div class="seg" style="display:inline-flex;"><button type="button" id="rwK1" class="act-on" onclick="rwKind('amount')">Ks</button><button type="button" id="rwK2" onclick="rwKind('percent')">%</button></div></div>
+        <div class="lrow"><div class="lt"><b id="rwVL">လျှော့ငွေ (Ks)</b></div><div class="stp wide"><input type="number" id="rwValue" inputmode="numeric" min="1" value="3000"></div></div>
+        <div class="lrow"><div class="lt"><b>% အတွက် အများဆုံးလျှော့ငွေ (Ks)</b><small>မကန့်သတ်လျှင် 0</small></div><div class="stp wide"><input type="number" id="rwMax" inputmode="numeric" min="0" value="0"></div></div>
+        <div class="lrow"><div class="lt"><b>အနည်းဆုံး မှာရမည့်ငွေ (Ks)</b><small>မကန့်သတ်လျှင် 0</small></div><div class="stp wide"><input type="number" id="rwMin" inputmode="numeric" min="0" value="0"></div></div>
+        <div class="lrow"><div class="lt"><b>voucher သက်တမ်း (ရက်)</b><small>0 = မကုန်</small></div><div class="stp wide"><input type="number" id="rwDays" inputmode="numeric" min="0" value="30"></div></div>
+        <div class="lrow"><div class="lt"><b>အမည် (မဖြည့်လည်းရ)</b></div><div class="stp wide"><input type="text" id="rwName" maxlength="60" placeholder="ဥပမာ ဖောက်သည်ကောင်းဆု"></div></div>
+        <button class="btn full" style="margin-top:12px;" type="button" onclick="saveRule()"><i class="fa-solid fa-floppy-disk"></i> ဆုစည်းမျဉ်း သိမ်းမည်</button>
+        <p class="help">ဝယ်သူက ဖုန်းနံပါတ် + မိမိအော်ဒါဘောက်ချာနံပါတ်နဲ့ <b>promos.html</b> မှာ ဝင်ကြည့်တဲ့အခါ ပန်းတိုင်ရောက်ရင် voucher ကို အလိုအလျောက် ထုတ်ပေးပါမယ်။ ထို voucher သည် ထိုဖုန်းနံပါတ်နှင့်သာ၊ တစ်ကြိမ်သာ သုံးလို့ရပါတယ်။</p>
+      </div>
+      <div id="rwList"></div>
+
+      <!-- လူတစ်ယောက်ချင်းကို ကုဒ်ပေးရန် -->
+      <div class="card how">
+        <h3>🎁 လူတစ်ယောက်ချင်းကို လျှော့ဈေးကုဒ် ပေးနည်း</h3>
+        <ol>
+          <li>အောက်ကခလုတ်ကိုနှိပ် → <b>ဘယ်သူ့ကိုပေးမလဲ</b> ရွေး (အမည်/ဖုန်းနဲ့ ရှာနိုင်)</li>
+          <li><b>လျှော့ဈေး</b> ရွေး (ဥပမာ ၁၀%)</li>
+          <li>ထွက်လာတဲ့ စာကို <b>Viber နဲ့ ပို့</b>လိုက်ပါ</li>
+        </ol>
+        <button class="btn" type="button" onclick="openGive()"><i class="fa-solid fa-gift"></i> ကုဒ်ပေးမည်</button>
+        <div class="safe">🔒 ကုဒ်က ရွေးထားတဲ့ <b>ဖုန်းနံပါတ်နဲ့ပဲ</b> သုံးလို့ရပါတယ်၊ <b>တစ်ကြိမ်သာ</b>။ ဖုန်းနံပါတ်ကို တခြားသူသိနေလည်း ကုဒ်မသိရင် မသုံးနိုင်ပါဘူး။</div>
+      </div>
+
+      <!-- ဖောက်သည်ကောင်းများ -->
+      <div class="sec">
+        <span>👑 မှာများသော ဖောက်သည်များ <small style="font-weight:600;">(🎁 နှိပ်ပြီး ကုဒ်ပေးပါ)</small></span>
+        <div class="chips" id="minChips">
+          <button class="chip" data-n="3" type="button">၃+</button>
+          <button class="chip on" data-n="5" type="button">၅+</button>
+          <button class="chip" data-n="10" type="button">၁၀+</button>
+        </div>
+      </div>
+      <div id="custList"></div>
+
+      <!-- ကုဒ်စာရင်း -->
+      <div class="sec"><span>🎟 ကုဒ်စာရင်း</span><span id="promoCount"></span></div>
+      <div id="promoList"></div>
+
+      <details class="adv">
+        <summary>⚙️ အလိုအလျောက် လက်ဆောင် (မလိုလျှင် ကျော်ပါ)</summary>
+      <!-- ဖောက်သည် အလိုအလျောက်လက်ဆောင် -->
+            <div class="card">
+        <div class="warnbox" style="margin:0 0 12px;">⚠️ ဖွင့်ထားလျှင် ဖုန်းနံပါတ်သိသူ ဘယ်သူမဆို ထိုနံပါတ်ဖြင့် မှာရင် လျှော့ဈေးရနိုင်ပါသည်။ လုံခြုံစေချင်လျှင် ပိတ်ထားပြီး အပေါ်က "ကုဒ်ပေးမည်" ကိုသာ သုံးပါ။</div>
+        <div class="sw-row">
+          <div class="t"><b>အော်ဒါများများမှာသူကို အလိုအလျောက် လျှော့ပေးမည်</b><small>ကုဒ်မလိုပါ — ဖုန်းနံပါတ်ဖြင့် မှာထားသော အကြိမ်ကို ရေတွက်ပါသည်</small></div>
+          <div class="seg" id="loySeg"><button type="button" id="loyBtnOn" onclick="setLoy(true)">ဖွင့်</button><button type="button" id="loyBtnOff" onclick="setLoy(false)">ပိတ်</button></div>
+        </div>
+        <div class="loy-grid" id="loyGrid">
+          <div class="lrow"><div class="lt"><b>အော်ဒါ ဘယ်နှကြိမ်မြောက်တိုင်း</b><small>ဥပမာ 5 = ၅ ကြိမ်မြောက်တိုင်း</small></div>
+            <div class="stp"><button type="button" onclick="loyStep('loyEvery',-1,2,100)">−</button><input type="number" id="loyEvery" inputmode="numeric" min="2" max="100"><button type="button" onclick="loyStep('loyEvery',1,2,100)">+</button></div></div>
+          <div class="lrow"><div class="lt"><b>လျှော့ရာခိုင်နှုန်း (%)</b><small>မသုံးလိုလျှင် 0 ထားပါ (သို့) အကွက်ကို ဖြုတ်ထားပါ</small></div>
+            <div class="stp"><button type="button" onclick="loyStep('loyPercent',-5,0,100)">−</button><input type="number" id="loyPercent" inputmode="numeric" min="1" max="100"><button type="button" onclick="loyStep('loyPercent',5,0,100)">+</button></div></div>
+          <div class="chips" id="pctChips"><button type="button" onclick="loyPct(0)">မသုံး</button><button type="button" onclick="loyPct(5)">5%</button><button type="button" onclick="loyPct(10)">10%</button><button type="button" onclick="loyPct(15)">15%</button><button type="button" onclick="loyPct(20)">20%</button><button type="button" onclick="loyPct(30)">30%</button><button type="button" onclick="loyPct(50)">50%</button></div>
+          <div class="lrow"><div class="lt"><b>သတ်မှတ်ငွေ လျှော့ပေးမည် (Ks)</b><small>ဥပမာ 1000 = တစ်ကြိမ် ၁၀၀၀ Ks လျှော့ — မသုံးလျှင် ဗလာ/0</small></div>
+            <div class="stp wide"><input type="number" id="loyFixed" inputmode="numeric" min="0" placeholder="0"></div></div>
+          <div class="lrow"><div class="lt"><b>% အတွက် အများဆုံး လျှော့ငွေ (Ks)</b><small>ရာခိုင်နှုန်းသုံးမှ သက်ရောက်သည် — ဗလာ/0 = ကန့်မထား</small></div>
+            <div class="stp wide"><input type="number" id="loyMax" inputmode="numeric" min="0" placeholder="0"></div></div>
+        </div>
+        <div class="lrow" style="margin-top:10px;"><div class="lt"><b>အကြိမ်ရေ ပြန်စရေမည်</b><small id="loySince">အော်ဒါဟောင်း အားလုံးကို ရေတွက်နေသည် (စမ်းသပ်အော်ဒါများပါ ပါနေနိုင်သည်)</small></div>
+          <div class="stp wide"><button type="button" style="width:auto;padding:0 14px;font-weight:700;font-size:13px;" onclick="loyReset()">ယခုမှ စရေမည်</button></div></div>
+        <p class="help" id="loyErr" style="color:#dc2626;font-weight:700;display:none;"></p>
+        <p class="help" id="loyHelp"></p>
+        <button class="btn full" style="margin-top:12px;" id="loySave" type="button" onclick="saveLoy()"><i class="fa-solid fa-floppy-disk"></i> <span id="loySaveTxt">သိမ်းမည်</span></button>
+        <p class="help">ကုဒ်နှင့် အလိုအလျောက်လက်ဆောင် နှစ်ခုလုံးရနေလျှင် ပိုများသည့်တစ်ခုကိုသာ ပေးပါသည် (ပေါင်းမပေး)။ ဖျက်ထားသော (Cancelled) အော်ဒါကို မရေပါ။</p>
+      </div>
+
+      </details>
+    </div>
+  </main>
+</div>
+
+<div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="ကုဒ်အသစ်">
+  <div class="grab"></div>
+  <div class="s-head"><b id="sTitle">ကုဒ်အသစ်</b><button class="s-close" type="button" onclick="closeSheet()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="s-body" id="sBody"></div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const num = v => Number(String(v ?? 0).replace(/[^\d.\-]/g, "")) || 0;
+  const mny = n => Math.round(n).toLocaleString() + " Ks";
+  const normPhone = s => String(s ?? "").toLowerCase().replace(/[\s\-()+]/g, "");
+  const PAL = ["#2563eb", "#0d9488", "#7c3aed", "#ea580c", "#db2777", "#4f46e5", "#0891b2", "#65a30d"];
+  const colorOf = s => { let h = 0; for (const ch of String(s)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return PAL[h % PAL.length]; };
+  const initial = n => (Array.from(String(n || "?").trim())[0] || "?").toUpperCase();
+
+  let promos = [], customers = [], today = "", minOrders = 5;
+  let loy = { on: false, every: 5, percent: 10, fixed: 0, max: 0 };
+  let form = null;   // create form state
+
+  // ---------- load ----------
+
+  // ---------- v16: feature controls + reward rules ----------
+  let rwRules = [], pf = { codes: true, orders: true, spend: true, vip: true }, rwForm = { type: "orders", kind: "amount" };
+  const PF = [["codes", "🎟", "Promo ကုဒ်", "ကုဒ်ထည့်ပြီး လျှော့ဈေးယူခြင်း"], ["orders", "🛍", "အော်ဒါအကြိမ်ရေ ဆု", "အော်ဒါ N ကြိမ်ပြည့်ရင် voucher"], ["spend", "💰", "ဝယ်ယူငွေပမာဏ ဆု", "စုစုပေါင်းငွေ ပြည့်ရင် voucher"], ["vip", "👑", "ဝယ်သူတစ်ဦးချင်း အထူး voucher", "ဖုန်းနံပါတ်သီးသန့် ကုဒ်များ"]];
+  function renderPF() {
+    $("pfBox").innerHTML = PF.map(([k, ic, t, s]) => `<div class="sw-row" style="padding:9px 0;border-bottom:1px dashed var(--line);"><div class="t"><b>${ic} ${t}</b><small>${s}</small></div><div class="seg"><button type="button" class="${pf[k] ? "act-on" : ""}" onclick="setPF('${k}',true)">ဖွင့်</button><button type="button" class="${pf[k] ? "" : "act-off"}" onclick="setPF('${k}',false)">ပိတ်</button></div></div>`).join("");
+    $("pfCount").textContent = PF.filter(x => pf[x[0]]).length + " / " + PF.length + " ဖွင့်ထား";
+  }
+  async function setPF(k, v) {
+    const old = pf[k]; pf[k] = v; renderPF();
+    try { const r = await apiFetch("/api/admin/promo-features", { method: "POST", body: JSON.stringify({ [k]: v }) }); pf = r.features || pf; renderPF(); showToast(v ? "ဖွင့်ပြီး ✓" : "ပိတ်ပြီး"); }
+    catch (_) { pf[k] = old; renderPF(); }
+  }
+  async function loadRewards() {
+    try { const r = await apiFetch("/api/admin/rewards"); rwRules = r.rules || []; pf = r.features || pf; } catch (_) {}
+    renderPF(); renderRules();
+  }
+  function ruleTxt(r) { return (r.type === "spend" ? num(r.target).toLocaleString() + " Ks ဝယ်ပြည့်တိုင်း" : "အော်ဒါ " + r.target + " ကြိမ်ပြည့်တိုင်း") + " → " + (r.kind === "amount" ? num(r.value).toLocaleString() + " Ks" : r.value + "%") + " လျှော့"; }
+  function renderRules() {
+    $("rwList").innerHTML = rwRules.length ? rwRules.map((r, i) => `<div class="card" style="padding:12px 14px;"><div class="sw-row"><div class="t"><b>${r.type === "spend" ? "💰" : "🛍"} ${esc(r.name)}</b><small>${ruleTxt(r)}${r.valid_days ? " • " + r.valid_days + " ရက်" : ""}</small><small style="display:block;color:#0D5C49;font-weight:700;">ထုတ်ပေးပြီး ${r.claims || 0} • သုံးပြီး ${r.used || 0}</small></div><div style="display:flex;gap:6px;align-items:center;"><div class="seg"><button type="button" class="${r.active ? "act-on" : ""}" onclick="toggleRule(${i},1)">ဖွင့်</button><button type="button" class="${r.active ? "" : "act-off"}" onclick="toggleRule(${i},0)">ပိတ်</button></div><button type="button" class="ibtn" style="width:36px;height:36px;color:#dc2626;" onclick="delRule(${i})" aria-label="ဖျက်"><i class="fa-solid fa-trash"></i></button></div></div></div>`).join("") : '<div class="state"><b>ဆုစည်းမျဉ်း မရှိသေးပါ</b>အပေါ်က "အသစ်" ကိုနှိပ်ပြီး ထည့်ပါ</div>';
+  }
+  function rwType(t) { rwForm.type = t; $("rwT1").className = t === "orders" ? "act-on" : ""; $("rwT2").className = t === "spend" ? "act-on" : ""; $("rwTL").textContent = t === "spend" ? "ဝယ်ယူငွေ ဘယ်လောက်ပြည့်ရင် (Ks)" : "အော်ဒါ ဘယ်နှကြိမ်ပြည့်ရင်"; $("rwTarget").value = t === "spend" ? 100000 : 10; }
+  function rwKind(k) { rwForm.kind = k; $("rwK1").className = k === "amount" ? "act-on" : ""; $("rwK2").className = k === "percent" ? "act-on" : ""; $("rwVL").textContent = k === "percent" ? "လျှော့ရာခိုင်နှုန်း (%)" : "လျှော့ငွေ (Ks)"; $("rwValue").value = k === "percent" ? 10 : 3000; }
+  async function saveRule() {
+    const body = { type: rwForm.type, kind: rwForm.kind, target: $("rwTarget").value, value: $("rwValue").value, max_discount: $("rwMax").value, min_total: $("rwMin").value, valid_days: $("rwDays").value, name: $("rwName").value };
+    try { await apiFetch("/api/admin/rewards", { method: "POST", body: JSON.stringify(body) }); showToast("သိမ်းပြီး ✓"); $("rwForm").style.display = "none"; $("rwName").value = ""; loadRewards(); } catch (_) {}
+  }
+  async function toggleRule(i, v) { try { await apiFetch("/api/admin/rewards/" + rwRules[i].id, { method: "PATCH", body: JSON.stringify({ active: !!v }) }); rwRules[i].active = v; renderRules(); } catch (_) {} }
+  async function delRule(i) { if (!confirm("ဤဆုစည်းမျဉ်းကို ဖျက်မလား? (ထုတ်ပေးပြီး voucher များ ဆက်ရှိမည်)")) return; try { await apiFetch("/api/admin/rewards/" + rwRules[i].id, { method: "DELETE" }); loadRewards(); } catch (_) {} }
+
+  async function loadAll() {
+    const b = $("refreshBtn"); b.classList.add("spin");
+    try {
+      const [pr, cu, st] = await Promise.all([
+        apiFetch("/api/admin/promos"),
+        apiFetch("/api/admin/customers"),
+        apiFetch("/api/admin/app-settings"),
+      ]);
+      promos = pr.promos || []; today = pr.today || ""; customers = cu.customers || [];
+      if (st.loyal) loy = st.loyal;
+      renderLoy(); renderCustomers(); renderPromos(); loadRewards();
+    } catch (e) {
+      $("promoList").innerHTML = '<div class="state"><b>ဖွင့်၍ မရပါ</b>အင်တာနက် စစ်ပြီး ပြန်ကြိုးစားပါ</div>';
+    }
+    b.classList.remove("spin");
+  }
+
+  // ---------- loyalty ----------
+  function renderLoy() {
+    $("loyBtnOn").className = loy.on ? "act-on" : "";
+    $("loyBtnOff").className = loy.on ? "" : "act-off";
+    $("loyGrid").classList.toggle("dim", !loy.on);
+    $("loyEvery").value = loy.every; $("loyPercent").value = loy.percent || ""; $("loyFixed").value = loy.fixed || ""; $("loyMax").value = loy.max || "";
+    updLoyHelp();
+    $("loySince").textContent = loy.since ? "ရေတွက်စနေ့: " + loy.since.slice(0, 16) + " (UTC) နောက်ပိုင်း အော်ဒါများသာ ရေတွက်သည်" : "အော်ဒါဟောင်း အားလုံးကို ရေတွက်နေသည် (စမ်းသပ်အော်ဒါများပါ ပါနေနိုင်သည်)";
+  }
+  async function loyReset() {
+    if (!confirm("ယခုမှစပြီး ဖောက်သည်တိုင်း အော်ဒါအကြိမ်ရေကို ၀ မှ ပြန်ရေတွက်မလား?\n(အရင်အော်ဒါများ မရေတော့ပါ)")) return;
+    try { const r = await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ loyal_reset: true }) }); if (r.loyal && r.loyal.since) { loy = r.loyal; renderLoy(); showToast("ပြန်စရေပါပြီ ✅", 3000); } else showToast("မအောင်မြင်ပါ — worker.js အသစ်တင်ပါ", 4000); } catch (e) { showToast("မအောင်မြင်ပါ", 3000); }
+  }
+  function loyVals() {
+    const g = id => { const v = String($(id).value).trim(); return v === "" ? NaN : Number(v); };
+    const o = id => String($(id).value).trim() === "" ? 0 : Number($(id).value);
+    return { every: g("loyEvery"), percent: o("loyPercent"), fixed: o("loyFixed"), max: o("loyMax") };
+  }
+  function loyCheck(v) {
+    if (!Number.isInteger(v.every) || v.every < 2 || v.every > 100) return "အကြိမ်ရေ — 2 မှ 100 ကြား ဂဏန်းထည့်ပါ";
+    if (!Number.isInteger(v.percent) || v.percent < 0 || v.percent > 100) return "ရာခိုင်နှုန်း — 0 မှ 100 ကြား ဂဏန်းထည့်ပါ";
+    if (!Number.isInteger(v.fixed) || v.fixed < 0) return "သတ်မှတ်ငွေ — 0 သို့မဟုတ် ပိုကြီးသော ဂဏန်းထည့်ပါ";
+    if (v.percent === 0 && v.fixed === 0) return "ရာခိုင်နှုန်း သို့မဟုတ် သတ်မှတ်ငွေ — တစ်ခုခု ထည့်ပါ";
+    if (!Number.isFinite(v.max) || v.max < 0) return "အများဆုံးငွေ — 0 သို့မဟုတ် ပိုကြီးသော ဂဏန်းထည့်ပါ";
+    return "";
+  }
+  function loyDirty() { const v = loyVals(); return v.every !== loy.every || v.percent !== loy.percent || v.fixed !== (loy.fixed || 0) || v.max !== (loy.max || 0); }
+  function updLoyHelp() {
+    const v = loyVals(), err = loyCheck(v), er = $("loyErr");
+    er.style.display = err ? "block" : "none"; er.textContent = err ? "⚠️ " + err : "";
+    document.querySelectorAll("#pctChips button").forEach(b => b.classList.toggle("on", b.textContent === (v.percent === 0 ? "မသုံး" : v.percent + "%")));
+    $("loyHelp").textContent = (loy.on ? "✅ ယခု ဖွင့်ထားသည် — " : "⛔ ယခု ပိတ်ထားသည် — ") + (err ? "" : `အော်ဒါ ${v.every} ကြိမ်မြောက်တိုင်း ${[v.percent > 0 ? v.percent + "%" : "", v.fixed > 0 ? v.fixed.toLocaleString() + " Ks" : ""].filter(Boolean).join(" + ")} လျှော့ပေးမည်` + (v.percent > 0 && v.max > 0 ? ` (အများဆုံး ${v.max.toLocaleString()} Ks)` : ""));
+    const d = !err && loyDirty();
+    $("loySaveTxt").textContent = d ? "သိမ်းမည် (ပြင်ထားသည် — မသိမ်းရသေးပါ)" : "သိမ်းမည်";
+    $("loySave").style.background = d ? "#16a34a" : "";
+  }
+  function loyStep(id, d, lo, hi) { const c = Number($(id).value); const base = Number.isFinite(c) && $(id).value !== "" ? c : lo; $(id).value = Math.min(hi, Math.max(lo, base + d)); updLoyHelp(); }
+  function loyPct(n) { $("loyPercent").value = n || ""; updLoyHelp(); }
+  ["loyEvery", "loyPercent", "loyFixed", "loyMax"].forEach(id => $(id).addEventListener("input", updLoyHelp));
+  let loyBusy = false;
+  // ဖွင့်/ပိတ် — Server က အတည်ပြုမှ ပြောင်းပြသည် (မှန်သည့်အခြေအနေကိုသာ ပြမည်)
+  async function setLoy(want) {
+    if (loyBusy) return;
+    if (want === !!loy.on) { showToast(want ? "ဖွင့်ထားပြီးသား ဖြစ်ပါသည်" : "ပိတ်ထားပြီးသား ဖြစ်ပါသည်"); return; }
+    loyBusy = true;
+    try {
+      const r = await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ loyal_on: want ? 1 : 0 }) });
+      if (!r.loyal) { showToast("Worker အဟောင်းဖြစ်နေသည် — worker.js အသစ်တင်ပါ", 5000); }
+      else {
+        const keep = loyVals(); loy = r.loyal; renderLoy();
+        if (loyCheck(keep) === "" ) { $("loyEvery").value = keep.every; $("loyPercent").value = keep.percent || ""; $("loyFixed").value = keep.fixed || ""; $("loyMax").value = keep.max || ""; updLoyHelp(); }
+        if (!!loy.on !== want) showToast("မပြောင်းနိုင်ပါ — Worker အသစ် (v9) တင်ထားခြင်း ရှိမရှိ စစ်ပါ", 5000);
+        else showToast(want ? "ဖွင့်လိုက်ပါပြီ ✅" : "ပိတ်လိုက်ပါပြီ ✅");
+      }
+    } catch (_) {}
+    loyBusy = false;
+  }
+  async function saveLoy() {
+    const v = loyVals(), err = loyCheck(v);
+    if (err) { updLoyHelp(); showToast(err, 4000); return; }
+    const b = $("loySave"); b.disabled = true;
+    try {
+      const r = await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ loyal_every: v.every, loyal_percent: v.percent, loyal_fixed: v.fixed, loyal_max: v.max }) });
+      if (r.loyal) { loy = r.loyal; renderLoy(); showToast(loy.percent === v.percent && loy.every === v.every && (loy.fixed || 0) === v.fixed ? "သိမ်းပြီးပါပြီ ✅" : "မသိမ်းနိုင်ပါ — worker.js အသစ်တင်ပါ", 4000); }
+    } catch (_) {}
+    b.disabled = false;
+  }
+
+  // ---------- top customers ----------
+  document.addEventListener("click", e => {
+    const c = e.target.closest("#minChips .chip"); if (!c) return;
+    minOrders = Number(c.dataset.n);
+    document.querySelectorAll("#minChips .chip").forEach(x => x.classList.toggle("on", x === c));
+    renderCustomers();
+  });
+  function givenTo(phone) { const pn = normPhone(phone); return promos.find(p => p.phone && p.phone === pn && p.active); }
+  function renderCustomers() {
+    const list = customers.filter(c => num(c.orders) >= minOrders).sort((a, b) => num(b.orders) - num(a.orders)).slice(0, 30);
+    if (!list.length) { $("custList").innerHTML = `<div class="state"><b>${minOrders} ကြိမ်နှင့်အထက် မှာသူ မရှိသေးပါ</b>အနည်းဆုံးအကြိမ်ကို လျှော့ကြည့်ပါ</div>`; return; }
+    $("custList").innerHTML = list.map((c, i) => {
+      const g = givenTo(c.phone);
+      return `<div class="cust"><div class="av" style="background:${colorOf(c.phone || c.name)}">${esc(initial(c.name))}</div>
+        <div class="m"><b>${esc(c.name || "Guest")}</b><small>${esc(c.phone)} · ${num(c.orders)} ကြိမ် · ${mny(num(c.spent))}</small></div>
+        ${g ? `<span class="given">🎟 ${esc(g.code)}</span>` : `<button class="give" type="button" onclick="giveTo(${i})">🎁 ကုဒ်ပေးမည်</button>`}</div>`;
+    }).join("");
+    window._shown = list;
+  }
+  function giveTo(i) { const c = window._shown[i]; if (c) openGive(c); }
+
+  // ---------- ရိုးရှင်းသော ကုဒ်ပေးမည် (လူရွေး → လျှော့ဈေးရွေး → ပို့) ----------
+  const GIVE_OPTS = [
+    { k: "percent", v: 5, t: "၅%" }, { k: "percent", v: 10, t: "၁၀%" }, { k: "percent", v: 20, t: "၂၀%" },
+    { k: "amount", v: 1000, t: "၁,၀၀၀ Ks" }, { k: "amount", v: 2000, t: "၂,၀၀၀ Ks" }, { k: "amount", v: 3000, t: "၃,၀၀၀ Ks" },
+  ];
+  let gv = null;
+  function openGive(c) {
+    gv = { name: (c && c.name) || "", phone: (c && c.phone) || "", q: "", opt: 1, days: 30 };
+    $("sTitle").textContent = "🎁 ကုဒ်ပေးမည်";
+    renderGive();
+    $("backdrop").classList.add("show"); $("sheet").classList.add("show");
+  }
+  function renderGive() {
+    $("sBody").innerHTML = `
+      <span class="gl">၁။ ဘယ်သူ့ကို ပေးမလဲ</span><div id="gvWho"></div>
+      <span class="gl">၂။ လျှော့ဈေး ဘယ်လောက်ပေးမလဲ</span>
+      <div class="pickg">${GIVE_OPTS.map((o, i) => `<button type="button" class="pick ${gv.opt === i ? "on" : ""}" onclick="gvOpt(${i})">${o.t}</button>`).join("")}</div>
+      <span class="gl">၃။ ဘယ်နှစ်ရက်အတွင်း သုံးလို့ရမလဲ</span>
+      <div class="pickg">${[7, 30, 90].map(d => `<button type="button" class="pick ${gv.days === d ? "on" : ""}" onclick="gvDays(${d})">${d} ရက်</button>`).join("")}</div>
+      <div class="safe" style="margin-top:14px;">🔒 ဒီဖုန်းနံပါတ်နဲ့ပဲ၊ တစ်ကြိမ်သာ သုံးလို့ရပါမယ်။</div>
+      <button class="btn full" id="gvBtn" type="button" style="margin-top:14px;" onclick="createGive()"><i class="fa-solid fa-ticket"></i> ကုဒ်ထုတ်မည်</button>
+      <button class="glink" type="button" onclick="gvAdvanced()">အသေးစိတ် ပြင်လိုလျှင် (အနည်းဆုံးမှာငွေ၊ ကြိမ်ရေ စသည်)</button>`;
+    renderWho();
+  }
+  function renderWho() {
+    const box = $("gvWho"); if (!box) return;
+    const btn = $("gvBtn"); if (btn) btn.disabled = !gv.phone;
+    if (gv.phone) {
+      box.innerHTML = `<div class="who"><div class="av" style="width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#fff;background:${colorOf(gv.phone)}">${esc(initial(gv.name || gv.phone))}</div>
+        <div class="m"><b>${esc(gv.name || "ဖုန်းနံပါတ်အသစ်")}</b><small>${esc(gv.phone)}</small></div><button type="button" onclick="gvChange()">ပြောင်းမည်</button></div>`;
+      return;
+    }
+    box.innerHTML = `<div class="fld" style="margin:0;"><input id="gvQ" type="text" inputmode="search" autocomplete="off" placeholder="အမည် သို့မဟုတ် ဖုန်းနံပါတ် ရိုက်ရှာပါ" value="${esc(gv.q)}" oninput="gvSearch(this.value)"></div><div id="gvRes"></div>`;
+    gvList();
+  }
+  function gvSearch(v) { gv.q = v; gvList(); }
+  function gvList() {
+    const box = $("gvRes"); if (!box) return;
+    const q = gv.q.trim().toLowerCase(), qd = normPhone(gv.q);
+    let list = customers.slice().sort((a, b) => num(b.orders) - num(a.orders));
+    if (q) list = list.filter(c => String(c.name || "").toLowerCase().includes(q) || (qd.length >= 3 && normPhone(c.phone).includes(qd)));
+    list = list.slice(0, 6); window._gvList = list;
+    let h = list.map((c, i) => `<button type="button" onclick="gvPick(${i})"><b>${esc(c.name || "Guest")}</b><small>${esc(c.phone)} · ${num(c.orders)} ကြိမ်</small></button>`).join("");
+    if (qd.length >= 6 && /^\d+$/.test(qd) && !list.some(c => normPhone(c.phone) === qd)) h += `<button type="button" onclick="gvNew()"><b>➕ ဤနံပါတ်ကို သုံးမည်</b><small>${esc(gv.q.trim())}</small></button>`;
+    box.innerHTML = `<div class="res">${h || '<div class="none">မတွေ့ပါ — ဖုန်းနံပါတ် အပြည့်အစုံ ရိုက်ထည့်လျှင် အသစ်အဖြစ် သုံးနိုင်ပါသည်</div>'}</div>`;
+  }
+  function gvPick(i) { const c = window._gvList[i]; if (!c) return; gv.name = c.name || ""; gv.phone = c.phone || ""; renderWho(); }
+  function gvNew() { gv.name = ""; gv.phone = gv.q.trim(); renderWho(); }
+  function gvChange() { gv.phone = ""; gv.name = ""; gv.q = ""; renderWho(); setTimeout(() => { const e = $("gvQ"); if (e) e.focus(); }, 50); }
+  function gvOpt(i) { gv.opt = i; document.querySelectorAll(".pickg")[0].querySelectorAll(".pick").forEach((b, n) => b.classList.toggle("on", n === i)); }
+  function gvDays(d) { gv.days = d; document.querySelectorAll(".pickg")[1].querySelectorAll(".pick").forEach((b, n) => b.classList.toggle("on", [7, 30, 90][n] === d)); }
+  function gvAdvanced() {
+    const o = GIVE_OPTS[gv.opt];
+    openCreate({ phone: gv.phone, note: gv.name, kind: o.k, value: o.v, per_phone: 1, days: gv.days });
+  }
+  async function createGive() {
+    if (!gv.phone) return;
+    const o = GIVE_OPTS[gv.opt];
+    const body = { kind: o.k, value: o.v, max_discount: 0, min_total: 0, phone: gv.phone, per_phone: 1, max_uses: 1, expires: addDays(gv.days), code: "", note: gv.name || "" };
+    const b = $("gvBtn"); b.disabled = true;
+    try {
+      const r = await apiFetch("/api/admin/promos", { method: "POST", body: JSON.stringify(body) });
+      await loadAll(); showDone(r, body);
+    } catch (_) { b.disabled = false; }
+  }
+
+  // ---------- promo list ----------
+  function state(p) {
+    if (!p.active) return ["off", "ပိတ်ထား"];
+    if (p.expires && p.expires < today) return ["bad", "သက်တမ်းကုန်"];
+    if (p.max_uses > 0 && p.used >= p.max_uses) return ["warn", "ပြည့်သွား"];
+    return ["ok", "သုံးနိုင်"];
+  }
+  function valTxt(p) { return p.kind === "amount" ? `-${num(p.value).toLocaleString()} Ks` : `-${p.value}%`; }
+  function renderPromos() {
+    $("promoCount").textContent = promos.length ? promos.length + " ခု" : "";
+    if (!promos.length) { $("promoList").innerHTML = '<div class="state"><b>ကုဒ် မရှိသေးပါ</b>အပေါ်က "ကုဒ်အသစ်" ကိုနှိပ်ပါ</div>'; return; }
+    $("promoList").innerHTML = promos.map((p, i) => {
+      const [cls, txt] = state(p);
+      const meta = [];
+      if (p.kind === "percent" && p.max_discount > 0) meta.push(`အများဆုံး ${num(p.max_discount).toLocaleString()} Ks`);
+      if (p.min_total > 0) meta.push(`အနည်းဆုံး ${num(p.min_total).toLocaleString()} Ks မှာမှ`);
+      if (p.phone) meta.push(`📞 ${esc(p.phone)} သီးသန့်`);
+      meta.push(p.per_phone > 0 ? `ဖုန်းတစ်ခုလျှင် ${p.per_phone} ကြိမ်` : "ကြိမ်ရေ မကန့်");
+      meta.push(p.max_uses > 0 ? `သုံးပြီး ${p.used}/${p.max_uses}` : `သုံးပြီး ${p.used}`);
+      if (p.expires) meta.push(`⏰ ${esc(p.expires)} အထိ`);
+      if (p.note) meta.push(`📝 ${esc(p.note)}`);
+      return `<div class="pr ${p.active ? "" : "off"}"><div class="pr-h"><span class="code">${esc(p.code)}</span><span class="st ${cls}">${txt}</span><span class="val">${valTxt(p)}</span></div>
+        <div class="meta">${meta.map(m => `<span>${m}</span>`).join("")}</div>
+        <div class="pr-a"><button class="sw ${p.active ? "on" : ""}" type="button" onclick="togglePromo(${i})" aria-label="ဖွင့်/ပိတ်"></button>
+          <button class="mini" type="button" onclick="copyCode(${i})"><i class="fa-regular fa-copy"></i> ကူးယူ</button>
+          <button class="mini" type="button" onclick="shareCode(${i})"><i class="fa-solid fa-share-nodes"></i> ပို့မည်</button>
+          <button class="mini del" type="button" onclick="delPromo(${i})"><i class="fa-regular fa-trash-can"></i></button></div></div>`;
+    }).join("");
+  }
+  async function togglePromo(i) {
+    const p = promos[i]; const next = !p.active;
+    p.active = next ? 1 : 0; renderPromos(); renderCustomers();
+    try { await apiFetch("/api/admin/promos/" + encodeURIComponent(p.code), { method: "PATCH", body: JSON.stringify({ active: next }) }); }
+    catch (_) { p.active = next ? 0 : 1; renderPromos(); renderCustomers(); }
+  }
+  async function delPromo(i) {
+    const p = promos[i];
+    if (!confirm(`${p.code} ကို ဖျက်မလား?\n(သုံးပြီးသား အော်ဒါများ မပျက်ပါ)`)) return;
+    try { await apiFetch("/api/admin/promos/" + encodeURIComponent(p.code), { method: "DELETE" }); promos.splice(i, 1); renderPromos(); renderCustomers(); showToast("ဖျက်ပြီးပါပြီ"); } catch (_) {}
+  }
+  function msgFor(p) {
+    const val = p.kind === "amount" ? `${num(p.value).toLocaleString()} Ks လျှော့` : `${p.value}% လျှော့`;
+    return `🍗 မြင်သာကြက်ကင်မှ အားပေးမှုကို ကျေးဇူးတင်ပါသည် 🙏\n🎁 သင့်အတွက် ${val} ကုဒ်: ${p.code}\nအော်ဒါတင်ချိန် "Promo ကုဒ်" ထဲ ထည့်ပါ။` +
+      (p.phone ? `\n(ဤဖုန်းနံပါတ်အတွက်သာ)` : "") + (p.expires ? `\n⏰ ${p.expires} အထိ` : "");
+  }
+  async function copyText(t) { try { await navigator.clipboard.writeText(t); showToast("ကူးယူပြီးပါပြီ"); } catch (_) { prompt("ကူးယူပါ", t); } }
+  function copyCode(i) { copyText(promos[i].code); }
+  async function shareCode(i) {
+    const t = msgFor(promos[i]);
+    if (navigator.share) { try { await navigator.share({ text: t }); return; } catch (_) { return; } }
+    copyText(t);
+  }
+
+  // ---------- create sheet ----------
+  function addDays(n) { const d = new Date(Date.now() + 390 * 60000 + n * 86400000); return d.toISOString().slice(0, 10); }
+  function openCreate(pre) {
+    pre = pre || {};
+    form = { kind: pre.kind || "percent", value: pre.value || 10, code: "", max_discount: "", min_total: "", phone: pre.phone || "", max_uses: "", per_phone: pre.per_phone != null ? pre.per_phone : 1, expires: pre.days ? addDays(pre.days) : "", note: pre.note || "" };
+    renderForm(); $("sTitle").textContent = pre.phone ? "ဖောက်သည်ကို ကုဒ်ပေးမည်" : "ကုဒ်အသစ်";
+    $("backdrop").classList.add("show"); $("sheet").classList.add("show");
+  }
+  function closeSheet() { $("backdrop").classList.remove("show"); $("sheet").classList.remove("show"); }
+  function fv(k, label, type, ph, extra) { return `<div class="fld"><label>${label}</label><input type="${type}" data-k="${k}" value="${esc(form[k])}" placeholder="${esc(ph || "")}" ${extra || ""} oninput="form['${k}']=this.value"></div>`; }
+  function renderForm() {
+    $("sBody").innerHTML = `
+      <div class="seg"><button type="button" class="${form.kind === "percent" ? "on" : ""}" onclick="setKind('percent')">% ရာခိုင်နှုန်း</button><button type="button" class="${form.kind === "amount" ? "on" : ""}" onclick="setKind('amount')">Ks ငွေပမာဏ</button></div>
+      <div class="g2">${fv("value", form.kind === "percent" ? "လျှော့ % (၁–၁၀၀)" : "လျှော့ငွေ Ks", "number", "", 'inputmode="numeric" min="1"')}
+        ${form.kind === "percent" ? fv("max_discount", "အများဆုံး လျှော့ငွေ Ks", "number", "0 = မကန့်", 'inputmode="numeric" min="0"') : fv("min_total", "အနည်းဆုံး မှာငွေ Ks", "number", "0 = မကန့်", 'inputmode="numeric" min="0"')}</div>
+      ${form.kind === "percent" ? fv("min_total", "အနည်းဆုံး မှာငွေ Ks", "number", "0 = မကန့်", 'inputmode="numeric" min="0"') : ""}
+      ${fv("phone", "📞 ဤဖုန်းနံပါတ်အတွက်သာ (မဖြည့်လည်းရ — ဖြည့်လျှင် တခြားသူသုံး၍မရ)", "tel", "09...")}
+      <div class="g2">${fv("per_phone", "ဖုန်းတစ်ခုလျှင် အကြိမ်", "number", "0 = မကန့်", 'inputmode="numeric" min="0"')}${fv("max_uses", "စုစုပေါင်း သုံးခွင့်", "number", "0 = မကန့်", 'inputmode="numeric" min="0"')}</div>
+      <div class="fld"><label>⏰ သက်တမ်းကုန်ရက် (မဖြည့်လျှင် ကုန်ဆုံးမည်မဟုတ်)</label><input type="date" data-k="expires" value="${esc(form.expires)}" oninput="form.expires=this.value">
+        <div class="qk"><button type="button" onclick="setExp(7)">+၇ ရက်</button><button type="button" onclick="setExp(30)">+၃၀ ရက်</button><button type="button" onclick="setExp(0)">မကန့်</button></div></div>
+      ${fv("code", "ကုဒ်အမည် (အလွတ်ထားလျှင် အလိုအလျောက် ထုတ်ပေးမည်)", "text", "ဥပမာ - NEW10", 'maxlength="20" autocapitalize="characters" style="text-transform:uppercase"')}
+      ${fv("note", "📝 မှတ်ချက် (ကိုယ့်အတွက်သာ)", "text", "ဥပမာ - VIP ကိုအောင်", 'maxlength="80"')}
+      <button class="btn full" id="createBtn" type="button" onclick="createPromo()"><i class="fa-solid fa-ticket"></i> ကုဒ်ဖန်တီးမည်</button>`;
+  }
+  function setKind(k) { form.kind = k; renderForm(); }
+  function setExp(n) { form.expires = n ? addDays(n) : ""; renderForm(); }
+  function showDone(r, body) {
+    const p = promos.find(x => x.code === r.code) || { code: r.code, kind: body.kind, value: body.value, phone: normPhone(body.phone), expires: body.expires };
+    window._made = p;
+    $("sTitle").textContent = "ဖန်တီးပြီးပါပြီ ✅";
+    $("sBody").innerHTML = `<div class="done"><div style="font-size:30px;">🎟</div><span class="code">${esc(p.code)}</span>
+      <p>${esc(msgFor(p)).replace(/\n/g, "<br>")}</p>
+      <div class="row2"><button class="btn sec2" type="button" onclick="copyText(window._made.code)"><i class="fa-regular fa-copy"></i> ကုဒ်ကူး</button>
+      <button class="btn sec2" type="button" onclick="copyText(msgFor(window._made))"><i class="fa-regular fa-message"></i> စာကူး</button>
+      <a class="btn viber" style="text-decoration:none;" href="viber://forward?text=${encodeURIComponent(msgFor(p))}"><i class="fa-brands fa-viber"></i> Viber</a>
+      <button class="btn" type="button" onclick="shareCode(promos.findIndex(x=>x.code===window._made.code))"><i class="fa-solid fa-share-nodes"></i> ပို့မည်</button></div></div>`;
+  }
+  async function createPromo() {
+    const body = { kind: form.kind, value: num(form.value), max_discount: num(form.max_discount), min_total: num(form.min_total), phone: form.phone, per_phone: form.per_phone === "" ? 1 : num(form.per_phone), max_uses: num(form.max_uses), expires: form.expires, code: String(form.code || "").trim(), note: form.note };
+    const b = $("createBtn"); b.disabled = true;
+    try {
+      const r = await apiFetch("/api/admin/promos", { method: "POST", body: JSON.stringify(body) });
+      await loadAll(); showDone(r, body);
+    } catch (_) { b.disabled = false; }
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof renderAdminLayout === "function") renderAdminLayout("promos");
+    loadAll();
+  });
+</script>
+</body>
+</html>

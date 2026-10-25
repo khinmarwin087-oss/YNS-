@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Customers • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gd:#094838;--gs:#E3F1EB;--am:#F0A033;--as:#FFF3DF;--ai:#8A4B00;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18);--num:'Bricolage Grotesque','Noto Sans Myanmar',sans-serif}
+html,body{overflow-x:hidden}
+.main{padding:0 0 90px!important;min-width:0}
+.in{max-width:900px;margin:0 auto;padding:0 16px}
+/* hero */
+.hero{position:relative;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 0 62px;overflow:hidden;background:radial-gradient(120% 90% at 100% 0%,rgba(240,160,51,.22),transparent 55%),repeating-linear-gradient(115deg,rgba(255,255,255,.028) 0 2px,transparent 2px 14px),linear-gradient(160deg,#0B4F3F,#083D31)}
+@media(min-width:769px){.hero{border-radius:0 0 30px 30px}.mbtn{display:none!important}}
+.hr{display:flex;align-items:center;gap:10px}
+.ht{flex:1;min-width:0}.ht h1{margin:0;font-size:22px;font-weight:700;line-height:1.4}.ht small{color:rgba(255,255,255,.75);font-size:12.5px}
+.circ{width:42px;height:42px;flex-shrink:0;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;font-size:15px;backdrop-filter:blur(6px);transition:.15s}
+.circ:hover{background:rgba(255,255,255,.2)}.circ:active{transform:scale(.92)}.circ.spin i{animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lbl{margin-top:20px;font-size:12.5px;color:#F7C879;font-weight:700}
+.big{font:800 40px/1.15 var(--num);letter-spacing:-1.2px;margin:2px 0 14px;white-space:nowrap}.big span{font-size:16px;color:rgba(255,255,255,.7);margin-left:6px;letter-spacing:0;font-weight:600}
+.per{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.per::-webkit-scrollbar{display:none}
+.per button{flex-shrink:0;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:rgba(255,255,255,.85);padding:5px 13px;border-radius:99px;font-size:12.5px;font-weight:700;cursor:pointer}
+.per button.on{background:#fff;color:var(--gd);border-color:#fff}
+.rng{display:none;gap:8px;align-items:center;margin-top:10px}.rng.show{display:flex}
+.rng input{flex:1;min-width:0;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:#fff;border-radius:10px;padding:7px 9px;font:inherit;font-size:13px;color-scheme:dark}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15)}
+.kp b{display:block;font:800 18px var(--num)}.kp small{font-size:11.5px;color:rgba(255,255,255,.72)}
+/* search */
+.sw{position:sticky;top:0;z-index:40;margin-top:-30px;padding:0 0 8px}
+.sw .in{padding:0 14px}
+.sb2{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:0 14px;box-shadow:0 10px 24px -12px rgba(8,61,49,.35)}
+.sb2:focus-within{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,92,73,.15)}
+.sb2 i{color:#94a3a0;font-size:14px}.sb2 input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:14px 0;font:inherit;font-size:14.5px;color:var(--ink)}
+.sb2 .x{display:none;background:none;color:#94a3a0;font-size:15px;padding:6px}.sb2.has .x{display:block}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:10px 2px 2px}.chips::-webkit-scrollbar{display:none}
+.chips button{flex-shrink:0;background:#fff;border:1px solid var(--ln);color:var(--sub);padding:7px 13px;border-radius:99px;font-size:12.5px;font-weight:700;white-space:nowrap;box-shadow:var(--sh)}
+.chips button.on{background:var(--g);border-color:var(--g);color:#fff}.chips button em{font:700 11.5px var(--num);font-style:normal;opacity:.7;margin-left:5px}
+.chips button.warn.on{background:var(--dg);border-color:var(--dg)}
+.lh{display:flex;justify-content:space-between;align-items:center;margin:10px 4px 8px;font-size:12.5px;color:var(--sub);font-weight:700}
+.lh select{border:0;background:transparent;font-weight:700;font-size:12.5px;font-family:inherit;color:var(--ink);outline:0;cursor:pointer}
+.note{margin:0 4px 6px;font-size:11.5px;color:var(--sub)}.note i{color:var(--ok);margin-right:5px}
+/* list */
+.list{display:flex;flex-direction:column;gap:8px}
+@media(min-width:900px){.list{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px;background:#fff;border:1px solid var(--ln);border-radius:18px;box-shadow:var(--sh);min-width:0;color:inherit;transition:transform .15s,border-color .2s}
+.row:hover{border-color:#bcd3c9}.row:active{transform:scale(.985)}
+.av{position:relative;flex-shrink:0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:700 17px var(--num);color:#fff}
+.av .rk{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;border-radius:99px;background:var(--am);color:#3b2200;font:800 11px/20px var(--num);text-align:center;border:2px solid #fff}
+.mid{flex:1;min-width:0}.mid .n{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mid .p{font-size:12px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tg{display:inline-block;font-size:10.5px;font-weight:700;padding:0 8px;border-radius:99px;margin-left:6px;vertical-align:1px}
+.tg.vip{background:var(--as);color:var(--ai)}.tg.reg{background:var(--gs);color:var(--gd)}.tg.new{background:#e9eef8;color:#2b57b0}
+.fl{display:flex;gap:5px;margin-top:3px;flex-wrap:wrap}
+.fl span{font-size:10.5px;font-weight:700;padding:0 7px;border-radius:99px}
+.fl .lap{background:var(--as);color:var(--ai)}.fl .can{background:#fdeaea;color:#b42f2f}.fl .nt{background:var(--gs);color:var(--gd)}
+.rt{text-align:right;flex-shrink:0}.rt b{display:block;font:800 14.5px var(--num)}.rt small{display:block;font-size:11px;color:var(--sub)}
+.state{text-align:center;padding:46px 20px;color:var(--sub);font-size:13.5px;grid-column:1/-1}
+.state i.bg{display:block;font-size:34px;margin-bottom:10px;color:#c3cfc8}.state b{display:block;color:var(--ink);font-size:15px}
+.btn{background:var(--g);color:#fff;padding:10px 18px;border-radius:12px;font-weight:700;font-size:13px;margin-top:12px}
+.more{display:block;margin:14px auto 0;background:#fff;color:var(--ink);border:1px solid var(--ln);padding:10px 20px;border-radius:99px;font-weight:700;font-size:13px;grid-column:1/-1}
+.sk{height:72px;border-radius:18px;background:linear-gradient(90deg,#e6ebe7 25%,#f2f5f2 50%,#e6ebe7 75%);background-size:200% 100%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+/* sheet */
+.bd{position:fixed;inset:0;background:rgba(8,40,31,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:1200}.bd.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:1210;display:flex;flex-direction:column;max-height:93dvh;background:var(--bg);border-radius:26px 26px 0 0;box-shadow:0 -20px 60px rgba(8,40,31,.3);transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.85,.25,1);visibility:hidden}
+.sheet.show{transform:none;visibility:visible}
+@media(min-width:900px){.sheet{left:auto;top:0;width:480px;max-height:none;border-radius:26px 0 0 26px;transform:translateX(105%)}.sheet.show{transform:none}.grab{display:none}}
+.grab{width:42px;height:5px;border-radius:99px;background:#c3cfc8;margin:9px auto 0;flex-shrink:0}
+.sh{display:flex;align-items:center;gap:13px;padding:14px 18px 8px}.sh .av{width:56px;height:56px;font-size:22px}
+.sh .t{flex:1;min-width:0}.sh .t b{display:block;font-size:17px;font-weight:700;word-break:break-word}.sh .t span{font-size:12.5px;color:var(--sub)}
+.sc{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--ln);color:#64748b;flex-shrink:0}
+.sbd{flex:1;overflow-y:auto;padding:6px 18px calc(22px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0 12px}
+.acts a,.acts button{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;border-radius:14px;font-weight:700;font-size:13.5px;text-decoration:none}
+.acts .call{background:var(--g);color:#fff}.acts .copy{background:#fff;color:var(--ink);border:1px solid var(--ln)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stats>div{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:12px 6px;text-align:center;min-width:0}
+.stats b{display:block;font:800 17px var(--num);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stats small{font-size:11px;color:var(--sub)}
+.card{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.card h4{margin:0 0 9px;font-size:12.5px;font-weight:700;color:var(--sub)}
+.card textarea{width:100%;min-height:70px;resize:vertical;border:1px solid var(--ln);border-radius:12px;padding:10px 12px;font:inherit;font-size:13.5px;background:#fafcfa;color:var(--ink);outline:0}
+.card textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,92,73,.12)}
+.tp{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tp button{background:var(--gs);color:var(--gd);padding:5px 11px;border-radius:99px;font-size:12px;font-weight:700}.tp button.on{background:var(--g);color:#fff}
+.snd{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.snd a,.snd button{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 4px;border-radius:12px;font-weight:700;font-size:12.5px;text-decoration:none;color:#fff}
+.snd .vb{background:#7360F2}.snd .sm{background:var(--g)}.snd .tgm{background:#229ED9}
+.sv{margin-top:8px;background:var(--g);color:#fff;padding:9px 16px;border-radius:12px;font-weight:700;font-size:13px}
+.bar{height:9px;border-radius:99px;background:var(--gs);overflow:hidden;margin:8px 0 6px}.bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--g),var(--am))}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kv small{display:block;font-size:11px;color:var(--sub)}.kv b{font-size:13.5px}
+.vc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px dashed var(--ln)}.vc:first-of-type{border-top:0;padding-top:0}
+.vc code{font:700 13px var(--num);letter-spacing:.5px}.vc small{display:block;color:var(--sub);font-size:11px}
+.st{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:#eef2ef;color:#52605a}.st.live{background:var(--gs);color:var(--gd)}.st.used{background:#e9eef8;color:#2b57b0}.st.expired{background:#fdeaea;color:#b42f2f}
+.fav{display:flex;flex-wrap:wrap;gap:6px}.fav span{background:var(--as);color:var(--ai);font-size:12px;font-weight:700;padding:5px 10px;border-radius:99px}
+.ord{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #eef2ef;text-decoration:none;color:inherit}.ord:first-of-type{border-top:0;padding-top:2px}
+.ord .a{flex:1;min-width:0}.ord .a b{font-size:13px}.ord .a small{display:block;font-size:11.5px;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ord .m{font:800 13px var(--num);white-space:nowrap}
+.pill{font-size:10.5px;font-weight:700;padding:1px 8px;border-radius:99px;margin-left:6px;background:#eef2ef;color:#52605a}.pill.New{background:#e9eef8;color:#2b57b0}.pill.Processing{background:#fff1e6;color:#c2410c}.pill.Ready{background:var(--gs);color:var(--gd)}
+.mu{color:var(--sub);font-size:12.5px;text-align:center;padding:10px 0}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main">
+    <header class="hero"><div class="in">
+      <div class="hr">
+        <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="ht"><h1>Customers</h1><small id="sub">ဝယ်သူများ</small></div>
+        <button class="circ" onclick="exportCsv()" aria-label="CSV ထုတ်မည်" type="button"><i class="fa-solid fa-file-arrow-down"></i></button>
+        <button class="circ" id="rf" onclick="loadCustomers()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+      <div class="lbl" id="plbl">စုစုပေါင်း ဝယ်ယူငွေ</div>
+      <div class="big" id="bigN">0<span>Ks</span></div>
+      <div class="per" id="per">
+        <button class="on" data-p="all" type="button">အားလုံး</button><button data-p="month" type="button">ဒီလ</button><button data-p="last" type="button">ပြီးခဲ့သည့်လ</button><button data-p="30" type="button">ရက် ၃၀</button><button data-p="custom" type="button">ရက်ရွေး</button>
+      </div>
+      <div class="rng" id="rng"><input type="date" id="dFrom" aria-label="စတင်ရက်"><input type="date" id="dTo" aria-label="ဆုံးရက်"></div>
+      <div class="kp" id="kp"></div>
+    </div></header>
+    <div class="sw"><div class="in">
+      <label class="sb2" id="sbx"><i class="fa-solid fa-magnifying-glass"></i>
+        <input type="search" id="q" placeholder="အမည် သို့မဟုတ် ဖုန်းနံပါတ် ရှာပါ..." oninput="onSearch()" autocomplete="off">
+        <button class="x" type="button" onclick="clearSearch()" aria-label="ရှင်းမည်"><i class="fa-solid fa-circle-xmark"></i></button></label>
+      <div class="chips" id="chips"></div>
+    </div></div>
+    <div class="in">
+      <div class="lh"><span id="cnt">&nbsp;</span>
+        <select id="sort" onchange="onSort()" aria-label="စီရန်"><option value="spent">ငွေအများဆုံး</option><option value="orders">အော်ဒါအများဆုံး</option><option value="recent">မကြာသေးမီ</option><option value="name">အမည်</option></select></div>
+      <div class="note"><i class="fa-solid fa-circle-check"></i>ပယ်ဖျက်ထားသော (Cancelled) အော်ဒါများကို အရေအတွက်နှင့် ငွေပေါင်းတွင် မထည့်ပါ</div>
+      <div class="list" id="list"></div>
+    </div>
+  </main>
+</div>
+<div class="bd" id="bd" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Customer အသေးစိတ်"><div class="grab"></div><div class="sh" id="sHead"></div><div class="sbd" id="sBody"></div></div>
+
+<script src="js/main.js"></script>
+<script>
+let all=[],seg="all",sortBy="spent",query="",shown=30,openKey=null,view=[],per="all",loyal={on:false},tpl=0,msgTxt="";
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num=v=>Number(String(v??0).replace(/[^\d.\-]/g,""))||0;
+const mny=n=>typeof money==="function"?money(n):Math.round(n).toLocaleString()+" Ks";
+const short=n=>n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+"M":n>=1e4?Math.round(n/1e3)+"K":Math.round(n).toLocaleString();
+const isTel=p=>/^[+\d][\d\s\-()]{5,}$/.test(String(p||"").trim());
+const PAL=["#0D5C49","#0d7a6a","#6d4bb5","#c2410c","#b0356b","#3b4fb8","#0b7d9a","#6b7f1d"];
+const colorOf=s=>{let h=0;for(const ch of String(s))h=(h*31+ch.charCodeAt(0))>>>0;return PAL[h%PAL.length]};
+const initial=n=>(Array.from(String(n||"?").trim())[0]||"?").toUpperCase();
+const sym=s=>String(s??"").toLowerCase().replace(/[\s\-()+]/g,"");   // worker ၏ normPhone နှင့်တူ
+const mmt=()=>new Date(Date.now()+390*60000);                         // မြန်မာစံတော်ချိန်
+function pkey(p){const s=String(p||"").trim();if(!isTel(s))return s.toLowerCase();let d=s.replace(/\D/g,"");if(d.startsWith("00959"))d="0"+d.slice(4);else if(d.startsWith("959"))d="0"+d.slice(2);return d}
+function toDate(s){if(!s)return null;const d=new Date(/[zZ]$|[+-]\d\d:?\d\d$/.test(s)?s:String(s).replace(" ","T")+"Z");return isNaN(d)?null:d}
+const days=s=>{const d=toDate(s);return d?Math.floor((Date.now()-d)/864e5):null};
+function ago(s){const d=toDate(s);if(!d)return"-";const m=Math.max(0,Math.floor((Date.now()-d)/6e4));if(m<1)return"ယခုလေးတင်";if(m<60)return m+" မိနစ်က";const h=Math.floor(m/60);if(h<24)return h+" နာရီက";const dd=Math.floor(h/24);if(dd<30)return dd+" ရက်က";const mo=Math.floor(dd/30);return mo<12?mo+" လက်က":Math.floor(mo/12)+" နှစ်က"}
+const kind=c=>c.orders>=5||c.spent>=50000?"vip":c.orders>=2?"reg":"new";   // VIP ၅ ကြိမ်+ / ၅၀,၀၀၀ Ks+ ၊ ပုံမှန် ၂ ကြိမ်+
+const KT={vip:"VIP",reg:"ပုံမှန်",new:"အသစ်"};
+const lapsed=c=>per==="all"&&c.orders>0?days(c.last_order):null;
+
+function range(){
+  const t=mmt(),y=t.getUTCFullYear(),m=t.getUTCMonth(),f=d=>d.toISOString().slice(0,10),today=f(t);
+  if(per==="month")return{from:f(new Date(Date.UTC(y,m,1))),to:today};
+  if(per==="last")return{from:f(new Date(Date.UTC(y,m-1,1))),to:f(new Date(Date.UTC(y,m,0)))};
+  if(per==="30")return{from:f(new Date(t-29*864e5)),to:today};
+  if(per==="custom")return{from:$("dFrom").value,to:$("dTo").value};
+  return{from:"",to:""};
+}
+const PL={all:"စုစုပေါင်း ဝယ်ယူငွေ",month:"ဒီလ ဝယ်ယူငွေ",last:"ပြီးခဲ့သည့်လ ဝယ်ယူငွေ",30:"ရက် ၃၀ အတွင်း ဝယ်ယူငွေ",custom:"ရွေးထားသော ရက်အတွင်း ဝယ်ယူငွေ"};
+$("per").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;per=b.dataset.p;
+  document.querySelectorAll("#per button").forEach(x=>x.classList.toggle("on",x===b));
+  $("rng").classList.toggle("show",per==="custom");$("plbl").textContent=PL[per];
+  if(!["all"].includes(per)&&(seg==="l30"||seg==="l60"))seg="all";
+  if(per!=="custom")loadCustomers()});
+["dFrom","dTo"].forEach(i=>$(i).addEventListener("change",()=>{if(per==="custom")loadCustomers()}));
+
+async function loadCustomers(){
+  const btn=$("rf");btn.classList.add("spin");
+  if(!all.length)$("list").innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
+  try{
+    const r=range(),qs=(r.from?"from="+r.from+"&":"")+(r.to?"to="+r.to:"");
+    const res=await apiFetch("/api/admin/customers"+(qs?"?"+qs:""));
+    const raw=(res&&res.customers)||(Array.isArray(res)?res:[]),notes=(res&&res.notes)||{};loyal=(res&&res.loyal)||{on:false};
+    const m=new Map();
+    raw.forEach(x=>{const k=pkey(x.phone);if(!k)return;const o=num(x.orders),s=num(x.spent),cn=num(x.cancelled);
+      let c=m.get(k);
+      if(!c){c={key:k,phone:x.phone,name:"",orders:0,spent:0,cancelled:0,last_order:"",first_order:"",loyal:0,phones:[],note:"",best:-1};m.set(k,c)}
+      c.orders+=o;c.spent+=s;c.cancelled+=cn;c.loyal+=num(x.loyal_orders);c.phones.push(x.phone);
+      const nt=notes[sym(x.phone)];if(nt&&!c.note)c.note=nt;
+      if(s>c.best||(!c.name&&x.name)){if(s>c.best){c.best=s;c.phone=x.phone}if(x.name)c.name=x.name}
+      if(x.last_order&&String(x.last_order)>c.last_order)c.last_order=x.last_order;
+      if(x.first_order&&(!c.first_order||String(x.first_order)<c.first_order))c.first_order=x.first_order});
+    all=[...m.values()];shown=30;render();
+  }catch(e){if(!all.length)$("list").innerHTML='<div class="state"><i class="fa-solid fa-triangle-exclamation bg"></i><b>Data ရယူ၍ မရပါ</b>အင်တာနက် သို့မဟုတ် Admin Key ကို စစ်ပါ<br><button class="btn" type="button" onclick="loadCustomers()">ပြန်ကြိုးစားမည်</button></div>'}
+  finally{btn.classList.remove("spin")}
+}
+
+function inSeg(c){
+  if(seg==="can")return c.cancelled>=2;
+  if(c.orders<=0)return false;
+  if(seg==="all")return true;
+  if(seg==="l30"){const d=lapsed(c);return d!==null&&d>=30}
+  if(seg==="l60"){const d=lapsed(c);return d!==null&&d>=60}
+  return kind(c)===seg;
+}
+function filtered(){
+  const t=query.toLowerCase().trim(),q=sym(t);
+  const by={spent:(a,b)=>b.spent-a.spent||b.cancelled-a.cancelled,orders:(a,b)=>b.orders-a.orders||b.spent-a.spent,recent:(a,b)=>String(b.last_order).localeCompare(String(a.last_order)),name:(a,b)=>String(a.name).localeCompare(String(b.name),"my")}[seg==="can"?"x":sortBy]||((a,b)=>b.cancelled-a.cancelled);
+  return all.filter(c=>inSeg(c)&&(!t||String(c.name).toLowerCase().includes(t)||(q&&c.phones.some(p=>sym(p).includes(q))))).sort(by);
+}
+
+function render(){
+  const act=all.filter(c=>c.orders>0),tot=act.length,sp=act.reduce((a,c)=>a+c.spent,0),od=act.reduce((a,c)=>a+c.orders,0),rep=act.filter(c=>c.orders>=2).length;
+  const cn={vip:0,reg:0,new:0,l30:0,l60:0,can:0};
+  act.forEach(c=>{cn[kind(c)]++;const d=lapsed(c);if(d!==null){if(d>=30)cn.l30++;if(d>=60)cn.l60++}});
+  cn.can=all.filter(c=>c.cancelled>=2).length;
+  $("bigN").innerHTML=Math.round(sp).toLocaleString()+"<span>Ks</span>";
+  const mStart=new Date(Date.UTC(mmt().getUTCFullYear(),mmt().getUTCMonth(),1)-390*60000).toISOString();
+  const fresh=per==="all"?act.filter(c=>String(c.first_order).replace(" ","T")>=mStart.slice(0,19)).length:null;
+  $("kp").innerHTML=`<div><b>${tot}</b><small>ဝယ်သူ</small></div><div><b>${tot?Math.round(rep/tot*100):0}%</b><small>ပြန်ဝယ်သူ</small></div><div><b>${od?short(sp/od):0}</b><small>ပျမ်းမျှ/အော်ဒါ</small></div><div><b>${fresh===null?"—":"+"+fresh}</b><small>ဒီလ အသစ်</small></div>`;
+  $("sub").textContent=tot?`ဝယ်သူ ${tot} ယောက် · အော်ဒါ ${od} ခု`:"ဝယ်သူများ";
+  const defs=[["all","အားလုံး",tot],["vip","👑 VIP",cn.vip],["reg","ပုံမှန်",cn.reg],["new","အသစ်",cn.new]];
+  if(per==="all")defs.push(["l30","ပျောက် ၃၀ ရက်+",cn.l30],["l60","ပျောက် ၆၀ ရက်+",cn.l60]);
+  defs.push(["can","ပယ်ဖျက်များသူ",cn.can]);
+  $("chips").innerHTML=defs.map(([k,t,n])=>`<button type="button" data-s="${k}" class="${seg===k?"on":""} ${k==="can"?"warn":""}">${t}<em>${n}</em></button>`).join("");
+
+  view=filtered();$("cnt").textContent=view.length===(seg==="all"?tot:view.length)&&!query?`${view.length} ယောက်`:`${view.length} ယောက် တွေ့သည်`;
+  if(!all.length){$("list").innerHTML='<div class="state"><i class="fa-solid fa-users bg"></i><b>ဝယ်သူ မရှိသေးပါ</b>အော်ဒါတင်သူများ ဤနေရာတွင် အလိုအလျောက် စာရင်းဝင်ပါမည်</div>';return}
+  if(!view.length){$("list").innerHTML='<div class="state"><i class="fa-solid fa-magnifying-glass bg"></i><b>မတွေ့ပါ</b>အခြားစကားလုံး (သို့) အုပ်စုဖြင့် ကြည့်ပါ</div>';return}
+  const ranked=sortBy==="spent"&&seg==="all"&&!query;
+  $("list").innerHTML=view.slice(0,shown).map((c,i)=>{const k=kind(c),nm=c.name||"အမည်မသိ",d=lapsed(c),fl=[];
+    if(d!==null&&d>=30)fl.push(`<span class="lap">ပျောက် ${d} ရက်</span>`);
+    if(c.cancelled>=2)fl.push(`<span class="can">ပယ်ဖျက် ${c.cancelled}</span>`);
+    if(c.note)fl.push(`<span class="nt"><i class="fa-regular fa-note-sticky"></i> မှတ်ချက်</span>`);
+    return`<button class="row" type="button" data-i="${i}"><div class="av" style="background:${colorOf(c.key)}">${esc(initial(nm))}${ranked&&i<3?`<span class="rk">${i+1}</span>`:""}</div>
+      <div class="mid"><div class="n">${esc(nm)}${c.orders>0?`<span class="tg ${k}">${KT[k]}</span>`:""}</div><div class="p">${esc(c.phone)}</div>${fl.length?`<div class="fl">${fl.join("")}</div>`:""}</div>
+      <div class="rt"><b>${mny(c.spent)}</b><small>${c.orders} ကြိမ်${c.orders?" · "+ago(c.last_order):""}</small></div></button>`}).join("")
+    +(view.length>shown?`<button class="more" type="button" onclick="shown+=30;render()">နောက်ထပ် ${Math.min(30,view.length-shown)} ယောက် ပြမည်</button>`:"");
+}
+$("list").addEventListener("click",e=>{const b=e.target.closest(".row");if(b)openSheet(view[+b.dataset.i])});
+$("chips").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;seg=b.dataset.s;shown=30;render()});
+let _t;
+function onSearch(){query=$("q").value;$("sbx").classList.toggle("has",!!query);clearTimeout(_t);_t=setTimeout(()=>{shown=30;render()},120)}
+function clearSearch(){$("q").value="";onSearch();$("q").focus()}
+function onSort(){sortBy=$("sort").value;shown=30;render()}
+
+function exportCsv(){
+  const l=filtered();if(!l.length)return showToast("ထုတ်ရန် data မရှိပါ");
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const rows=[["Name","Phone","Orders","Spent","Cancelled","First order","Last order","Note"],...l.map(c=>[c.name,c.phone,c.orders,c.spent,c.cancelled,c.first_order,c.last_order,c.note])];
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));
+  a.download="customers-"+mmt().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+// ============ Detail sheet ============
+const items=x=>{try{const v=JSON.parse(x.items_json||"[]");return Array.isArray(v)?v:[]}catch(_){return[]}};
+const shopName=()=>{try{return(getMe().shop&&getMe().shop.name)||"မြင်သာကြက်ကင်"}catch(_){return"မြင်သာကြက်ကင်"}};
+const WD=["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"];
+function intl(p){const d=pkey(p);return d.startsWith("0")?"+95"+d.slice(1):d.startsWith("95")?"+"+d:d}
+function tpls(c){const n=c.name||"ဧည့်သည်",s=shopName();return[
+ ["ပြန်လာပါဦး",`မင်္ဂလာပါ ${n} ရေ၊ ${s} က လွမ်းနေပါပြီ 🍗 ဒီအပတ် ပြန်လာပြီး မှာကြည့်ပါဦးနော်။`],
+ ["ပရိုမို",`မင်္ဂလာပါ ${n} ရေ၊ ${s} မှာ ဒီရက်ပိုင်း အထူးလျှော့စျေး ရှိပါတယ် 🎁 မှာယူဖို့ ဖိတ်ခေါ်ပါတယ်။`],
+ ["ကျေးဇူးတင်",`${n} ရေ၊ ${s} ကို အမြဲထောက်ပံ့ပေးတဲ့အတွက် ကျေးဇူးတင်ပါတယ် 🙏`]]}
+function sendLinks(c){
+  const p=String(c.phone),tel=isTel(p),tg=/^@/.test(p)?p.slice(1):null,t=encodeURIComponent(msgTxt),n=tel?intl(p):"";
+  return`${tel?`<a class="vb" href="viber://chat?number=${encodeURIComponent(n)}" onclick="copyTxt()"><i class="fa-brands fa-viber"></i> Viber</a><a class="sm" href="sms:${esc(n)}?body=${t}"><i class="fa-solid fa-comment-sms"></i> SMS</a>`:`<span></span><span></span>`}
+  <a class="tgm" href="${tg?"https://t.me/"+esc(tg):tel?"https://t.me/"+esc(n):"#"}" target="_blank" rel="noopener" onclick="copyTxt()"><i class="fa-brands fa-telegram"></i> Telegram</a>`}
+function setTpl(i){tpl=i;const c=all.find(x=>x.key===openKey);if(!c)return;msgTxt=tpls(c)[i][1];$("msgBox").value=msgTxt;
+  document.querySelectorAll(".tp button").forEach((b,j)=>b.classList.toggle("on",j===i));$("snd").innerHTML=sendLinks(c)}
+function msgEdit(){msgTxt=$("msgBox").value;const c=all.find(x=>x.key===openKey);if(c)$("snd").innerHTML=sendLinks(c)}
+async function copyTxt(){try{await navigator.clipboard.writeText(msgTxt);showToast("စာကူးပြီး — Paste လုပ်ပါ ✅")}catch(_){}}
+
+async function openSheet(c){
+  if(!c)return;
+  const k=kind(c),nm=c.name||"အမည်မသိ",phone=String(c.phone),tel=isTel(phone),tg=/^@/.test(phone)?phone.slice(1):null,was=$("sheet").classList.contains("show");
+  openKey=c.key;tpl=0;msgTxt=tpls(c)[0][1];
+  $("sHead").innerHTML=`<div class="av" style="background:${colorOf(c.key)}">${esc(initial(nm))}</div><div class="t"><b>${esc(nm)}${c.orders>0?`<span class="tg ${k}">${KT[k]}</span>`:""}</b><span>${esc(phone)}</span></div><button class="sc" type="button" onclick="closeSheet()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button>`;
+  let lo="";
+  if(loyal.on&&loyal.every>0){const ev=loyal.every,cur=c.loyal%ev,done=Math.floor(c.loyal/ev);
+    lo=`<div class="card"><h4>Loyalty (ဆုရမည့် အော်ဒါ)</h4><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13.5px"><span>${cur} / ${ev} ကြိမ်</span><span style="color:var(--sub);font-weight:500">${cur?`နောက် ${ev-cur} ကြိမ်မှာ ဆုရမည်`:done?"ဆုရပြီး — အသစ်စ":""}</span></div><div class="bar"><i style="width:${Math.round(cur/ev*100)}%"></i></div><small style="color:var(--sub)">${esc(loyal.text||"")}${done?` · ဆုရပြီး ${done} ကြိမ်`:""}</small></div>`}
+  const avg=c.orders?c.spent/c.orders:0;
+  $("sBody").innerHTML=`<div class="acts">${tel?`<a class="call" href="tel:${esc(phone.replace(/[^\d+]/g,""))}"><i class="fa-solid fa-phone"></i> ဖုန်းခေါ်မည်</a>`:tg?`<a class="call" href="https://t.me/${esc(tg)}" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i> Telegram</a>`:"<span></span>"}<button class="copy" type="button" onclick="copyPhone()"><i class="fa-regular fa-copy"></i> ကူးမည်</button></div>
+  <div class="stats"><div><b>${c.orders}</b><small>အော်ဒါ</small></div><div><b>${short(c.spent)}</b><small>စုစုပေါင်း Ks</small></div><div><b>${short(avg)}</b><small>ပျမ်းမျှ Ks</small></div></div>
+  ${c.cancelled>=2?`<div class="card" style="background:#fdeaea;border-color:#f6cccc"><h4 style="color:#b42f2f;margin:0">⚠ ပယ်ဖျက်ခဲ့သော အော်ဒါ ${c.cancelled} ခု (ပေါင်းထဲ မပါ)</h4></div>`:""}
+  <div class="card"><h4>မှတ်ချက် (ဝယ်သူအကြောင်း)</h4><textarea id="noteBox" maxlength="500" placeholder="ဥပမာ — ငရုတ်သီးမစားပါ၊ ညနေ ၆ နာရီနောက်မှ ယူတတ်">${esc(c.note)}</textarea><button class="sv" type="button" onclick="saveNote()"><i class="fa-solid fa-floppy-disk"></i> သိမ်းမည်</button></div>
+  <div class="card"><h4>မက်ဆေ့ချ် ပို့မည်</h4><div class="tp">${tpls(c).map((t,i)=>`<button type="button" class="${i?"":"on"}" onclick="setTpl(${i})">${t[0]}</button>`).join("")}</div><textarea id="msgBox" oninput="msgEdit()">${esc(msgTxt)}</textarea><div class="snd" id="snd">${sendLinks(c)}</div></div>
+  ${lo}
+  <div class="card"><h4>မှာယူပုံ</h4><div class="kv" id="rhy"><div><small>နောက်ဆုံး မှာချိန်</small><b>${c.orders?ago(c.last_order):"-"}</b></div><div><small>ပထမဆုံး မှာချိန်</small><b>${c.first_order?esc(typeof fmtDate==="function"?fmtDate(c.first_order):c.first_order):"-"}</b></div></div></div>
+  <div class="card" id="vcBox" style="display:none"><h4>Voucher / ဆုများ</h4><div id="vcList"></div></div>
+  <div id="favBox"></div>
+  <div class="card"><h4>မှာယူခဲ့သော အော်ဒါများ</h4><div id="ordBox"><div class="mu"><i class="fa-solid fa-spinner fa-spin"></i> ရယူနေသည်...</div></div></div>`;
+  $("bd").classList.add("show");$("sheet").classList.add("show");$("sBody").scrollTop=0;
+  if(!was){try{history.pushState({sheet:1},"")}catch(_){}}
+
+  const tl=tel?apiFetch("/api/admin/customer-vouchers?phones="+encodeURIComponent(c.phones.join(","))).catch(()=>null):Promise.resolve(null);
+  tl.then(r=>{if(openKey!==c.key||!r||!(r.vouchers||[]).length)return;const S={live:"သုံးနိုင်",used:"သုံးပြီး",expired:"သက်တမ်းကုန်",off:"ပိတ်ထား"};
+    $("vcBox").style.display="";$("vcList").innerHTML=r.vouchers.map(v=>`<div class="vc"><div><code>${esc(v.code)}</code><small>${esc(v.label)} လျှော့ · ${v.from==="reward"?"Loyalty ဆု":"ပေးထားသော"}${v.expires?" · "+esc(v.expires)+" အထိ":""}</small></div><span class="st ${v.state}">${S[v.state]||v.state}</span></div>`).join("")});
+
+  try{
+    const term=tel?pkey(phone).slice(-8):phone;let list=[];
+    for(let p=1;p<=3;p++){const res=await apiFetch("/api/admin/orders?search="+encodeURIComponent(term)+"&pageSize=50&page="+p);if(openKey!==c.key)return;const g=res.orders||[];list=list.concat(g);if(g.length<50)break}
+    const mine=list.filter(x=>pkey(x.phone)===c.key),valid=mine.filter(x=>x.status!=="Cancelled"),cx=mine.length-valid.length,box=$("ordBox");
+    if(!valid.length){box.innerHTML='<div class="mu">အော်ဒါ မတွေ့ပါ</div>';return}
+    const cnt={};valid.forEach(x=>items(x).forEach(i=>{const n=i.name||i.title;if(n)cnt[n]=(cnt[n]||0)+(num(i.qty??i.quantity)||1)}));
+    const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,4);
+    if(top.length)$("favBox").innerHTML=`<div class="card"><h4>အကြိုက်ဆုံး ပစ္စည်းများ</h4><div class="fav">${top.map(([n,q])=>`<span>${esc(n)} ×${q}</span>`).join("")}</div></div>`;
+    // မှာယူပုံ — ပျမ်းမျှ ပြန်မှာချိန် / အကြိမ်များသော နေ့ နှင့် အချိန်
+    const ds=valid.map(x=>toDate(x.created_at)).filter(Boolean).sort((a,b)=>a-b);
+    if(ds.length>1){const gap=Math.round((ds[ds.length-1]-ds[0])/864e5/(ds.length-1));const wd=Array(7).fill(0),hr=Array(24).fill(0);
+      ds.forEach(d=>{const m=new Date(+d+390*60000);wd[m.getUTCDay()]++;hr[m.getUTCHours()]++});
+      const w=wd.indexOf(Math.max(...wd)),h=hr.indexOf(Math.max(...hr));
+      $("rhy").insertAdjacentHTML("beforeend",`<div><small>ပျမ်းမျှ ပြန်မှာချိန်</small><b>${gap<1?"နေ့စဉ်လိုလို":"ရက် "+gap+" ခါတစ်ခါ"}</b></div><div><small>အများဆုံး မှာသည့်</small><b>${WD[w]} · ${String(h).padStart(2,"0")}:00 ဝန်းကျင်</b></div>`)}
+    box.innerHTML=valid.slice(0,10).map(x=>{const sm=items(x).map(i=>esc(i.name||"?")+" ×"+(num(i.qty??i.quantity)||1)).join(", ")||"—",st=x.status||"New";
+      return`<a class="ord" href="orders.html#o${esc(x.id)}"><div class="a"><b>${esc(x.voucher_code||"#"+x.id)}<span class="pill ${esc(st)}">${esc(st)}</span></b><small>${esc(ago(x.created_at))} · ${sm}</small></div><div class="m">${mny(num(x.total))}</div></a>`}).join("")
+      +(valid.length>10?'<div class="mu">နောက်ဆုံး ၁၀ ခုကိုသာ ပြထားသည်</div>':"")+(cx?`<div class="mu">ပယ်ဖျက်ထားသော ${cx} ခုကို မထည့်ပါ</div>`:"");
+  }catch(_){if(openKey===c.key)$("ordBox").innerHTML='<div class="mu">အော်ဒါများ ရယူ၍မရပါ</div>'}
+}
+async function saveNote(){
+  const c=all.find(x=>x.key===openKey);if(!c)return;const note=$("noteBox").value.trim();
+  try{await apiFetch("/api/admin/customer-note",{method:"POST",body:JSON.stringify({phones:c.phones,note})});c.note=note;showToast("မှတ်ချက် သိမ်းပြီး ✅");render()}catch(_){}
+}
+function closeSheet(fromPop){
+  if(!$("sheet").classList.contains("show"))return;
+  $("sheet").classList.remove("show");$("bd").classList.remove("show");openKey=null;
+  if(!fromPop){try{if(history.state&&history.state.sheet)history.back()}catch(_){}}
+}
+window.addEventListener("popstate",()=>closeSheet(true));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+async function copyPhone(){const c=all.find(x=>x.key===openKey),p=c?String(c.phone):"";try{await navigator.clipboard.writeText(p);showToast("ကူးပြီးပါပြီ ✅")}catch(_){showToast(p)}}
+window.addEventListener("load",()=>{if(typeof renderAdminLayout==="function")renderAdminLayout("customers");loadCustomers()});
+</script>
+</body>
+</html>

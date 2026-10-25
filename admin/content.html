@@ -55,6 +55,34 @@
   .mi .ok { font-size: 11px; color: #16a34a; font-weight: 700; height: 14px; }
   .cats { display: flex; flex-wrap: wrap; gap: 8px; }
   .cats button { border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+  /* banner manager v18 */
+  .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 2px 1px 8px; scrollbar-width: none; } .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 99px; padding: 8px 14px; font-weight: 700; font-size: 12.5px; display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+  .tab em { font: 800 11px "Plus Jakarta Sans", sans-serif; font-style: normal; background: #EEF2F0; border-radius: 99px; padding: 1px 7px; color: #5b6770; }
+  .tab.on { background: #0D5C49; color: #fff; border-color: #0D5C49; } .tab.on em { background: rgba(255,255,255,.22); color: #fff; }
+  .bcard { border: 1px solid var(--line); border-radius: 18px; background: #fff; margin-bottom: 10px; overflow: hidden; box-shadow: var(--card-shadow); }
+  .bcard.off { opacity: .62; }
+  .bh { display: flex; gap: 11px; align-items: center; padding: 10px; cursor: pointer; }
+  .bth { width: 76px; height: 54px; flex: none; border-radius: 13px; background: #E3F1EB center/cover no-repeat; display: grid; place-items: center; color: #0D5C49; font-size: 18px; overflow: hidden; }
+  .bth.g { background: linear-gradient(155deg,#F5B54E,#D9820F); } .bth.d { background: linear-gradient(155deg,#1E2B27,#0B1411); } .bth.l { background: linear-gradient(155deg,#F4F9F6,#DCEBE3); } .bth.n { background: linear-gradient(155deg,#0B4F3F,#083D31); }
+  .bi { flex: 1; min-width: 0; } .bi b { display: block; font-size: 14px; font-weight: 800; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bi div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 3px; }
+  .pl { font-size: 10.5px; font-weight: 800; padding: 1px 9px; border-radius: 99px; background: #E8F1EC; color: #083D31; } .pl.g { background: #FFF1D6; color: #8A4B00; } .pl.v { background: #EFE9FB; color: #6D3FC4; } .pl.r { background: #FDE8E4; color: #B42318; }
+  .bh .mini { width: 34px; height: 34px; border-radius: 11px; border: 1px solid var(--line); background: #fff; color: #5b6770; font-size: 12px; flex: none; cursor: pointer; }
+  .bb { display: none; padding: 4px 12px 14px; border-top: 1px dashed var(--line); background: #FAFCFB; } .bcard.open .bb { display: block; }
+  .bb .fld { margin: 10px 0 0; } .bb select, .fld select { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 10px 11px; font-size: 14px; background: #f8fafc; font-family: inherit; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .chp { display: flex; flex-wrap: wrap; gap: 7px; } .chp button { border: 1.5px solid var(--line); background: #fff; border-radius: 99px; padding: 7px 13px; font-weight: 700; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+  .chp button.on { border-color: #0D5C49; background: #E8F1EC; color: #083D31; }
+  .ph2 { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
+  .ph2 .thumb { width: 96px; height: 64px; }
+  .ph2 button.s { border: 0; border-radius: 11px; padding: 8px 12px; background: #E3F1EB; color: #083D31; font-weight: 800; font-size: 12.5px; margin-right: 6px; cursor: pointer; }
+  .del { width: 100%; margin-top: 12px; border: 0; border-radius: 12px; padding: 10px; background: #FDE8E4; color: #B42318; font-weight: 800; font-size: 13px; cursor: pointer; }
+  .rng { width: 100%; accent-color: #0D5C49; } .rv { font: 800 13px "Plus Jakarta Sans", sans-serif; color: #0D5C49; }
+  .pu-prev { margin-top: 12px; border-radius: 22px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: var(--card-shadow); max-width: 280px; margin-left: auto; margin-right: auto; text-align: center; }
+  .pu-prev .pi { aspect-ratio: 16/11; background: #E3F1EB center/cover; } .pu-prev .pb { padding: 12px 14px 14px; } .pu-prev h5 { margin: 0 0 4px; font-size: 15px; } .pu-prev p { margin: 0 0 10px; font-size: 12px; color: var(--muted); white-space: pre-wrap; } .pu-prev span { display: block; background: #0D5C49; color: #fff; border-radius: 12px; padding: 9px; font-weight: 800; font-size: 13px; }
+  .savebar { position: sticky; bottom: 12px; z-index: 30; margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -72,18 +100,40 @@
     </div></div>
 
     <div class="p-wrap">
-      <h2 class="sec"><i class="fa-regular fa-image"></i> ထိပ်ဆုံး Banner</h2>
+      <h2 class="sec"><i class="fa-regular fa-image"></i> Banner များ</h2>
       <div class="card">
-        <div class="prev" id="prev"><small id="pvK"></small><h4 id="pvT"></h4><span id="pvB"></span></div>
-        <div class="fld"><label>အပေါ်ကဆောင်းစာ (သေးသေး)</label><input id="bK" maxlength="40" placeholder="ဒီနေ့အတွက်" oninput="pv()"></div>
-        <div class="fld"><label>ခေါင်းစဉ်</label><input id="bT" maxlength="60" placeholder="ဒီနေ့ ဘာစားမလဲ?" oninput="pv()"></div>
-        <div class="fld"><label>ခလုတ်စာသား</label><input id="bB" maxlength="30" placeholder="မီနူး ကြည့်မည်" oninput="pv()"></div>
-        <p class="help" style="margin-top:14px"><b>Banner ပုံများ</b> — ဖုန်းထဲက ပုံကို တိုက်ရိုက်ရွေးပါ (အလိုအလျောက် ကျုံ့ပေးပါမယ်)။ ပုံတစ်ပုံထက်ပိုရင် အလိုအလျောက် ဆလိုက်ပြောင်းပါမယ်။ ပုံမထည့်ရင် အစိမ်းရောင်နောက်ခံ သုံးပါမယ်။</p>
-        <div id="slides"></div>
-        <button class="btn ghost" type="button" id="addSlide" onclick="addSlide()"><i class="fa-solid fa-plus"></i> Banner ပုံ ထည့်မည်</button>
-        <div style="height:10px"></div>
-        <button class="btn" type="button" onclick="saveBanner()">Banner သိမ်းမည်</button>
+        <p class="help">Banner ကို လိုသလောက် ထည့်နိုင်ပါတယ်။ နေရာ (ထိပ်ဆုံး / Category အောက် / မီနူးအလယ်)၊ စာသား၊ ခလုတ်၊ ဖွင့်ရက်-ပိတ်ရက်ကို တစ်ခုချင်း ရွေးနိုင်ပါတယ်။ ပြီးရင် အောက်ဆုံးက <b>သိမ်းမည်</b> ကို နှိပ်ပါ။</p>
+        <div class="tabs" id="bTabs"></div>
+        <div id="bList"></div>
+        <button class="btn ghost" type="button" onclick="addBanner()"><i class="fa-solid fa-plus"></i> Banner အသစ် ထည့်မည်</button>
+        <p class="help" style="margin:14px 0 6px"><b>မူလစာသားများ</b> (Banner တစ်ခုချင်းမှာ မဖြည့်ထားလျှင် ဒီစာတွေ သုံးမည်)</p>
+        <div class="fld"><label>အပေါ်ကဆောင်းစာ (သေးသေး)</label><input id="bK" maxlength="40" placeholder="ဒီနေ့အတွက်"></div>
+        <div class="fld"><label>ခေါင်းစဉ်</label><input id="bT" maxlength="60" placeholder="ဒီနေ့ ဘာစားမလဲ?"></div>
+        <div class="fld"><label>ခလုတ်စာသား</label><input id="bB" maxlength="30" placeholder="မီနူး ကြည့်မည်"></div>
       </div>
+
+      <h2 class="sec"><i class="fa-solid fa-wand-sparkles"></i> Slider လှုပ်ရှားပုံ</h2>
+      <div class="card">
+        <p class="help">Banner တစ်နေရာမှာ တစ်ခုထက်ပိုရှိရင် အလိုအလျောက် ပြောင်းပြပါမယ်။</p>
+        <div class="fld"><label>ပြောင်းပုံ</label><div class="chp" id="aChips"></div></div>
+        <div class="fld"><label>ပြောင်းချိန် — <span class="rv" id="spV">5</span> စက္ကန့်</label><input class="rng" id="spR" type="range" min="2" max="15" step="1" value="5" oninput="bopts.speed=+this.value;$('spV').textContent=this.value"></div>
+      </div>
+
+      <h2 class="sec"><i class="fa-regular fa-window-restore"></i> Pop-up (ဝင်လာချိန် ပေါ်မည့် ကြော်ငြာ)</h2>
+      <div class="card">
+        <div class="sw-row"><div class="t"><b>Pop-up ဖွင့်မည်</b><small>ဝယ်သူ စာမျက်နှာ ဝင်လာလျှင် ပေါ်လာမည်</small></div><button class="sw" id="puOn" type="button" onclick="this.classList.toggle('on');popup.on=this.classList.contains('on')?1:0"></button></div>
+        <div class="ph2"><div class="thumb" id="puThumb" onclick="puPhoto()"><i class="fa-solid fa-camera"></i></div><div><button class="s" type="button" onclick="puPhoto()">ပုံထည့်/ပြောင်း</button><button class="s" type="button" style="background:#FDE8E4;color:#B42318" onclick="popup.img='';puPaint()">ပုံဖယ်</button></div></div>
+        <div class="fld"><label>ခေါင်းစဉ်</label><input id="puT" maxlength="60" oninput="popup.title=this.value;puPv()" placeholder="ဥပမာ — ဒီနေ့ ၁၀% လျှော့!"></div>
+        <div class="fld"><label>စာသား</label><textarea id="puX" maxlength="240" rows="3" oninput="popup.text=this.value;puPv()" placeholder="အသေးစိတ် ရေးပါ"></textarea></div>
+        <div class="fld"><label>ခလုတ်စာသား (မထည့်လျှင် ခလုတ်မပြ)</label><input id="puB" maxlength="30" oninput="popup.btn=this.value;puPv()" placeholder="ကြည့်မည်"></div>
+        <div class="fld"><label>ခလုတ်နှိပ်လျှင် သွားမည့်နေရာ</label><div id="puL"></div></div>
+        <div class="fld"><label>ပေါ်မည့်အကြိမ်</label><div class="chp" id="puF"></div></div>
+        <div class="g2"><div class="fld"><label>စောင့်ချိန် (စက္ကန့်)</label><input id="puD" type="number" min="0" max="30" inputmode="numeric" oninput="popup.delay=+this.value||0"></div><div></div></div>
+        <div class="g2"><div class="fld"><label>စတင်မည့်ရက် (မထည့်လည်းရ)</label><input id="puS" type="date" onchange="popup.start=this.value"></div><div class="fld"><label>ပြီးဆုံးမည့်ရက်</label><input id="puE" type="date" onchange="popup.end=this.value"></div></div>
+        <div class="pu-prev" id="puPrev"></div>
+      </div>
+
+      <div class="savebar"><button class="btn" type="button" id="saveAll" onclick="saveBanner()"><i class="fa-solid fa-floppy-disk"></i> Banner / Pop-up အားလုံး သိမ်းမည်</button></div>
 
       <h2 class="sec"><i class="fa-solid fa-bullhorn"></i> အသိပေးဘား (Notice Bar)</h2>
       <div class="card">
@@ -118,57 +168,132 @@
 <script>
   const $ = id => document.getElementById(id);
   const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  let slides = [], items = [], newImg = "";
+  let items = [], newImg = "";
   const cssUrl = u => "url('" + String(u).replace(/['"\\()\s]/g, encodeURIComponent) + "')";
+
+  let banners = [], bopts = { speed: 5, anim: "slide" }, popup = { on: 0, img: "", title: "", text: "", btn: "", link: "", freq: "day", delay: 0, start: "", end: "" }, bTab = "all", openId = "";
+  const POS = { top: "ထိပ်ဆုံး", cats: "Category အောက်", mid: "မီနူးအလယ်" }, THEMES = { green: "အစိမ်း", gold: "ရွှေရောင်", dark: "မှောင်", light: "အလင်း" };
+  const THC = { green: "n", gold: "g", dark: "d", light: "l" };
+  const uid = () => "b" + Math.random().toString(36).slice(2, 8);
+  const today = () => new Date(Date.now() + 390 * 60000).toISOString().slice(0, 10);
 
   async function load() {
     try {
       const a = await apiFetch("/api/admin/app-settings"); const c = a.content || {};
       $("bK").value = c.kicker || ""; $("bT").value = c.title || ""; $("bB").value = c.btn || "";
-      slides = (c.slides || []).map(x => ({ img: x.img || "", title: x.title || "", sub: x.sub || "" }));
+      banners = (c.banners || []).map(b => ({ ...b }));
+      bopts = Object.assign({ speed: 5, anim: "slide" }, c.bopts || {});
+      popup = Object.assign(popup, c.popup || {});
       $("nOn").classList.toggle("on", !!c.notice_on); $("nT").value = c.notice_text || ""; $("nC").value = c.notice_closed || "";
-      renderSlides(); pv();
+      renderBanners(); paintOpts(); puPaint();
     } catch (_) {}
-    try { const p = await apiFetch("/api/admin/products"); items = p.products || []; renderMenu(); } catch (_) {}
+    try { const p = await apiFetch("/api/admin/products"); items = p.products || []; renderMenu(); renderBanners(); puPaint(); } catch (_) {}
   }
 
-  /* ---------- Banner ---------- */
-  function pv() {
-    $("pvK").textContent = $("bK").value || "ဒီနေ့အတွက်";
-    $("pvT").textContent = $("bT").value || "ဒီနေ့ ဘာစားမလဲ?";
-    $("pvB").textContent = $("bB").value || "မီနူး ကြည့်မည်";
-    const f = slides.find(s => s.img); $("prev").style.backgroundImage = f ? cssUrl(f.img) : "";
+  /* ---------- link picker ---------- */
+  function linkType(l) { l = l || ""; return !l || l === "menu" ? l || "" : l === "promos" ? "promos" : l.startsWith("cat:") ? "cat" : l.startsWith("item:") ? "item" : /^https?:/i.test(l) ? "url" : ""; }
+  function linkHtml(l, cb) {
+    const t = linkType(l);
+    const sel = `<select onchange="${cb}(this.value,'type')"><option value="" ${t === "" ? "selected" : ""}>မီနူးသို့ ဆင်း (မူလ)</option><option value="cat" ${t === "cat" ? "selected" : ""}>အမျိုးအစား တစ်ခုသို့</option><option value="item" ${t === "item" ? "selected" : ""}>ပစ္စည်း တစ်ခု ဖွင့်မည်</option><option value="promos" ${t === "promos" ? "selected" : ""}>ဆုများ / Promo စာမျက်နှာ</option><option value="url" ${t === "url" ? "selected" : ""}>ပြင်ပ Link (https://...)</option></select>`;
+    let more = "";
+    if (t === "cat") more = `<select style="margin-top:6px" onchange="${cb}('cat:'+this.value)">${cats().map(c => `<option value="${esc(c)}" ${l === "cat:" + c ? "selected" : ""}>${esc(c)}</option>`).join("") || "<option value=''>အမျိုးအစား မရှိသေး</option>"}</select>`;
+    if (t === "item") more = `<select style="margin-top:6px" onchange="${cb}('item:'+this.value)">${items.map(p => `<option value="${p.id}" ${l === "item:" + p.id ? "selected" : ""}>${esc(p.name)}</option>`).join("") || "<option value=''>ပစ္စည်း မရှိသေး</option>"}</select>`;
+    if (t === "url") more = `<input style="margin-top:6px" value="${esc(l)}" maxlength="300" placeholder="https://..." onchange="${cb}(this.value)">`;
+    return sel + more;
   }
-  function renderSlides() {
-    $("slides").innerHTML = slides.map((s, i) => `
-      <div class="slide" data-i="${i}">
-        <div class="thumb ${s.img ? "has" : ""}" ${s.img ? `style="background-image:${cssUrl(s.img)}"` : ""} onclick="slidePhoto(${i})">${s.img ? '<span class="ov">ပြောင်းမည်</span>' : '<i class="fa-solid fa-camera"></i>'}</div>
-        <div class="f"><input placeholder="ဆလိုက်ခေါင်းစဉ် (မထည့်လည်းရ)" maxlength="60" value="${esc(s.title)}" oninput="slides[${i}].title=this.value"><input placeholder="ဖော်ပြချက်အတို (မထည့်လည်းရ)" maxlength="100" value="${esc(s.sub)}" oninput="slides[${i}].sub=this.value"></div>
-        <div class="ac"><button type="button" onclick="mv(${i},-1)" aria-label="အပေါ်">▲</button><button type="button" onclick="mv(${i},1)" aria-label="အောက်">▼</button><button type="button" onclick="rmSlide(${i})" aria-label="ဖျက်" style="color:#b42318">✕</button></div>
-      </div>`).join("");
-    $("addSlide").style.display = slides.length >= 6 ? "none" : "";
+  function linkVal(cur, v, kind) {   // select ပြောင်းလိုက်သောအခါ default တန်ဖိုး
+    if (kind !== "type") return v;
+    if (v === "cat") return "cat:" + (cats()[0] || "");
+    if (v === "item") return items[0] ? "item:" + items[0].id : "";
+    if (v === "url") return "https://";
+    return v;
   }
+
+  /* ---------- banners ---------- */
+  function counts() { const c = { all: banners.length, top: 0, cats: 0, mid: 0 }; banners.forEach(b => { c[b.pos] = (c[b.pos] || 0) + 1; }); return c; }
+  function status(b) {
+    if (!b.on) return '<span class="pl r">ပိတ်ထား</span>';
+    const t = today();
+    if (b.start && b.start > t) return `<span class="pl g">${esc(b.start)} မှ စမည်</span>`;
+    if (b.end && b.end < t) return '<span class="pl r">သက်တမ်းကုန်</span>';
+    return b.start || b.end ? `<span class="pl g">${esc(b.start || "…")} → ${esc(b.end || "…")}</span>` : '<span class="pl">ပြနေသည်</span>';
+  }
+  function renderBanners() {
+    const c = counts();
+    $("bTabs").innerHTML = [["all", "အားလုံး"], ["top", "ထိပ်ဆုံး"], ["cats", "Category အောက်"], ["mid", "မီနူးအလယ်"]].map(([k, l]) => `<button type="button" class="tab ${bTab === k ? "on" : ""}" onclick="bTab='${k}';renderBanners()">${l}<em>${c[k] || 0}</em></button>`).join("");
+    const list = banners.filter(b => bTab === "all" || b.pos === bTab);
+    $("bList").innerHTML = list.length ? list.map(b => {
+      const i = banners.indexOf(b), th = THC[b.theme] || "n";
+      return `<div class="bcard ${b.on ? "" : "off"} ${openId === b.id ? "open" : ""}" data-id="${b.id}">
+        <div class="bh" onclick="tgl('${b.id}')"><div class="bth ${b.img ? "" : th}" ${b.img ? `style="background-image:${cssUrl(b.img)}"` : ""}>${b.img ? "" : '<i class="fa-regular fa-image"></i>'}</div>
+          <div class="bi"><b>${esc(b.title || "(ခေါင်းစဉ်မရှိ)")}</b><div><span class="pl v">${POS[b.pos]}</span>${status(b)}</div></div>
+          <button class="mini" type="button" onclick="event.stopPropagation();mvB(${i},-1)" aria-label="အပေါ်">▲</button><button class="mini" type="button" onclick="event.stopPropagation();mvB(${i},1)" aria-label="အောက်">▼</button>
+          <button class="sw ${b.on ? "on" : ""}" style="width:44px;height:27px" type="button" onclick="event.stopPropagation();upd('${b.id}','on',${b.on ? 0 : 1},true)" aria-label="ဖွင့်/ပိတ်"></button></div>
+        <div class="bb">
+          <div class="ph2"><div class="thumb ${b.img ? "has" : ""}" ${b.img ? `style="background-image:${cssUrl(b.img)}"` : ""} onclick="bPhoto('${b.id}')">${b.img ? '<span class="ov">ပြောင်း</span>' : '<i class="fa-solid fa-camera"></i>'}</div>
+            <div><button class="s" type="button" onclick="bPhoto('${b.id}')">ပုံထည့်/ပြောင်း</button>${b.img ? `<button class="s" type="button" style="background:#FDE8E4;color:#B42318" onclick="upd('${b.id}','img','',true)">ပုံဖယ်</button>` : ""}</div></div>
+          <div class="fld"><label>ခေါင်းစဉ်</label><input maxlength="60" value="${esc(b.title)}" oninput="upd('${b.id}','title',this.value)" placeholder="ဥပမာ — ၂ ခုဝယ် ၁ ခုလျှော့"></div>
+          <div class="fld"><label>ဖော်ပြချက်အတို</label><input maxlength="100" value="${esc(b.sub)}" oninput="upd('${b.id}','sub',this.value)"></div>
+          <div class="g2"><div class="fld"><label>အပေါ်ကဆောင်းစာ</label><input maxlength="40" value="${esc(b.kick)}" oninput="upd('${b.id}','kick',this.value)" placeholder="မူလစာသား သုံးမည်"></div><div class="fld"><label>ခလုတ်စာသား</label><input maxlength="30" value="${esc(b.btn)}" oninput="upd('${b.id}','btn',this.value)" placeholder="ကြည့်မည်"></div></div>
+          <div class="fld"><label>နှိပ်လျှင် သွားမည့်နေရာ</label>${linkHtml(b.link, `lk('${b.id}')`)}</div>
+          <div class="fld"><label>ထားမည့်နေရာ</label><div class="chp">${Object.keys(POS).map(k => `<button type="button" class="${b.pos === k ? "on" : ""}" onclick="upd('${b.id}','pos','${k}',true)">${POS[k]}</button>`).join("")}</div></div>
+          <div class="fld"><label>အရောင် (ပုံမပါလျှင်)</label><div class="chp">${Object.keys(THEMES).map(k => `<button type="button" class="${b.theme === k ? "on" : ""}" onclick="upd('${b.id}','theme','${k}',true)">${THEMES[k]}</button>`).join("")}</div></div>
+          <div class="g2"><div class="fld"><label>စတင်မည့်ရက် (မထည့်လည်းရ)</label><input type="date" value="${esc(b.start)}" onchange="upd('${b.id}','start',this.value,true)"></div><div class="fld"><label>ပြီးဆုံးမည့်ရက်</label><input type="date" value="${esc(b.end)}" onchange="upd('${b.id}','end',this.value,true)"></div></div>
+          <button class="del" type="button" onclick="rmB('${b.id}')"><i class="fa-regular fa-trash-can"></i> ဤ Banner ကို ဖျက်မည်</button>
+        </div></div>`;
+    }).join("") : `<p class="help" style="text-align:center;padding:14px 0">${banners.length ? "ဤနေရာတွင် Banner မရှိသေးပါ" : "Banner မရှိသေးပါ — မူလ ဆိုင်ပုံစံ banner တစ်ခု ပြနေပါမယ်။ အောက်က ခလုတ်နှိပ်ပြီး ထည့်ပါ"}</p>`;
+  }
+  function tgl(id) { openId = openId === id ? "" : id; renderBanners(); }
+  function upd(id, k, v, re) { const b = banners.find(x => x.id === id); if (!b) return; b[k] = v; if (re) renderBanners(); else { const t = document.querySelector(`.bcard[data-id="${id}"] .bi b`); if (k === "title" && t) t.textContent = v || "(ခေါင်းစဉ်မရှိ)"; } }
+  window.lk = (id) => (v, kind) => { const b = banners.find(x => x.id === id); b.link = linkVal(b.link, v, kind); renderBanners(); };
+  function addBanner() {
+    if (banners.length >= 20) return showToast("Banner ၂၀ ခုအထိသာ ထည့်နိုင်သည်");
+    const pos = bTab === "all" ? "top" : bTab, b = { id: uid(), img: "", title: "", sub: "", kick: "", btn: "", link: "", pos, theme: "green", on: 1, start: "", end: "" };
+    banners.push(b); openId = b.id; renderBanners(); setTimeout(() => { const e = document.querySelector(`.bcard[data-id="${b.id}"]`); if (e) e.scrollIntoView({ behavior: "smooth", block: "center" }); }, 50);
+  }
+  function rmB(id) { if (!confirm("ဤ Banner ကို ဖျက်မလား?")) return; banners = banners.filter(b => b.id !== id); renderBanners(); }
+  function mvB(i, d) { const list = banners.filter(b => bTab === "all" || b.pos === bTab), b = banners[i], k = list.indexOf(b), o = list[k + d]; if (!o) return; const j = banners.indexOf(o); [banners[i], banners[j]] = [banners[j], banners[i]]; renderBanners(); }
   async function withBusy(el, fn) {
     el && el.classList.add("busy");
     try { return await fn(); } catch (e) { showToast(e.message || "မအောင်မြင်ပါ"); } finally { el && el.classList.remove("busy"); }
   }
-  async function addSlide() {
-    await withBusy($("addSlide"), async () => {
+  async function bPhoto(id) {
+    await withBusy(document.querySelector(`.bcard[data-id="${id}"]`), async () => {
       showToast("ပုံ ကျုံ့ပြီး တင်နေသည်...");
       const r = await YNSUpload.pickAndUpload({ maxDim: 1400, maxKB: 300 }); if (!r) return;
-      slides.push({ img: r.url, title: "", sub: "" }); renderSlides(); pv(); showToast("ပုံတင်ပြီး ✓ (" + Math.round(r.bytes / 1024) + " KB)");
+      upd(id, "img", r.url, true); showToast("ပုံတင်ပြီး ✓ (" + Math.round(r.bytes / 1024) + " KB)");
     });
   }
-  async function slidePhoto(i) {
-    await withBusy(document.querySelector(`.slide[data-i="${i}"]`), async () => {
-      const r = await YNSUpload.pickAndUpload({ maxDim: 1400, maxKB: 300 }); if (!r) return;
-      slides[i].img = r.url; renderSlides(); pv(); showToast("ပုံတင်ပြီး ✓");
-    });
+
+  /* ---------- slider options ---------- */
+  function paintOpts() {
+    $("aChips").innerHTML = [["slide", "ဘေးသို့ ဆွဲပြောင်း"], ["fade", "Fade (ဖြည်းဖြည်းပျောက်)"], ["zoom", "Zoom (ပုံအနည်းငယ်ချဲ့)"]].map(([k, l]) => `<button type="button" class="${bopts.anim === k ? "on" : ""}" onclick="bopts.anim='${k}';paintOpts()">${l}</button>`).join("");
+    $("spR").value = bopts.speed; $("spV").textContent = bopts.speed;
   }
-  function mv(i, d) { const j = i + d; if (j < 0 || j >= slides.length) return; [slides[i], slides[j]] = [slides[j], slides[i]]; renderSlides(); pv(); }
-  function rmSlide(i) { slides.splice(i, 1); renderSlides(); pv(); }
+
+  /* ---------- pop-up ---------- */
+  function puPaint() {
+    $("puOn").classList.toggle("on", !!popup.on);
+    $("puT").value = popup.title || ""; $("puX").value = popup.text || ""; $("puB").value = popup.btn || ""; $("puD").value = popup.delay || 0; $("puS").value = popup.start || ""; $("puE").value = popup.end || "";
+    const th = $("puThumb"); th.style.backgroundImage = popup.img ? cssUrl(popup.img) : ""; th.classList.toggle("has", !!popup.img); th.innerHTML = popup.img ? '<span class="ov">ပြောင်း</span>' : '<i class="fa-solid fa-camera"></i>';
+    $("puL").innerHTML = linkHtml(popup.link, "puLink");
+    $("puF").innerHTML = [["day", "တစ်နေ့ တစ်ကြိမ်"], ["session", "ဝင်တိုင်း (tab ပိတ်သည်အထိ တစ်ကြိမ်)"], ["once", "တစ်သက်တာ တစ်ကြိမ်"], ["always", "စာမျက်နှာ ဖွင့်တိုင်း"]].map(([k, l]) => `<button type="button" class="${popup.freq === k ? "on" : ""}" onclick="popup.freq='${k}';puPaint()">${l}</button>`).join("");
+    puPv();
+  }
+  window.puLink = (v, kind) => { popup.link = linkVal(popup.link, v, kind); puPaint(); };
+  function puPv() { $("puPrev").innerHTML = (popup.img ? `<div class="pi" style="background-image:${cssUrl(popup.img)}"></div>` : "") + `<div class="pb">${popup.title ? `<h5>${esc(popup.title)}</h5>` : ""}${popup.text ? `<p>${esc(popup.text)}</p>` : ""}${popup.btn ? `<span>${esc(popup.btn)}</span>` : ""}${!popup.title && !popup.text && !popup.img ? '<p>Pop-up နမူနာ ဒီမှာ ပေါ်မည်</p>' : ""}</div>`; }
+  async function puPhoto() {
+    await withBusy($("puThumb"), async () => { showToast("ပုံ ကျုံ့ပြီး တင်နေသည်..."); const r = await YNSUpload.pickAndUpload({ maxDim: 1200, maxKB: 260 }); if (!r) return; popup.img = r.url; puPaint(); showToast("ပုံတင်ပြီး ✓"); });
+  }
+
   async function saveBanner() {
-    try { await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ banner_kicker: $("bK").value, banner_title: $("bT").value, banner_btn: $("bB").value, banner_slides: slides }) }); showToast("Banner သိမ်းပြီး ✅"); } catch (_) {}
+    const b = $("saveAll"); b.disabled = true;
+    try {
+      const body = { banner_kicker: $("bK").value, banner_title: $("bT").value, banner_btn: $("bB").value, banners, bopts, popup };
+      const r = await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify(body) });
+      const c = r.content || {}; if (c.banners) banners = c.banners.map(x => ({ ...x }));
+      renderBanners(); showToast("Banner / Pop-up သိမ်းပြီး ✅");
+    } catch (_) {} finally { b.disabled = false; }
   }
   async function saveNotice() {
     try { await apiFetch("/api/admin/app-settings", { method: "POST", body: JSON.stringify({ notice_on: $("nOn").classList.contains("on"), notice_text: $("nT").value, notice_closed: $("nC").value }) }); showToast("အသိပေးဘား သိမ်းပြီး ✅"); } catch (_) {}

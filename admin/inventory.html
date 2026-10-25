@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Inventory • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gd:#094838;--gs:#E3F1EB;--am:#F0A033;--as:#FFF3DF;--ai:#8A4B00;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18);--num:'Bricolage Grotesque','Noto Sans Myanmar',sans-serif}
+html,body{overflow-x:hidden}
+.main{padding:0 0 110px!important;min-width:0}
+.in{max-width:1000px;margin:0 auto;padding:0 16px}
+.hero{position:relative;color:#fff;padding:calc(12px + env(safe-area-inset-top)) 0 56px;overflow:hidden;background:radial-gradient(120% 90% at 100% 0%,rgba(240,160,51,.22),transparent 55%),repeating-linear-gradient(115deg,rgba(255,255,255,.028) 0 2px,transparent 2px 14px),linear-gradient(160deg,#0B4F3F,#083D31)}
+@media(min-width:769px){.hero{border-radius:0 0 30px 30px}.mbtn{display:none!important}}
+.hr{display:flex;align-items:center;gap:10px}.ht{flex:1;min-width:0}.ht h1{margin:0;font-size:22px;font-weight:700;line-height:1.4}.ht small{color:rgba(255,255,255,.75);font-size:12.5px}
+.circ{width:42px;height:42px;flex-shrink:0;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center;font-size:15px;backdrop-filter:blur(6px)}
+.circ:active{transform:scale(.92)}.circ.spin i{animation:sp .8s linear infinite}
+.circ.addb{width:auto;padding:0 16px;border-radius:99px;background:var(--am);border-color:var(--am);color:#3b2200;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lbl{margin-top:18px;font-size:12.5px;color:#F7C879;font-weight:700}
+.big{font:800 38px/1.15 var(--num);letter-spacing:-1.2px;margin:2px 0 12px;white-space:nowrap}.big span{font-size:16px;color:rgba(255,255,255,.7);margin-left:6px;letter-spacing:0;font-weight:600}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding-top:13px;border-top:1px solid rgba(255,255,255,.15)}
+.kp b{display:block;font:800 18px var(--num)}.kp small{font-size:11.5px;color:rgba(255,255,255,.72)}
+.sw1{position:sticky;top:0;z-index:40;margin-top:-28px;padding-bottom:6px}
+.srow{display:flex;gap:8px;align-items:center}
+.sb2{flex:1;min-width:0;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:0 14px;box-shadow:0 10px 24px -12px rgba(8,61,49,.35)}
+.sb2:focus-within{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,92,73,.15)}
+.sb2 i{color:#94a3a0;font-size:14px}.sb2 input{flex:1;min-width:0;border:0;outline:0;background:transparent;padding:14px 0;font:inherit;font-size:14.5px;color:var(--ink)}
+.vt{width:48px;height:48px;flex-shrink:0;border-radius:16px;background:#fff;border:1px solid var(--ln);box-shadow:0 10px 24px -12px rgba(8,61,49,.35);color:var(--g);font-size:16px}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:10px 2px 2px}.chips::-webkit-scrollbar{display:none}
+.chips button{flex-shrink:0;background:#fff;border:1px solid var(--ln);color:var(--sub);padding:7px 13px;border-radius:99px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.chips button.on{background:var(--g);border-color:var(--g);color:#fff}.chips button.rd.on{background:var(--dg);border-color:var(--dg)}.chips button.am.on{background:var(--am);border-color:var(--am);color:#3b2200}
+.chips button em{font:700 11.5px var(--num);font-style:normal;opacity:.7;margin-left:5px}
+.chips.cat button{background:var(--gs);border-color:#cfe5da;color:var(--gd)}.chips.cat button.on{background:var(--gd);color:#fff}
+.chips.tool button{background:transparent;border:1px dashed #b9cdc3;color:var(--gd)}.chips.tool button.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.lh{display:flex;justify-content:space-between;align-items:center;margin:12px 4px 8px;font-size:12.5px;color:var(--sub);font-weight:700}
+.lh select{border:0;background:transparent;font-weight:700;font-size:12.5px;font-family:inherit;color:var(--ink);outline:0}
+.auto{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:11px 13px;box-shadow:var(--sh);margin-top:6px}
+.auto .ic{width:36px;height:36px;border-radius:50%;background:var(--gs);color:var(--g);display:grid;place-items:center;flex-shrink:0}.auto.off .ic{background:#eef2ef;color:#94a3a0}
+.auto .tx{flex:1;min-width:0}.auto .tx b{display:block;font-size:12.5px}.auto .tx small{color:var(--sub);font-size:11px}.auto .go{color:#b0bdb6;font-size:12px}
+/* products */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}@media(min-width:960px){.grid{grid-template-columns:repeat(4,1fr)}}
+.grid.l{grid-template-columns:1fr!important;gap:8px}
+.pc{position:relative;background:#fff;border:1px solid var(--ln);border-radius:20px;overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;min-width:0}
+.l .pc{flex-direction:row;align-items:stretch}
+.pc.out .ph,.pc.hid .ph{filter:grayscale(.85) brightness(.9)}.pc.out .pn,.pc.hid .pn{color:var(--sub)}
+.pc.sel{outline:3px solid var(--g);outline-offset:-3px}
+.ph{position:relative;aspect-ratio:4/3;background:#e9efe9 center/cover no-repeat;display:grid;place-items:center;font-size:36px;cursor:pointer;flex-shrink:0}
+.l .ph{aspect-ratio:auto;width:92px;font-size:26px}
+.tag{position:absolute;left:8px;top:8px;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--am);color:#3b2200;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.tag.sl{top:auto;bottom:8px;background:var(--dg);color:#fff}
+.stat{position:absolute;right:8px;top:8px;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:rgba(24,35,31,.78);color:#fff}
+.stat.lo{background:var(--am);color:#3b2200}
+.chk{position:absolute;right:8px;top:8px;width:26px;height:26px;border-radius:50%;background:#fff;border:2px solid #b9cdc3;display:none;place-items:center;color:#fff;font-size:12px}
+.selm .chk{display:grid}.selm .stat{display:none}.pc.sel .chk{background:var(--g);border-color:var(--g)}
+.pb{padding:10px 12px 12px;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.pn{font-weight:700;font-size:14px;line-height:1.45;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;cursor:pointer}
+.pp{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.pp b{font:800 15px var(--num);color:var(--gd);cursor:text;border-bottom:1px dashed #b9cdc3}.pp s{font-size:11.5px;color:#94a3a0}
+.pp input{width:90px;font:800 15px var(--num);border:1.5px solid var(--g);border-radius:8px;padding:2px 6px;outline:0}
+.pm{font-size:11.5px;color:var(--sub);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pm span.c{background:#eef2ef;border-radius:99px;padding:0 8px}.pm span.s{background:var(--gs);color:var(--gd);font-weight:700;border-radius:99px;padding:0 8px}.pm span.m{background:var(--as);color:var(--ai);font-weight:700;border-radius:99px;padding:0 8px}
+.meter{height:6px;border-radius:99px;background:#e9efe9;overflow:hidden;margin-top:3px}.meter i{display:block;height:100%;background:var(--ok);border-radius:99px}.meter i.lo{background:var(--am)}.meter i.no{background:var(--dg)}
+.ctl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px}
+.sw{position:relative;width:46px;height:28px;flex-shrink:0;border-radius:99px;background:#c9d3cd;transition:.2s;border:0;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s}.sw.on{background:var(--ok)}.sw.on::after{left:21px}
+.stp{display:flex;align-items:center;gap:3px}.stp button{width:30px;height:30px;border-radius:50%;background:var(--gs);color:var(--gd);font-size:17px;font-weight:700;line-height:1}
+.stp input{width:42px;text-align:center;border:1px solid var(--ln);border-radius:10px;padding:5px 0;font:700 14px var(--num);background:#fff;outline:0;color:var(--ink)}
+.stp input:focus{border-color:var(--g)}
+.mv{display:none;gap:6px;margin-top:6px}.reo .mv{display:flex}.reo .ctl{display:none}
+.mv button{flex:1;padding:8px;border-radius:12px;background:var(--gs);color:var(--gd);font-weight:700}
+.state{text-align:center;padding:46px 20px;color:var(--sub);font-size:13.5px;grid-column:1/-1}.state i.bg{display:block;font-size:34px;margin-bottom:10px;color:#c3cfc8}.state b{display:block;color:var(--ink);font-size:15px}
+.sk{height:200px;border-radius:20px;background:linear-gradient(90deg,#e6ebe7 25%,#f2f5f2 50%,#e6ebe7 75%);background-size:200% 100%;animation:sh 1.2s infinite}@keyframes sh{to{background-position:-200% 0}}
+/* bulk + snack */
+.bulk{position:fixed;left:0;right:0;bottom:0;z-index:900;background:#fff;border-top:1px solid var(--ln);box-shadow:0 -10px 30px rgba(8,40,31,.15);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:none}
+.bulk.show{display:block}.bulk .bt{font-size:12.5px;font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between}
+.bulk .ba{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.bulk .ba::-webkit-scrollbar{display:none}
+.bulk .ba button{flex-shrink:0;padding:9px 14px;border-radius:99px;background:var(--gs);color:var(--gd);font-weight:700;font-size:12.5px}.bulk .ba button.d{background:#fdeaea;color:#b42f2f}
+.snack{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,30px);z-index:2100;background:var(--ink);color:#fff;border-radius:99px;padding:10px 12px 10px 18px;font-size:13px;font-weight:600;display:flex;gap:12px;align-items:center;opacity:0;pointer-events:none;transition:.25s;max-width:92%}
+.snack.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}.snack button{background:var(--am);color:#3b2200;font-weight:700;border-radius:99px;padding:5px 13px;font-size:12.5px}
+.bulk.show~.snack{bottom:calc(110px + env(safe-area-inset-bottom))}
+/* sheet */
+.backdrop{position:fixed;inset:0;background:rgba(8,40,31,.55);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .25s;z-index:1200}.backdrop.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:1210;display:flex;flex-direction:column;max-height:94dvh;background:var(--bg);border-radius:26px 26px 0 0;box-shadow:0 -20px 60px rgba(8,40,31,.3);transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.85,.25,1);visibility:hidden}
+.sheet.show{transform:none;visibility:visible}
+@media(min-width:900px){.sheet{left:auto;top:0;width:500px;max-height:none;border-radius:26px 0 0 26px;transform:translateX(105%)}.sheet.show{transform:none}.grab{display:none}}
+.grab{width:42px;height:5px;border-radius:99px;background:#c3cfc8;margin:9px auto 0;flex-shrink:0}
+.s-head{display:flex;align-items:center;gap:10px;padding:14px 18px 8px}.s-head h3{flex:1;margin:0;font-size:17px;font-weight:700}
+.s-close{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--ln);color:#64748b;font-size:15px}
+.s-body{flex:1;overflow-y:auto;padding:4px 18px 18px;overscroll-behavior:contain}
+.s-foot{display:flex;gap:8px;padding:10px 18px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--ln);background:var(--bg)}
+.s-foot:empty{display:none}
+.btn-main,.btn-sub,.btn-warn,.btn-del,.btn-dup{padding:13px 18px;border-radius:99px;font-weight:700;font-size:14px}
+.btn-main{flex:1;background:var(--g);color:#fff}.btn-sub{flex:1;background:#fff;border:1px solid var(--ln)}.btn-warn{background:var(--as);color:var(--ai)}
+.btn-del{background:#fdeaea;color:#b42f2f;padding:13px 16px}.btn-dup{background:var(--gs);color:var(--gd);padding:13px 16px}.btn-main:disabled{opacity:.6}
+.sec{margin:18px 2px 8px;font-size:13px;font-weight:700}.sec:first-child{margin-top:6px}
+.fld{margin-bottom:10px}.fld label{display:block;font-size:11.5px;font-weight:700;color:var(--sub);margin-bottom:4px}.fld label small{font-weight:500}
+.fld input,.fld select,.fld textarea{width:100%;box-sizing:border-box;border:1px solid var(--ln);border-radius:12px;padding:11px 12px;font:inherit;font-size:14px;background:#fff;outline:0;min-width:0;color:var(--ink)}
+.fld textarea{min-height:76px;resize:vertical}.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(13,92,73,.13)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.cnt{font-size:11px;color:var(--sub);text-align:right}
+.hint{font-size:12px;color:var(--sub);line-height:1.75;margin:0 0 8px}
+.pvc{display:flex;gap:12px;background:#fff;border:1px solid var(--ln);border-radius:18px;padding:10px;box-shadow:var(--sh);margin-bottom:6px}
+.pvi{position:relative;width:86px;height:72px;border-radius:14px;background:#e9efe9 center/cover;display:grid;place-items:center;font-size:26px;flex-shrink:0}
+.pvb{flex:1;min-width:0}.pvb b{display:block;font-size:14px}.pvb small{color:var(--sub);font-size:11.5px}.pvb .pr{font:800 16px var(--num);color:var(--gd)}.pvb s{font-size:12px;color:#94a3a0;margin-left:5px}
+.upl{display:flex;gap:8px;margin-bottom:8px}.upl button{flex:1;padding:11px;border-radius:12px;background:var(--gs);color:var(--gd);font-weight:700;font-size:13px}
+.bdg{display:flex;gap:6px;flex-wrap:wrap}.bdg button{padding:6px 13px;border-radius:99px;background:#fff;border:1px solid var(--ln);font-size:12px;font-weight:700;color:var(--sub)}.bdg button.on{background:var(--am);border-color:var(--am);color:#3b2200}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:1px solid var(--ln);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+.opt .t{flex:1;min-width:0}.opt .t b{display:block;font-size:13.5px}.opt .t small{color:var(--sub);font-size:11.5px}
+.confirm{display:none;background:#fff1e6;border:1px solid #f7d2b4;border-radius:14px;padding:12px;font-size:12.5px;line-height:1.8;margin-top:10px}.confirm.show{display:block}.confirm button{margin-top:8px;padding:8px 14px;border-radius:99px;background:var(--g);color:#fff;font-weight:700;font-size:12.5px}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.preset{padding:7px 12px;border-radius:99px;background:var(--gs);color:var(--gd);font-weight:700;font-size:12px}
+.og{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:8px}.og-h{display:flex;align-items:center;gap:8px;margin-bottom:8px}.og-h .gi{color:var(--g)}
+.og-h input{flex:1;min-width:0;border:1px solid var(--ln);border-radius:10px;padding:8px 10px;font:inherit;font-size:13.5px;font-weight:700;outline:0}
+.x{width:32px;height:32px;border-radius:50%;background:#eef2ef;color:#64748b;flex-shrink:0}
+.og-t{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}.chip{padding:5px 11px;border-radius:99px;background:#fff;border:1px solid var(--ln);font-size:11.5px;font-weight:700;color:var(--sub)}.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.oc{display:flex;align-items:center;gap:6px;margin-bottom:6px}.oc .dot{width:8px;height:8px;border-radius:50%;background:#b9cdc3;flex-shrink:0}
+.oc input.on{flex:1;min-width:0;border:1px solid var(--ln);border-radius:10px;padding:8px 10px;font:inherit;font-size:13px;outline:0}
+.pw{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--sub)}.pw input{width:66px;border:1px solid var(--ln);border-radius:10px;padding:8px 6px;text-align:center;font:inherit;font-size:13px;outline:0}
+.addc,.addg{width:100%;padding:9px;border-radius:12px;background:var(--gs);color:var(--gd);font-weight:700;font-size:12.5px}.addg{background:#fff;border:1px dashed #9fcbb9;margin-bottom:6px}
+.empty-o{text-align:center;color:var(--sub);font-size:12px;padding:10px;line-height:1.8}
+.set-block{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:14px;margin-top:12px}.set-block h4{margin:0 0 4px;font-size:13.5px}.set-block p{margin:0 0 10px;font-size:12px;color:var(--sub)}.set-block .btns{display:flex;flex-direction:column;gap:8px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:16px;padding:12px;margin-bottom:10px}
+.rk{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #eef2ef}.rk:first-child{border-top:0}
+.rk .n{width:24px;height:24px;border-radius:50%;background:var(--gs);color:var(--gd);font:800 12px/24px var(--num);text-align:center;flex-shrink:0}.rk:nth-child(-n+3) .n{background:var(--am);color:#3b2200}
+.rk .t{flex:1;min-width:0}.rk .t b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rk .t small{color:var(--sub);font-size:11px}
+.rk .bar{height:5px;border-radius:99px;background:#e9efe9;margin-top:4px;overflow:hidden}.rk .bar i{display:block;height:100%;background:var(--g)}.rk .v{font:800 13px var(--num);white-space:nowrap}
+.cr{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #eef2ef}.cr:first-child{border-top:0}.cr b{flex:1;font-size:13.5px}.cr small{color:var(--sub)}
+.cr button{padding:6px 12px;border-radius:99px;background:var(--gs);color:var(--gd);font-weight:700;font-size:12px}
+.lg{display:flex;justify-content:space-between;gap:8px;font-size:12px;padding:6px 0;border-top:1px dashed var(--ln)}.lg:first-child{border-top:0}.lg b.p{color:var(--ok)}.lg b.m{color:var(--dg)}.lg small{color:var(--sub)}
+.sg{display:flex;gap:6px;margin-bottom:10px}.sg button{flex:1;padding:9px;border-radius:12px;background:#fff;border:1px solid var(--ln);font-weight:700;font-size:12.5px;color:var(--sub)}.sg button.on{background:var(--g);border-color:var(--g);color:#fff}
+.mini{padding:8px 14px;border-radius:99px;background:var(--gs);color:var(--gd);font-weight:700;font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main">
+    <header class="hero"><div class="in">
+      <div class="hr">
+        <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="ht"><h1>Inventory</h1><small id="sub">ပစ္စည်းစာရင်း</small></div>
+        <button class="circ" id="rf" onclick="load()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+        <button class="circ addb" onclick="openForm()" type="button"><i class="fa-solid fa-plus"></i> ပစ္စည်းအသစ်</button>
+      </div>
+      <div class="lbl" id="bigL">ဒီနေ့ ရောင်းရငွေ</div>
+      <div class="big" id="bigN">0<span>Ks</span></div>
+      <div class="kp" id="kp"></div>
+    </div></header>
+    <div class="sw1"><div class="in"><div class="srow">
+      <label class="sb2"><i class="fa-solid fa-magnifying-glass"></i><input type="search" id="q" placeholder="အမည်၊ category၊ ဈေး ရှာပါ..." oninput="onSearch()" autocomplete="off"></label>
+      <button class="vt" id="vt" type="button" onclick="toggleView()" aria-label="ပုံစံပြောင်း"><i class="fa-solid fa-list"></i></button>
+    </div></div></div>
+    <div class="in">
+      <div class="chips" id="tabs"></div>
+      <div class="chips cat" id="cats"></div>
+      <div class="chips tool" id="tools"></div>
+      <button class="auto" id="autoStrip" type="button" onclick="openSettings()"></button>
+      <div class="lh"><span id="cnt">&nbsp;</span>
+        <select id="sort" onchange="sortBy=this.value;render()" aria-label="စီရန်"><option value="manual">ကိုယ်စီထားသော အစီအစဉ်</option><option value="name">အမည်</option><option value="priceA">ဈေး (နည်း→များ)</option><option value="priceD">ဈေး (များ→နည်း)</option><option value="stock">Stock နည်းသည်ဦး</option><option value="best">ရောင်းအကောင်းဆုံး (၇ ရက်)</option></select></div>
+      <div class="grid" id="list"><div class="sk"></div><div class="sk"></div></div>
+    </div>
+  </main>
+</div>
+<div class="bulk" id="bulk"><div class="bt"><span id="bulkN">0 ရွေးထား</span><button type="button" onclick="exitSel()" style="color:var(--sub);font-weight:700">ပိတ်မည်</button></div>
+  <div class="ba"><button type="button" onclick="bulkSimple('available',true)">✅ ရှိ</button><button type="button" onclick="bulkSimple('available',false)">⛔ ကုန်</button><button type="button" onclick="bulkSimple('hidden',true)">🙈 ဖျောက်</button><button type="button" onclick="bulkSimple('hidden',false)">👁 ပြန်ပြ</button><button type="button" onclick="bulkCat()">🏷 Category</button><button type="button" onclick="bulkPrice()">💲 ဈေးပြင်</button><button type="button" class="d" onclick="bulkDel()">🗑 ဖျက်</button></div></div>
+<div class="snack" id="snack"><span id="snackT"></span><button type="button" id="snackB" style="display:none">ပြန်လုပ်</button></div>
+<div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div class="s-head"><h3 id="sTitle"></h3><button class="s-close" type="button" onclick="closeSheet()" aria-label="ပိတ်မည်"><i class="fa-solid fa-xmark"></i></button></div><div class="s-body" id="sBody"></div><div class="s-foot" id="sFoot"></div></div>
+
+<script src="js/main.js"></script>
+<script src="js/upload.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const int=v=>{const n=Math.round(Number(v));return Number.isFinite(n)&&n>=0?n:0};
+const fmt=n=>int(n).toLocaleString();
+const short=n=>n>=1e6?(n/1e6).toFixed(n>=1e7?0:1)+"M":n>=1e4?Math.round(n/1e3)+"K":Math.round(n).toLocaleString();
+const ls={get(k,d){try{return localStorage.getItem(k)||d}catch(_){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+const today=()=>new Date(Date.now()+390*60000).toISOString().slice(0,10);
+const bgi=u=>u?`background-image:url('${esc(String(u).replace(/'/g,"%27"))}')`:"";
+
+let P=[],S={auto_reset:true,reset_hour:15,last_reset:"",last_reset_count:0},ST=null;
+let tab="all",cat="__all",query="",sortBy="manual",view=ls.get("inv_view","grid"),loaded=false;
+let selMode=false,sel=new Set(),reoMode=false,editing=null,form=null;
+
+const tracked=p=>int(p.daily_stock)>0;
+const isHid=p=>p.hidden==1||p.hidden===true;
+const isOut=p=>!(p.available==1||p.available===true)||(tracked(p)&&int(p.stock)<=0);
+const isLow=p=>{if(isOut(p)||!tracked(p))return false;const d=int(p.daily_stock),t=int(p.low_stock_threshold??10),lim=t>d?Math.ceil(d*.25):t;return int(p.stock)<=Math.max(1,lim)};
+const onSale=p=>int(p.sale_price)>0&&int(p.sale_price)<int(p.price)&&(!p.sale_until||p.sale_until>=today());
+const effP=p=>onSale(p)?int(p.sale_price):int(p.price);
+const parseOpts=p=>{try{const a=JSON.parse(p.options_json||"[]");return Array.isArray(a)?a:[]}catch(_){return[]}};
+const hourLabel=h=>{h=int(h);const hh=h%12||12;return(h<12?"မနက် ":h<15?"နေ့လယ် ":h<19?"ညနေ ":"ည ")+hh+" နာရီ"};
+
+async function load(){
+  const btn=$("rf");btn.classList.add("spin");
+  try{
+    const [pr,st,ss]=await Promise.all([apiFetch("/api/admin/products"),apiFetch("/api/admin/inventory/settings").catch(()=>null),apiFetch("/api/admin/products/stats").catch(()=>null)]);
+    P=(pr&&pr.products)||(Array.isArray(pr)?pr:[]);
+    if(st&&st.ok)S=st;ST=ss&&ss.ok?ss:null;loaded=true;render();
+  }catch(e){if(!loaded)$("list").innerHTML='<div class="state"><i class="fa-solid fa-triangle-exclamation bg"></i><b>Data ရယူ၍ မရပါ</b>အင်တာနက် သို့မဟုတ် Admin Key ကို စစ်ပါ<br><button class="mini" style="margin-top:12px" type="button" onclick="load()">ပြန်ကြိုးစားမည်</button></div>'}
+  finally{btn.classList.remove("spin")}
+}
+const sold=(p,k)=>(ST&&ST[k]&&ST[k][p.id])||null;
+
+function visible(){
+  const q=query.trim().toLowerCase();
+  let l=P.filter(p=>{
+    const h=isHid(p);
+    if(tab==="hid"){if(!h)return false}else if(tab!=="all"&&h)return false;
+    if(tab==="in"&&isOut(p))return false;if(tab==="out"&&!isOut(p))return false;if(tab==="low"&&!isLow(p))return false;
+    if(cat!=="__all"&&String(p.category||"")!==(cat==="__none"?"":cat))return false;
+    return !q||[p.name,p.category,p.description,p.price].some(x=>String(x??"").toLowerCase().includes(q));
+  });
+  const nm=(a,b)=>String(a.name||"").localeCompare(String(b.name||""),"my");
+  if(sortBy==="name")l.sort(nm);else if(sortBy==="priceA")l.sort((a,b)=>effP(a)-effP(b));else if(sortBy==="priceD")l.sort((a,b)=>effP(b)-effP(a));
+  else if(sortBy==="stock")l.sort((a,b)=>(tracked(b)-tracked(a))||int(a.stock)-int(b.stock));
+  else if(sortBy==="best")l.sort((a,b)=>((sold(b,"d7")||{}).q||0)-((sold(a,"d7")||{}).q||0));
+  return l;
+}
+
+function render(){
+  const vis=P.filter(p=>!isHid(p)),out=vis.filter(isOut),low=P.filter(isLow),hid=P.filter(isHid);
+  const sv=vis.reduce((a,p)=>a+(tracked(p)?effP(p)*int(p.stock):0),0);
+  if(ST){$("bigL").textContent="ဒီနေ့ ရောင်းရငွေ";$("bigN").innerHTML=Math.round(Object.values(ST.today||{}).reduce((a,x)=>a+x.r,0)).toLocaleString()+"<span>Ks</span>"}
+  else{$("bigL").textContent="Stock တန်ဖိုး (နေ့စဉ်စစ်သော ပစ္စည်းများ)";$("bigN").innerHTML=Math.round(sv).toLocaleString()+"<span>Ks</span>"}
+  $("kp").innerHTML=`<div><b>${vis.length}</b><small>ပစ္စည်း</small></div><div><b>${out.length}</b><small>ကုန်နေ</small></div><div><b>${low.length}</b><small>နည်းနေ</small></div><div><b>${short(sv)}</b><small>Stock တန်ဖိုး</small></div>`;
+  $("sub").textContent=out.length?`ကုန်နေသည် ${out.length} မျိုး`:"ပစ္စည်းအားလုံး ရှိနေသည် ✅";
+  const T=[["all","အားလုံး",P.length,""],["in","ရှိသည်",vis.length-out.length,""],["out","ကုန်သည်",out.length,"rd"],["low","နည်းနေ",low.length,"am"],["hid","ဖျောက်ထား",hid.length,""]];
+  $("tabs").innerHTML=T.map(([k,t,n,c])=>`<button type="button" class="${c} ${tab===k?"on":""}" data-t="${k}">${t}<em>${n}</em></button>`).join("");
+  const cc={};P.forEach(p=>{const c=p.category||"";cc[c]=(cc[c]||0)+1});
+  const names=Object.keys(cc).filter(Boolean);
+  $("cats").innerHTML=`<button type="button" class="${cat==="__all"?"on":""}" data-c="__all">🍽 အားလုံး</button>`+names.map(c=>`<button type="button" class="${cat===c?"on":""}" data-c="${esc(c)}">${esc(c)}<em>${cc[c]}</em></button>`).join("")+(cc[""]?`<button type="button" class="${cat==="__none"?"on":""}" data-c="__none">မခွဲရသေး<em>${cc[""]}</em></button>`:"");
+  $("tools").innerHTML=`<button type="button" class="${reoMode?"on":""}" data-x="reo">↕ စီမည်</button><button type="button" class="${selMode?"on":""}" data-x="sel">☑ ရွေးမည်</button><button type="button" data-x="cat">🏷 Category</button><button type="button" data-x="ins">📈 ရောင်းအား</button><button type="button" data-x="csv">📄 CSV</button>`;
+  $("vt").innerHTML=`<i class="fa-solid fa-${view==="grid"?"list":"table-cells-large"}"></i>`;
+  const on=S.auto_reset,el=$("autoStrip");el.className="auto"+(on?"":" off");
+  el.innerHTML=`<div class="ic"><i class="fa-solid fa-clock-rotate-left"></i></div><div class="tx"><b>${on?`နေ့စဉ် ${hourLabel(S.reset_hour)}တွင် stock အသစ်ပြန်စမည်`:"နေ့စဉ် အလိုအလျောက် ပြန်စခြင်း ပိတ်ထားသည်"}</b><small>${on?"ထိုအချိန်ထိ ကုန်နေဆဲ ပစ္စည်းများကိုသာ ပြန်ဖွင့်ပေးမည်":"ကိုယ်တိုင်သာ ပြန်ဖွင့်ရမည်"}${S.last_reset?` · နောက်ဆုံး ${esc(S.last_reset)} (${S.last_reset_count} မျိုး)`:""}</small></div><i class="fa-solid fa-chevron-right go"></i>`;
+
+  const l=visible();$("cnt").textContent=l.length===P.length?`${l.length} မျိုး`:`${l.length} / ${P.length} မျိုး`;
+  const g=$("list");g.className="grid"+(view==="list"||reoMode?" l":"")+(selMode?" selm":"")+(reoMode?" reo":"");
+  if(!P.length){g.innerHTML='<div class="state"><i class="fa-solid fa-box-open bg"></i><b>ပစ္စည်း မရှိသေးပါ</b>အပေါ်က "ပစ္စည်းအသစ်" ခလုတ်ဖြင့် ထည့်ပါ</div>';return}
+  if(!l.length){g.innerHTML=`<div class="state"><i class="fa-solid fa-${tab==="out"?"circle-check":"magnifying-glass"} bg"></i><b>${tab==="out"?"ကုန်နေသော ပစ္စည်း မရှိပါ":"မတွေ့ပါ"}</b></div>`;return}
+  g.innerHTML=l.map(p=>{
+    const o=isOut(p),lo=isLow(p),t=tracked(p),st=int(p.stock),d=int(p.daily_stock),s7=sold(p,"d7"),s0=sold(p,"today"),sale=onSale(p),cost=int(p.cost);
+    const mg=cost>0&&effP(p)>0?Math.round((effP(p)-cost)/effP(p)*100):null;
+    return `<div class="pc${o?" out":""}${isHid(p)?" hid":""}${sel.has(p.id)?" sel":""}" data-id="${p.id}">
+      <div class="ph" style="${bgi(p.image)}" data-a="open">${p.image?"":"🍗"}${p.badge?`<span class="tag">${esc(p.badge)}</span>`:""}${sale?`<span class="tag sl">SALE</span>`:""}<span class="stat${lo?" lo":""}">${isHid(p)?"ဖျောက်ထား":o?"ကုန်":lo?"နည်းနေ":"ရှိ"}</span><span class="chk"><i class="fa-solid fa-check"></i></span></div>
+      <div class="pb"><div class="pn" data-a="open">${esc(p.name)}</div>
+        <div class="pp"><b data-a="price" title="ဈေးပြင်ရန် နှိပ်ပါ">${fmt(effP(p))} Ks</b>${sale?`<s>${fmt(p.price)}</s>`:""}</div>
+        <div class="pm">${p.category?`<span class="c">${esc(p.category)}</span>`:""}${s0?`<span class="s">ဒီနေ့ ${s0.q}</span>`:s7?`<span class="s">၇ရက် ${s7.q}</span>`:""}${mg!==null?`<span class="m">အမြတ် ${mg}%</span>`:""}${parseOpts(p).length?`<span class="c">Option ${parseOpts(p).length}</span>`:""}</div>
+        ${t?`<div class="pm">ကျန် <b style="color:var(--ink)">${st}</b> / ${d}</div><div class="meter"><i class="${o?"no":lo?"lo":""}" style="width:${Math.min(100,d?st/d*100:0)}%"></i></div>`:""}
+        <div class="ctl"><button class="sw${o?"":" on"}" type="button" data-a="sw" role="switch" aria-checked="${!o}" aria-label="ရှိ/ကုန်"></button>
+          ${t&&!o?`<div class="stp"><button type="button" data-a="dec" aria-label="လျှော့">−</button><input type="number" inputmode="numeric" min="0" value="${st}" data-a="stk" aria-label="Stock"><button type="button" data-a="inc" aria-label="တိုး">+</button></div>`:""}</div>
+        <div class="mv"><button type="button" data-a="up">↑ အပေါ်</button><button type="button" data-a="dn">↓ အောက်</button></div>
+      </div></div>`}).join("");
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b){tab=b.dataset.t;render()}});
+$("cats").addEventListener("click",e=>{const b=e.target.closest("button");if(b){cat=b.dataset.c;render()}});
+$("tools").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const x=b.dataset.x;
+  if(x==="reo")toggleReo();else if(x==="sel")toggleSel();else if(x==="cat")openCats();else if(x==="ins")openInsights();else if(x==="csv")openCsv()});
+function toggleView(){view=view==="grid"?"list":"grid";ls.set("inv_view",view);render()}
+let _t;function onSearch(){query=$("q").value;clearTimeout(_t);_t=setTimeout(render,120)}
+
+// ---- list actions (event delegation) ----
+$("list").addEventListener("click",e=>{
+  const c=e.target.closest(".pc");if(!c)return;const id=+c.dataset.id,a=(e.target.closest("[data-a]")||{dataset:{}}).dataset.a;
+  if(selMode&&a!=="stk"){togSel(id);return}
+  if(a==="open")openForm(id);else if(a==="sw")toggleAvail(id);else if(a==="dec")step(id,-1);else if(a==="inc")step(id,1);
+  else if(a==="price")editPrice(id,e.target.closest("b"));else if(a==="up")moveP(id,-1);else if(a==="dn")moveP(id,1)});
+$("list").addEventListener("change",e=>{if(e.target.dataset.a==="stk"){const id=+e.target.closest(".pc").dataset.id;setStock(id,e.target.value)}});
+
+// ---- optimistic update + undo ----
+function snack(msg,undo){
+  $("snackT").textContent=msg;const b=$("snackB");b.style.display=undo?"":"none";b.onclick=()=>{hideSnack();undo&&undo()};
+  $("snack").classList.add("show");clearTimeout(snack._t);snack._t=setTimeout(hideSnack,5500)}
+const hideSnack=()=>$("snack").classList.remove("show");
+async function patch(id,data){
+  const p=P.find(x=>x.id==id);if(!p)return false;const before={};Object.keys(data).forEach(k=>before[k]=p[k]);
+  Object.assign(p,data);render();
+  try{await apiFetch("/api/admin/products/"+id,{method:"PATCH",body:JSON.stringify(data)});return true}catch(_){Object.assign(p,before);render();return false}
+}
+async function toggleAvail(id){
+  const p=P.find(x=>x.id==id);if(!p)return;const prev={available:p.available,stock:p.stock};
+  const data=isOut(p)?{available:1,...(tracked(p)&&int(p.stock)<=0?{stock:int(p.daily_stock),reason:"ပြန်ဖွင့်"}:{})}:{available:0,...(tracked(p)?{stock:0,reason:"ကုန်ပြီဟုမှတ်"}:{})};
+  if(await patch(id,data))snack(isOut(p)?`${p.name} ကုန်ပြီဟု မှတ်ပြီး`:`${p.name} ပြန်ရှိပြီ ✅`,()=>patch(id,{...prev,reason:"ပြန်လုပ်"}));
+}
+const stepT={};
+function step(id,d){const p=P.find(x=>x.id==id);if(!p)return;const ns=Math.max(0,int(p.stock)+d);p.stock=ns;p.available=ns>0?1:0;render();
+  clearTimeout(stepT[id]);stepT[id]=setTimeout(()=>apiFetch("/api/admin/products/"+id,{method:"PATCH",body:JSON.stringify({stock:p.stock,available:p.stock>0?1:0})}).catch(()=>load()),450)}
+function setStock(id,v){const n=int(v);patch(id,{stock:n,available:n>0?1:0,reason:"ကိုယ်တိုင်ရိုက်ထည့်"})}
+function editPrice(id,el){
+  const p=P.find(x=>x.id==id);if(!p||!el||selMode)return;
+  el.outerHTML=`<input type="number" inputmode="numeric" min="0" value="${int(p.price)}" id="pe${id}">`;const i=$("pe"+id);i.focus();i.select();
+  let done=false;const fin=ok=>{if(done)return;done=true;if(ok&&int(i.value)!==int(p.price))patch(id,{price:int(i.value)});else render()};
+  i.addEventListener("keydown",e=>{if(e.key==="Enter")fin(true);if(e.key==="Escape")fin(false)});i.addEventListener("blur",()=>fin(true));
+}
+
+// ---- select / bulk ----
+function toggleSel(){selMode=!selMode;if(!selMode)sel.clear();if(selMode)reoMode=false;bulkUi();render()}
+function exitSel(){selMode=false;sel.clear();bulkUi();render()}
+function togSel(id){sel.has(id)?sel.delete(id):sel.add(id);bulkUi();render()}
+function bulkUi(){$("bulk").classList.toggle("show",selMode);$("bulkN").textContent=sel.size+" ခု ရွေးထား"}
+async function bulkCall(action,value){const ids=[...sel];await apiFetch("/api/admin/products/bulk",{method:"POST",body:JSON.stringify({ids,action,value})});return ids}
+async function bulkSimple(action,value){
+  if(!sel.size)return showToast("ပစ္စည်း အရင်ရွေးပါ");
+  const prev=[...sel].map(id=>{const p=P.find(x=>x.id==id);return{id,v:action==="available"?!isOut(p):isHid(p)}});
+  try{await bulkCall(action,value);await load();
+    snack(`${prev.length} ခု ပြောင်းပြီး ✅`,async()=>{for(const val of [true,false]){const ids=prev.filter(x=>x.v===val).map(x=>x.id);if(ids.length)await apiFetch("/api/admin/products/bulk",{method:"POST",body:JSON.stringify({ids,action,value:val})})}load()})}catch(_){}
+}
+function bulkCat(){
+  if(!sel.size)return showToast("ပစ္စည်း အရင်ရွေးပါ");const cats=[...new Set(P.map(x=>x.category).filter(Boolean))];
+  showSheet("Category ပြောင်းမည် ("+sel.size+")",`<div class="fld"><label>Category အသစ်</label><input id="bc" list="bcl" placeholder="ဥပမာ အသား"><datalist id="bcl">${cats.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div>`,'<button class="btn-main" type="button" onclick="doBulkCat()">ပြောင်းမည်</button>');
+}
+async function doBulkCat(){const v=$("bc").value.trim();try{await bulkCall("category",v);showToast("ပြောင်းပြီး ✅");closeSheet();exitSel();load()}catch(_){}}
+function bulkPrice(){
+  if(!sel.size)return showToast("ပစ္စည်း အရင်ရွေးပါ");
+  showSheet("ဈေးပြင်မည် ("+sel.size+")",`<div class="sg"><button type="button" class="on" id="bpA" onclick="bpMode('price_pct')">% ရာခိုင်နှုန်း</button><button type="button" id="bpB" onclick="bpMode('price_add')">Ks ငွေပမာဏ</button></div>
+    <div class="fld"><label id="bpL">တိုး (+) / လျှော့ (−) ရာခိုင်နှုန်း</label><input type="number" id="bpV" inputmode="numeric" placeholder="ဥပမာ 10 သို့ -10"></div><p class="hint">အနှုတ်ဂဏန်းဖြင့် ဈေးလျှော့နိုင်သည်။ ဥပမာ -10 = ၁၀% လျှော့။</p>`,'<button class="btn-main" type="button" onclick="doBulkPrice()">အတည်ပြုမည်</button>');window._bp="price_pct";
+}
+function bpMode(m){window._bp=m;$("bpA").classList.toggle("on",m==="price_pct");$("bpB").classList.toggle("on",m==="price_add");$("bpL").textContent=m==="price_pct"?"တိုး (+) / လျှော့ (−) ရာခိုင်နှုန်း":"တိုး (+) / လျှော့ (−) Ks"}
+async function doBulkPrice(){const v=Number($("bpV").value);if(!Number.isFinite(v)||v===0)return showToast("ဂဏန်း ထည့်ပါ");
+  try{await bulkCall(window._bp,v);showToast("ဈေးပြင်ပြီး ✅");closeSheet();exitSel();load()}catch(_){}}
+async function bulkDel(){if(!sel.size)return showToast("ပစ္စည်း အရင်ရွေးပါ");
+  if(!confirm(`ရွေးထားသော ${sel.size} မျိုးကို အပြီးအပိုင် ဖျက်မလား?\n(ဖျက်မည့်အစား "ဖျောက်" ကို သုံးနိုင်သည်၊ ယခင်အော်ဒါများ မပျက်ပါ)`))return;
+  try{await bulkCall("delete");showToast("ဖျက်ပြီး");exitSel();load()}catch(_){}}
+
+// ---- reorder ----
+function toggleReo(){
+  if(reoMode){return saveReo()}
+  reoMode=true;selMode=false;sel.clear();bulkUi();tab="all";cat="__all";query="";$("q").value="";sortBy="manual";$("sort").value="manual";render();
+  showToast("↑ ↓ ဖြင့် စီပြီး ထပ်နှိပ်၍ သိမ်းပါ");
+}
+function moveP(id,d){const i=P.findIndex(x=>x.id==id),j=i+d;if(j<0||j>=P.length)return;[P[i],P[j]]=[P[j],P[i]];render();const el=document.querySelector(`.pc[data-id="${id}"]`);if(el)el.scrollIntoView({block:"center"})}
+async function saveReo(){
+  try{await apiFetch("/api/admin/products/reorder",{method:"POST",body:JSON.stringify({ids:P.map(x=>x.id)})});showToast("အစီအစဉ် သိမ်းပြီး ✅")}catch(_){}
+  reoMode=false;load();
+}
+
+// ---- sheet ----
+function showSheet(title,body,foot){
+  $("sTitle").textContent=title;$("sBody").innerHTML=body;$("sFoot").innerHTML=foot||"";$("sBody").scrollTop=0;
+  const was=$("sheet").classList.contains("show");
+  $("backdrop").classList.add("show");$("sheet").classList.add("show");
+  if(!was){try{history.pushState({sheet:1},"")}catch(_){}}
+}
+function closeSheet(fromPop){
+  if(!$("sheet").classList.contains("show"))return;
+  $("sheet").classList.remove("show");$("backdrop").classList.remove("show");editing=null;form=null;
+  if(!fromPop){try{if(history.state&&history.state.sheet)history.back()}catch(_){}}
+}
+window.addEventListener("popstate",()=>closeSheet(true));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSheet()});
+
+// ---- add / edit form ----
+const PRESETS={size:{name:"အရွယ်အစား",required:true,multi:false,choices:[{name:"သေး",price:0},{name:"လတ်",price:1000},{name:"ကြီး",price:2000}]},
+  spicy:{name:"အစပ်အဆင့်",required:false,multi:false,choices:[{name:"မစပ်",price:0},{name:"အလတ်",price:0},{name:"စပ်",price:0}]},
+  addon:{name:"ထပ်ထည့်ရန် (Add-on)",required:false,multi:true,choices:[{name:"ကြက်ဥ",price:500},{name:"ထပ်ဆောင်း အချဉ်ရည်",price:300}]}};
+const BADGES=["","အသစ်","ရောင်းကောင်း","အထူး","စပ်","⭐ ဆိုင်ရှင်ရွေး"];
+function formFrom(p,dup){
+  if(!p)return{name:"",price:"",category:"",image:"",desc:"",options:[],track:false,daily:"",stock:"",low:10,avail:true,auto:true,hidden:false,sale:"",saleUntil:"",badge:"",cost:"",maxPer:"",from:"",to:""};
+  return{name:(p.name||"")+(dup?" (copy)":""),price:int(p.price),category:p.category||"",image:p.image||"",desc:p.description||"",options:JSON.parse(JSON.stringify(parseOpts(p))),track:tracked(p),daily:int(p.daily_stock),stock:dup?int(p.daily_stock):int(p.stock),low:int(p.low_stock_threshold??10),avail:dup?true:!isOut(p),auto:p.auto_restock==null?true:(p.auto_restock==1||p.auto_restock===true),hidden:dup?false:isHid(p),sale:int(p.sale_price)||"",saleUntil:p.sale_until||"",badge:p.badge||"",cost:int(p.cost)||"",maxPer:int(p.max_per_order)||"",from:p.avail_from||"",to:p.avail_to||""};
+}
+function openForm(id,dup){
+  const p=id?P.find(x=>x.id==id):null;editing=p&&!dup?p.id:null;form=formFrom(p,dup);
+  const cats=[...new Set(P.map(x=>x.category).filter(Boolean))];
+  const f=(k,l,type,ph,extra)=>`<div class="fld"><label>${l}</label><input type="${type}" data-f="${k}" value="${esc(form[k])}" placeholder="${esc(ph||"")}" ${extra||""}></div>`;
+  showSheet(editing?"Menu ပြင်မည်":dup?"Menu ထပ်တူကူးမည်":"Menu အသစ် ထည့်မည်",`
+    <div id="pv"></div>
+    <div class="sec">အခြေခံ အချက်အလက်</div>
+    ${f("name","Menu အမည်","text","ဥပမာ ကြက်ရင်အုံကင်",'maxlength="100"')}
+    <div class="two">${f("price","ဈေး (Ks)","number","4000",'inputmode="numeric" min="0"')}
+      <div class="fld"><label>အမျိုးအစား</label><input type="text" data-f="category" list="catList" value="${esc(form.category)}" placeholder="အသား" maxlength="50"><datalist id="catList">${cats.map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div></div>
+    <div class="fld"><label>ဖော်ပြချက် <small>— ဝယ်သူ မြင်ရမည့် စာသား</small></label><textarea data-f="desc" maxlength="500" placeholder="ဥပမာ - မီးသွေးဖိုကင်၊ ထိုင်းချဉ်စပ်ဆော့စ်နှင့်တွဲစား">${esc(form.desc)}</textarea></div>
+    <div class="sec">ပုံ</div>
+    <div class="upl"><button type="button" onclick="pickImg()"><i class="fa-solid fa-camera"></i> ဖုန်း/ဖိုင်မှ ပုံတင်မည်</button>${form.image?'<button type="button" onclick="setImg(\'\')" style="flex:0 0 auto;padding:11px 16px;background:#fdeaea;color:#b42f2f"><i class="fa-solid fa-trash-can"></i></button>':""}</div>
+    ${f("image","ပုံ link (သို့) အပေါ်ကခလုတ်ဖြင့် တင်ပါ","url","https://...")}
+
+    <div class="sec">🏷 Sale / Badge</div>
+    <div class="two">${f("sale","Sale ဈေး (Ks)","number","မသုံးလျှင် ဗလာ",'inputmode="numeric" min="0"')}${f("saleUntil","Sale ကုန်ဆုံးရက်","date","")}</div>
+    <div class="fld"><label>Badge (ပုံပေါ်တွင် ပြမည့်စာ)</label><div class="bdg" id="bdg">${BADGES.map(b=>`<button type="button" class="${form.badge===b?"on":""}" data-b="${esc(b)}">${b||"မရှိ"}</button>`).join("")}</div></div>
+
+    <div class="sec">💰 အရင်း / ကန့်သတ်ချက်</div>
+    <div class="two">${f("cost","အရင်းဈေး (Ks)","number","မဖြည့်လည်းရ",'inputmode="numeric" min="0"')}${f("maxPer","တစ်ကြိမ်လျှင် အများဆုံး","number","0 = မကန့်သတ်",'inputmode="numeric" min="0"')}</div>
+    <div class="hint" id="mg"></div>
+    <div class="two">${f("from","ရောင်းချိန် စ","time","")}${f("to","ရောင်းချိန် ဆုံး","time","")}</div>
+    <p class="hint" style="margin-top:-4px">နှစ်ခုလုံးဖြည့်မှ သက်ရောက်သည် (ဥပမာ 06:00 – 11:00 = မနက်စာ menu)။ အချိန်ပြင်ပတွင် ဝယ်သူက မှာမရပါ။</p>
+
+    <div class="sec">Option များ</div>
+    <div class="presets"><button class="preset" type="button" onclick="addPreset('size')">📏 အရွယ်အစား</button><button class="preset" type="button" onclick="addPreset('spicy')">🌶️ အစပ်အဆင့်</button><button class="preset" type="button" onclick="addPreset('addon')">➕ Add-on</button></div>
+    <div id="optBox"></div>
+
+    <div class="sec">ရောင်းချမှု / Stock</div>
+    <button class="opt" type="button" onclick="fToggle('avail')"><div class="t"><b>ရောင်းနေသည် (ရှိ)</b><small>ပိတ်လိုက်လျှင် ဝယ်သူက မှာမရတော့ပါ</small></div><span class="sw${form.avail?" on":""}" id="swavail"></span></button>
+    <button class="opt" type="button" onclick="fToggle('hidden')"><div class="t"><b>🙈 ဖျောက်ထားမည် (Archive)</b><small>ဝယ်သူ menu မှာ လုံးဝမပေါ်ပါ၊ ဒေတာ မပျက်ပါ (ရာသီစာ / ရပ်ထားသော menu)</small></div><span class="sw${form.hidden?" on":""}" id="swhidden"></span></button>
+    <button class="opt" type="button" onclick="fToggle('track')"><div class="t"><b>နေ့စဉ် အရေအတွက် စစ်မည်</b><small>မှာတိုင်း အလိုအလျောက် လျော့ပြီး ၀ ဖြစ်ရင် "ကုန်" ဖြစ်မည်</small></div><span class="sw${form.track?" on":""}" id="swtrack"></span></button>
+    <div id="trackBox" style="display:${form.track?"block":"none"}"><div class="two">${f("daily","နေ့စဉ် စတင်အရေအတွက်","number","20",'inputmode="numeric" min="0"')}${f("stock","ယခု ကျန်ရှိ","number","20",'inputmode="numeric" min="0"')}</div>
+      ${f("low","\"နည်းနေ\" သတိပေးမည့် အရေအတွက်","number","10",'inputmode="numeric" min="0"')}</div>
+    <button class="opt" type="button" onclick="fToggle('auto')"><div class="t"><b>နေ့စဉ် ပြန်စမည်</b><small>ပိတ်ထားလျှင် ဤ menu ကို အလိုအလျောက် ပြန်မဖွင့်ပါ</small></div><span class="sw${form.auto?" on":""}" id="swauto"></span></button>
+    ${editing?`<div class="sec">Stock မှတ်တမ်း</div><div class="card" id="lgBox"><button class="mini" type="button" onclick="loadLog(${editing})">မှတ်တမ်း ကြည့်မည်</button></div>`:""}
+    <div class="confirm" id="delBox">ဤ menu ကို အပြီးအပိုင် ဖျက်မှာ သေချာပါသလား? ယခင်အော်ဒါများ မပျက်ပါ။<br><b>ဖျက်မည့်အစား ဖျောက်ထားခြင်း (Archive) က ပိုလုံခြုံပါသည်။</b><br><button type="button" onclick="archiveIt()">🙈 ဖျောက်ထားမည်</button></div>`,
+    `${editing?'<button class="btn-del" id="delBtn" type="button" onclick="askDelete()" aria-label="ဖျက်"><i class="fa-solid fa-trash-can"></i></button><button class="btn-dup" type="button" onclick="dupIt()" aria-label="ထပ်တူကူး"><i class="fa-regular fa-clone"></i></button>':""}<button class="btn-main" id="saveBtn" type="button" onclick="saveForm()">${editing?"သိမ်းမည်":"ထည့်မည်"}</button>`);
+  renderOpts();updPv();
+  if(!p)setTimeout(()=>{try{document.querySelector('[data-f="name"]').focus()}catch(_){}},350);
+}
+$("sBody").addEventListener("input",e=>{const k=e.target.dataset&&e.target.dataset.f;if(k&&form){form[k]=e.target.value;updPv()}});
+$("sBody").addEventListener("click",e=>{const b=e.target.closest("#bdg button");if(b&&form){form.badge=b.dataset.b;document.querySelectorAll("#bdg button").forEach(x=>x.classList.toggle("on",x===b));updPv()}});
+function updPv(){
+  const el=$("pv");if(!el||!form)return;const pr=int(form.price),sl=int(form.sale),on=sl>0&&sl<pr;
+  el.innerHTML=`<div class="pvc"><div class="pvi" style="${bgi(form.image)}">${form.image?"":"🍗"}${form.badge?`<span class="tag" style="left:4px;top:4px">${esc(form.badge)}</span>`:""}</div>
+    <div class="pvb"><b>${esc(form.name||"Menu အမည်")}</b><small>${esc(form.category||"အမျိုးအစား")}</small><div><span class="pr">${fmt(on?sl:pr)} Ks</span>${on?`<s>${fmt(pr)}</s>`:""}</div><small>${esc(form.desc||"ဖော်ပြချက်")}</small></div></div>`;
+  const mg=$("mg"),c=int(form.cost),e=on?sl:pr;if(mg)mg.textContent=c>0&&e>0?`အမြတ် ${fmt(e-c)} Ks (${Math.round((e-c)/e*100)}%) — ဤ ဈေးအရ`:"";
+}
+async function pickImg(){
+  if(!window.YNSUpload)return showToast("upload.js မတွေ့ပါ — ပုံ link သုံးပါ");
+  try{const r=await YNSUpload.pickAndUpload({maxDim:900,maxKB:180});if(r&&r.url)setImg(r.url)}catch(e){showToast(e.message||"ပုံတင်၍ မရပါ")}
+}
+function setImg(u){form.image=u;const i=document.querySelector('[data-f="image"]');if(i)i.value=u;updPv()}
+function renderOpts(){
+  const o=form.options;
+  $("optBox").innerHTML=(o.length?o.map((g,gi)=>`<div class="og"><div class="og-h"><i class="fa-solid fa-layer-group gi"></i>
+    <input type="text" value="${esc(g.name)}" maxlength="40" placeholder="အုပ်စုအမည် (ဥပမာ အရွယ်အစား)" oninput="form.options[${gi}].name=this.value"><button class="x" type="button" onclick="gDel(${gi})" aria-label="အုပ်စုဖျက်"><i class="fa-solid fa-trash-can"></i></button></div>
+    <div class="og-t"><button class="chip${g.required?" on":""}" type="button" onclick="gTog(${gi},'required')">${g.required?"✓ ":""}မဖြစ်မနေ ရွေးရမည်</button><button class="chip${g.multi?" on":""}" type="button" onclick="gTog(${gi},'multi')">${g.multi?"✓ ":""}တစ်ခုထက်ပို ရွေးနိုင်</button></div>
+    ${g.choices.map((c,ci)=>`<div class="oc"><span class="dot"></span><input class="on" type="text" value="${esc(c.name)}" maxlength="40" placeholder="ရွေးချယ်စရာ" oninput="form.options[${gi}].choices[${ci}].name=this.value">
+      <div class="pw"><span>+</span><input type="number" inputmode="numeric" min="0" value="${esc(c.price||0)}" oninput="form.options[${gi}].choices[${ci}].price=this.value"><em style="font-style:normal">Ks</em></div><button class="x" type="button" onclick="cDel(${gi},${ci})" aria-label="ဖျက်"><i class="fa-solid fa-xmark"></i></button></div>`).join("")}
+    <button class="addc" type="button" onclick="cAdd(${gi})"><i class="fa-solid fa-plus"></i> ရွေးချယ်စရာ ထပ်ထည့်မည်</button></div>`).join(""):`<div class="empty-o">Option မရှိသေးပါ — အပေါ်က အမြန်ခလုတ်ကို နှိပ်ပါ</div>`)
+    +(o.length<8?`<button class="addg" type="button" onclick="gAdd()"><i class="fa-solid fa-circle-plus"></i> Option အုပ်စုအသစ်</button>`:"");
+}
+function addPreset(k){if(form.options.length>=8)return;form.options.push(JSON.parse(JSON.stringify(PRESETS[k])));renderOpts()}
+function gAdd(){form.options.push({name:"",required:false,multi:false,choices:[{name:"",price:0},{name:"",price:0}]});renderOpts()}
+function gDel(i){form.options.splice(i,1);renderOpts()}function gTog(i,k){form.options[i][k]=!form.options[i][k];renderOpts()}
+function cAdd(i){if(form.options[i].choices.length>=20)return;form.options[i].choices.push({name:"",price:0});renderOpts()}function cDel(i,c){form.options[i].choices.splice(c,1);renderOpts()}
+function fToggle(k){form[k]=!form[k];$("sw"+k).classList.toggle("on",form[k]);if(k==="track"){$("trackBox").style.display=form.track?"block":"none"}}
+async function saveForm(){
+  const name=String(form.name||"").trim();if(!name){showToast("ပစ္စည်းအမည် ထည့်ပါ");return}
+  const price=int(form.price),sale=int(form.sale),track=form.track;let daily=track?int(form.daily):0,stock=track?int(form.stock):0;
+  if(track&&daily<=0){showToast("နေ့စဉ် စတင်အရေအတွက် ထည့်ပါ");return}
+  if(track&&form.stock==="")stock=daily;
+  if(sale>0&&sale>=price){showToast("Sale ဈေးသည် ပုံမှန်ဈေးထက် နည်းရမည်");return}
+  if((form.from&&!form.to)||(!form.from&&form.to)){showToast("ရောင်းချိန် စ နှင့် ဆုံး နှစ်ခုလုံး ဖြည့်ပါ");return}
+  let avail=form.avail;if(track){if(stock<=0)avail=false;else if(!form.avail&&stock>0&&editing===null)avail=true}
+  const options=[];
+  for(const g of form.options){const choices=g.choices.map(c=>({name:String(c.name||"").trim(),price:int(c.price)})).filter(c=>c.name),gn=String(g.name||"").trim();
+    if(!gn&&!choices.length)continue;if(!gn){showToast("Option အုပ်စုအမည် ထည့်ပါ");return}if(!choices.length){showToast(`“${gn}” တွင် ရွေးချယ်စရာ ထည့်ပါ`);return}
+    options.push({name:gn,required:!!g.required,multi:!!g.multi,choices})}
+  const data={name,price,category:String(form.category||"").trim(),image:String(form.image||"").trim(),description:String(form.desc||"").trim(),options,available:avail,daily_stock:daily,
+    stock:track?stock:(editing?undefined:0),auto_restock:form.auto,low_stock_threshold:int(form.low),hidden:!!form.hidden,sale_price:sale,sale_until:sale>0?form.saleUntil:"",badge:form.badge,cost:int(form.cost),max_per_order:int(form.maxPer),avail_from:form.from,avail_to:form.to};
+  if(data.stock===undefined)delete data.stock;
+  if(editing&&track)data.reason="ပစ္စည်းပြင်ဆင်ခြင်း";
+  const b=$("saveBtn");b.disabled=true;b.textContent="သိမ်းနေသည်...";
+  try{if(editing)await apiFetch("/api/admin/products/"+editing,{method:"PATCH",body:JSON.stringify(data)});else await apiFetch("/api/admin/products",{method:"POST",body:JSON.stringify(data)});
+    showToast(editing?"ပြင်ပြီးပါပြီ ✅":"ထည့်ပြီးပါပြီ ✅");closeSheet();load()}
+  catch(_){b.disabled=false;b.textContent=editing?"သိမ်းမည်":"ထည့်မည်"}
+}
+function dupIt(){const id=editing;closeSheet();setTimeout(()=>openForm(id,true),350)}
+function askDelete(){const box=$("delBox"),btn=$("delBtn");if(!box.classList.contains("show")){box.classList.add("show");btn.innerHTML='<i class="fa-solid fa-trash-can"></i> ဖျက်မည်';$("sBody").scrollTop=99999;return}doDelete()}
+async function archiveIt(){const id=editing;try{await apiFetch("/api/admin/products/"+id,{method:"PATCH",body:JSON.stringify({hidden:true})});showToast("ဖျောက်ထားပြီး 🙈");closeSheet();load()}catch(_){}}
+async function doDelete(){const id=editing,p=P.find(x=>x.id==id);try{await apiFetch("/api/admin/products/"+id,{method:"DELETE"});showToast((p?p.name:"ပစ္စည်း")+" ဖျက်ပြီးပါပြီ");closeSheet();load()}catch(_){}}
+async function loadLog(id){
+  const box=$("lgBox");box.innerHTML='<div class="hint">ရယူနေသည်...</div>';
+  try{const r=await apiFetch("/api/admin/products/stock-log?id="+id),l=r.log||[];
+    box.innerHTML=l.length?l.map(x=>`<div class="lg"><span><b class="${x.delta>0?"p":"m"}">${x.delta>0?"+":""}${x.delta}</b> → ${x.stock_after}<br><small>${esc(x.reason||"")}</small></span><small>${esc(String(x.created_at||"").slice(5,16))} UTC</small></div>`).join(""):'<div class="hint">မှတ်တမ်း မရှိသေးပါ (ယခုမှ စတင်မှတ်မည်)</div>'}
+  catch(_){box.innerHTML='<div class="hint">ရယူ၍ မရပါ — worker.js အသစ်တင်ပါ</div>'}
+}
+
+// ---- categories ----
+function openCats(){
+  const cc={};P.forEach(p=>{const c=p.category||"";cc[c]=(cc[c]||0)+1});const names=Object.keys(cc).filter(Boolean);
+  showSheet("Category စီမံခန့်ခွဲမည်",`<p class="hint">အမည်ပြောင်းနိုင်သည်။ ရှိပြီးသား category အမည်ကို ထည့်လျှင် <b>ပေါင်းသွားမည်</b>။</p><div class="card">${names.length?names.map((c,i)=>`<div class="cr"><b>${esc(c)} <small>(${cc[c]})</small></b><button type="button" onclick="renCat(${i})">အမည်ပြောင်း / ပေါင်း</button></div>`).join(""):'<div class="hint">Category မရှိသေးပါ</div>'}</div>${cc[""]?`<p class="hint">မခွဲရသေးသော ပစ္စည်း ${cc[""]} မျိုး — "☑ ရွေးမည်" ဖြင့် Category ပေးနိုင်သည်။</p>`:""}`,'<button class="btn-sub" type="button" onclick="closeSheet()">ပိတ်မည်</button>');
+  window._cn=names;
+}
+async function renCat(i){
+  const from=window._cn[i],to=prompt(`"${from}" ၏ အမည်သစ် (ရှိပြီးသား အမည်ထည့်လျှင် ပေါင်းမည်)`,from);if(to===null)return;const t=to.trim();if(!t||t===from)return;
+  try{const r=await apiFetch("/api/admin/categories/rename",{method:"POST",body:JSON.stringify({from,to:t})});showToast(`${r.changed||0} မျိုး ပြောင်းပြီး ✅`);closeSheet();cat="__all";load()}catch(_){}
+}
+
+// ---- insights ----
+let insP="d7";
+function openInsights(){
+  if(!ST)return showToast("ရောင်းအားစာရင်းအတွက် worker.js အသစ်တင်ပါ");
+  const k=insP,rows=P.map(p=>({p,q:(ST[k][p.id]||{}).q||0,r:(ST[k][p.id]||{}).r||0})),top=rows.filter(x=>x.q>0).sort((a,b)=>b.q-a.q).slice(0,15),mx=top.length?top[0].q:1;
+  const dead=P.filter(p=>!isHid(p)&&!((ST.d30[p.id]||{}).q)),lows=P.filter(isLow);
+  const tr=rows.reduce((a,x)=>a+x.r,0),profit=rows.reduce((a,x)=>a+(int(x.p.cost)>0?x.r-int(x.p.cost)*x.q:0),0);
+  showSheet("📈 ရောင်းအား",`<div class="sg">${[["today","ဒီနေ့"],["d7","၇ ရက်"],["d30","၃၀ ရက်"]].map(([a,t])=>`<button type="button" class="${insP===a?"on":""}" onclick="insP='${a}';openInsights2()">${t}</button>`).join("")}</div>
+    <div class="card"><div class="two"><div><small style="color:var(--sub)">ရောင်းရငွေ</small><div style="font:800 20px var(--num)">${fmt(tr)} Ks</div></div><div><small style="color:var(--sub)">အမြတ် (အရင်းဈေးထည့်ထားသည်များ)</small><div style="font:800 20px var(--num);color:var(--ok)">${fmt(profit)} Ks</div></div></div></div>
+    <div class="sec">🏆 ရောင်းအကောင်းဆုံး</div><div class="card">${top.length?top.map((x,i)=>`<div class="rk"><span class="n">${i+1}</span><div class="t"><b>${esc(x.p.name)}</b><div class="bar"><i style="width:${Math.round(x.q/mx*100)}%"></i></div></div><span class="v">${x.q} ခု<br><small style="color:var(--sub);font-weight:500">${short(x.r)} Ks</small></span></div>`).join(""):'<div class="hint">ဒီကာလအတွင်း ရောင်းချမှု မရှိသေးပါ</div>'}</div>
+    <div class="sec">🐌 ၃၀ ရက်အတွင်း မရောင်းရသေးသော (${dead.length})</div><div class="card">${dead.length?dead.slice(0,20).map(p=>`<div class="rk"><div class="t"><b>${esc(p.name)}</b><small>${fmt(effP(p))} Ks</small></div></div>`).join(""):'<div class="hint">အားလုံး ရောင်းရပါသည် 🎉</div>'}</div>
+    <div class="sec">⚠️ Stock နည်းနေသော (${lows.length})</div><div class="card">${lows.length?lows.map(p=>`<div class="rk"><div class="t"><b>${esc(p.name)}</b><small>ကျန် ${int(p.stock)} / ${int(p.daily_stock)}</small></div></div>`).join(""):'<div class="hint">မရှိပါ</div>'}</div>`,'<button class="btn-sub" type="button" onclick="closeSheet()">ပိတ်မည်</button>');
+}
+function openInsights2(){openInsights()}
+
+// ---- CSV ----
+const CSV_COLS=["id","name","price","category","description","image","available","hidden","daily_stock","stock","low_stock_threshold","sale_price","sale_until","badge","cost","max_per_order","avail_from","avail_to"];
+function openCsv(){
+  showSheet("📄 CSV Export / Import",`<div class="set-block"><h4>Export</h4><p>ပစ္စည်းအားလုံးကို CSV ဖိုင်အဖြစ် ထုတ်မည် (Excel / Google Sheets ဖြင့် ဖွင့်နိုင်သည်)။ Option များ မပါပါ။</p><div class="btns"><button class="btn-main" type="button" onclick="exportCsv()">ဒေါင်းလုဒ် ထုတ်မည်</button></div></div>
+    <div class="set-block"><h4>Import</h4><p>အပေါ်က ပုံစံအတိုင်း ခေါင်းစီးပါသော CSV ဖိုင်ရွေးပါ။ <b>id</b> ကိုက်လျှင် ပြင်မည်၊ id မရှိ/မကိုက်လျှင် အသစ်ထည့်မည်။</p><div class="btns"><button class="btn-warn" type="button" onclick="importCsv()">CSV ဖိုင်ရွေး၍ ထည့်မည်</button></div><div class="hint" id="impMsg" style="margin-top:8px"></div></div>`,'<button class="btn-sub" type="button" onclick="closeSheet()">ပိတ်မည်</button>');
+}
+function exportCsv(){
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const rows=[CSV_COLS,...P.map(p=>CSV_COLS.map(c=>c==="available"?(isOut(p)?0:1):c==="hidden"?(isHid(p)?1:0):c==="description"?p.description:p[c]))];
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+rows.map(r=>r.map(q).join(",")).join("\n")],{type:"text/csv;charset=utf-8"}));
+  a.download="menu-"+today()+".csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+function parseCsv(t){const rows=[];let r=[],f="",q=false;t=t.replace(/^\ufeff/,"");
+  for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===","){r.push(f);f=""}else if(c==="\n"||c==="\r"){if(c==="\r"&&t[i+1]==="\n")i++;r.push(f);f="";if(r.length>1||r[0]!=="")rows.push(r);r=[]}else f+=c}
+  if(f!==""||r.length){r.push(f);rows.push(r)}return rows}
+function importCsv(){
+  const i=document.createElement("input");i.type="file";i.accept=".csv,text/csv";i.style.display="none";document.body.appendChild(i);
+  i.onchange=async()=>{const f=i.files&&i.files[0];i.remove();if(!f)return;
+    const rows=parseCsv(await f.text()),h=(rows.shift()||[]).map(x=>x.trim());if(!h.includes("name")||!rows.length){$("impMsg").textContent="ခေါင်းစီး (name, price...) ပါသော CSV ဖြစ်ရမည်";return}
+    if(!confirm(`စာကြောင်း ${rows.length} ကြောင်း ထည့်/ပြင်မည်။ ဆက်လုပ်မလား?`))return;
+    let ok=0,bad=0;
+    for(const r of rows){const o={};h.forEach((k,x)=>o[k]=r[x]);const name=String(o.name||"").trim();if(!name){bad++;continue}
+      const daily=int(o.daily_stock),d={name,price:int(o.price),category:o.category||"",description:o.description||"",image:o.image||"",available:!(o.available==="0"||o.available==="false"),hidden:o.hidden==="1"||o.hidden==="true",daily_stock:daily,sale_price:int(o.sale_price),sale_until:o.sale_until||"",badge:o.badge||"",cost:int(o.cost),max_per_order:int(o.max_per_order),avail_from:o.avail_from||"",avail_to:o.avail_to||""};
+      if(o.stock!==undefined&&o.stock!=="")d.stock=int(o.stock);if(o.low_stock_threshold)d.low_stock_threshold=int(o.low_stock_threshold);
+      try{const id=int(o.id);if(id&&P.some(p=>p.id==id))await apiFetch("/api/admin/products/"+id,{method:"PATCH",body:JSON.stringify(d)});else await apiFetch("/api/admin/products",{method:"POST",body:JSON.stringify(d)});ok++;$("impMsg").textContent=`${ok} / ${rows.length} ပြီး...`}catch(_){bad++}}
+    showToast(`ပြီးပါပြီ ✅ ${ok} ခု${bad?` (မအောင် ${bad})`:""}`);closeSheet();load()};
+  i.click();
+}
+
+// ---- auto-reset settings ----
+function openSettings(){
+  const hrs=Array.from({length:24},(_,h)=>`<option value="${h}"${h==S.reset_hour?" selected":""}>${hourLabel(h)}</option>`).join("");
+  showSheet("နေ့စဉ် ပြန်စခြင်း",`<button class="opt" type="button" onclick="setAuto()"><div class="t"><b>အလိုအလျောက် ပြန်စမည်</b><small>သတ်မှတ်ချိန်ရောက်ပြီး ကုန်နေဆဲ ဖြစ်လျှင် ပြန်ဖွင့်ပေးမည်။ ကိုယ်တိုင် ပြန်ဖွင့်ပြီးသားဆိုလျှင် မထိပါ။</small></div><span class="sw${S.auto_reset?" on":""}" id="swAR"></span></button>
+    <div class="fld"><label>ပြန်စမည့် အချိန် (မြန်မာစံတော်ချိန်)</label><select id="hrSel" onchange="setHour(this.value)">${hrs}</select></div>
+    <p class="hint">⚠️ Cloudflare Worker တွင် Cron Trigger <b>* * * * *</b> ထည့်ထားမှ အလိုအလျောက် အလုပ်လုပ်ပါမည်။</p>
+    <div class="set-block"><h4>ယခုချက်ချင်း ပြန်စမည်</h4><p>မနက်ဖြန်ကို မစောင့်ချင်သည့်အခါ ကိုယ်တိုင် နှိပ်နိုင်သည်။</p><div class="btns"><button class="btn-main" type="button" onclick="manualReset('soldout')">ကုန်နေသည်များကို ပြန်ဖွင့်မည်</button><button class="btn-warn" type="button" onclick="manualReset('all')">အားလုံးကို နေ့စဉ်အရေအတွက်သို့ ပြန်စမည်</button></div></div>`,'<button class="btn-sub" type="button" onclick="closeSheet()">ပိတ်မည်</button>');
+}
+async function setAuto(){const v=!S.auto_reset;S.auto_reset=v;$("swAR").classList.toggle("on",v);render();
+  try{await apiFetch("/api/admin/inventory/settings",{method:"POST",body:JSON.stringify({auto_reset:v})});showToast(v?"အလိုအလျောက် ပြန်စမည် ✅":"ပိတ်ထားသည်")}catch(_){S.auto_reset=!v;$("swAR").classList.toggle("on",!v);render()}}
+async function setHour(h){const old=S.reset_hour;S.reset_hour=int(h);render();
+  try{await apiFetch("/api/admin/inventory/settings",{method:"POST",body:JSON.stringify({reset_hour:int(h)})});showToast("နေ့စဉ် "+hourLabel(h)+" တွင် ပြန်စမည်")}catch(_){S.reset_hour=old;$("hrSel").value=old;render()}}
+async function manualReset(mode){
+  if(mode==="all"&&!confirm("auto ပြန်စ ဖွင့်ထားသော ပစ္စည်းအားလုံးကို နေ့စဉ်အရေအတွက်သို့ ပြန်ထားမည်။ သေချာပါသလား?"))return;
+  try{const r=await apiFetch("/api/admin/inventory/reset",{method:"POST",body:JSON.stringify({mode})});showToast(`ပစ္စည်း ${r.changed||0} မျိုး ပြန်စပြီး ✅`);closeSheet();load()}catch(_){}
+}
+window.onload=function(){if(typeof renderAdminLayout==="function")renderAdminLayout("inventory");load()};
+</script>
+</body>
+</html>

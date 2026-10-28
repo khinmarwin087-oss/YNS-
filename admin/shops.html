@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>ဆိုင်များ • Marketplace</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+  :root { --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18); }
+  html, body { overflow-x: hidden; }
+  body { line-height: 1.5; }
+  .main { padding: 0 14px 90px; min-width: 0; }
+  .p-wrap { max-width: 860px; margin: 0 auto; }
+  @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+  .p-top { position: sticky; top: 0; z-index: 40; margin: 0 -14px; padding: 10px 14px; background: rgba(244,246,251,.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  @media (min-width: 769px) { .p-top { margin: 0 -28px; padding: 18px 28px 12px; } }
+  .p-top-inner { max-width: 860px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+  .p-title { flex: 1; min-width: 0; }
+  .p-title h1 { margin: 0; font-size: 21px; font-weight: 800; letter-spacing: -.3px; color: var(--ink); line-height: 1.3; }
+  .p-title small { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+  .ibtn { width: 42px; height: 42px; flex-shrink: 0; border-radius: 13px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; font-size: 15px; color: var(--ink); box-shadow: 0 1px 2px rgba(15,23,42,.05); cursor: pointer; }
+  .ibtn.add { width: auto; padding: 0 14px; background: #0D5C49; color: #fff; border-color: #0D5C49; font-weight: 800; font-size: 13px; gap: 6px; display: inline-flex; align-items: center; }
+
+  .sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+  .sum div { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 12px 10px; box-shadow: var(--card-shadow); text-align: center; }
+  .sum b { display: block; font-size: 19px; font-weight: 800; color: #0D5C49; }
+  .sum small { font-size: 11px; color: var(--muted); font-weight: 600; }
+
+  .how { background: #E3F1EB; border: 1px solid #c9e4d8; color: #083D31; border-radius: 16px; padding: 12px 14px; font-size: 12.5px; line-height: 1.8; margin-bottom: 12px; }
+  .shop { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 14px; box-shadow: var(--card-shadow); margin-bottom: 10px; }
+  .shop.off { opacity: .6; }
+  .sh-top { display: flex; gap: 12px; align-items: center; }
+  .sh-logo { width: 52px; height: 52px; border-radius: 15px; background: #E3F1EB center/cover no-repeat; display: grid; place-items: center; font-size: 22px; flex-shrink: 0; overflow: hidden; }
+  .sh-name { flex: 1; min-width: 0; }
+  .sh-name b { display: block; font-size: 15.5px; font-weight: 800; color: var(--ink); }
+  .sh-name small { display: block; font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+  .tg { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 3px 8px; border-radius: 99px; }
+  .tg.on { background: #E3F1EB; color: #0D5C49; } .tg.sus { background: #FDECEC; color: #B42318; } .tg.mn { background: #FFF3DF; color: #8A4B00; }
+  .sh-stats { display: flex; gap: 14px; margin: 12px 0 10px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .sh-stats b { color: var(--ink); font-weight: 800; }
+  .sh-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sh-btns button { border: 1px solid var(--line); background: #f8fafc; border-radius: 11px; padding: 8px 11px; font-size: 12px; font-weight: 700; color: var(--ink); cursor: pointer; }
+  .sh-btns button.pri { background: #0D5C49; border-color: #0D5C49; color: #fff; }
+  .sh-btns button.dng { color: #B42318; }
+
+  .back { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 2500; display: none; align-items: flex-end; justify-content: center; }
+  .back.show { display: flex; }
+  .sheet { background: #fff; width: 100%; max-width: 520px; border-radius: 22px 22px 0 0; padding: 18px 16px 24px; max-height: 92vh; overflow: auto; }
+  @media (min-width: 769px) { .back { align-items: center; } .sheet { border-radius: 22px; } }
+  .sheet h3 { margin: 0 0 12px; font-size: 17px; }
+  .fld { margin-bottom: 10px; }
+  .fld label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .fld input, .fld textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 11px; font-size: 14px; background: #f8fafc; outline: none; font-family: inherit; }
+  .fld small { font-size: 11px; color: var(--muted); }
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 13px; font-weight: 800; font-size: 15px; background: #0D5C49; color: #fff; cursor: pointer; margin-top: 4px; }
+  .btn.ghost { background: #f1f5f9; color: var(--ink); }
+  .keybox { background: #0f172a; color: #86efac; border-radius: 12px; padding: 12px; font-family: monospace; font-size: 13px; word-break: break-all; margin: 8px 0; user-select: all; }
+  .warn { background: #FFF3DF; color: #8A4B00; border-radius: 12px; padding: 10px 12px; font-size: 12px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="p-top"><div class="p-top-inner">
+      <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="p-title"><h1>ဆိုင်များ</h1><small>Marketplace — တခြားဆိုင်ပိုင်ရှင်များ</small></div>
+      <button class="ibtn" onclick="loadAll()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+      <button class="ibtn add" onclick="openForm()" type="button"><i class="fa-solid fa-plus"></i> ဆိုင်အသစ်</button>
+    </div></div>
+
+    <div class="p-wrap">
+      <div class="sum" id="sum"></div>
+      <div class="how">
+        <b>ဆိုင်အသစ် ထည့်နည်း</b><br>
+        ၁။ "ဆိုင်အသစ်" နှိပ်ပြီး ဆိုင်အမည် ဖြည့်ပါ။<br>
+        ၂။ ရလာတဲ့ <b>ဆိုင်ပိုင်ရှင် Key</b> ကို ပိုင်ရှင်ဆီ ပို့ပေးပါ (တစ်ကြိမ်သာ ပြပါမယ်)။<br>
+        ၃။ ပိုင်ရှင်က Admin စာမျက်နှာမှာ ထို Key ဖြင့် ဝင်ပြီး ကိုယ့်ပစ္စည်း၊ ဈေးနှုန်း၊ အော်ဒါတွေကို ကိုယ်တိုင် စီမံမယ်။
+      </div>
+      <div id="list"></div>
+    </div>
+  </main>
+</div>
+
+<div class="back" id="back" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
+
+<script src="js/upload.js"></script>
+<script src="js/main.js"></script>
+<script>
+  const SITE = "https://myintharchickenbbq.shop";
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  let SHOPS = [];
+  const link = s => s.id === 1 ? SITE + "/" : SITE + "/index.html?shop=" + encodeURIComponent(s.slug);
+
+  async function loadAll() {
+    try {
+      const d = await apiFetch("/api/admin/shops");
+      SHOPS = d.shops || [];
+      render();
+    } catch (e) {
+      $("list").innerHTML = '<div class="how" style="background:#FDECEC;color:#B42318;border-color:#f5c2c2">ဤစာမျက်နှာသည် Owner Key ဖြင့်သာ ဝင်ရောက်နိုင်ပါသည်။</div>';
+    }
+  }
+
+  function render() {
+    const act = SHOPS.filter(s => s.status === "active").length;
+    const tot = SHOPS.reduce((a, s) => a + (s.today || 0), 0);
+    $("sum").innerHTML = `<div><b>${SHOPS.length}</b><small>ဆိုင်စုစုပေါင်း</small></div><div><b>${act}</b><small>လုပ်ကိုင်နေသော</small></div><div><b>${money(tot)}</b><small>ယနေ့ ရောင်းရငွေ</small></div>`;
+    $("list").innerHTML = SHOPS.map(s => {
+      const logo = s.logo ? `style="background-image:url('${esc(s.logo)}')"` : "";
+      const main = s.id === 1;
+      return `<div class="shop ${s.status === "active" ? "" : "off"}">
+        <div class="sh-top">
+          <div class="sh-logo" ${logo}>${s.logo ? "" : "🏪"}</div>
+          <div class="sh-name"><b>${esc(s.name)}</b><small>${esc(s.category || "—")}${s.owner_name ? " · " + esc(s.owner_name) : ""}</small></div>
+          ${main ? '<span class="tg mn">မူလဆိုင်</span>' : `<span class="tg ${s.status === "active" ? "on" : "sus"}">${s.status === "active" ? "လုပ်ကိုင်နေ" : "ပိတ်ထား"}</span>`}
+        </div>
+        <div class="sh-stats"><span>ယနေ့ <b>${money(s.today)}</b></span><span>စုစုပေါင်း <b>${money(s.revenue)}</b></span><span>အော်ဒါ <b>${s.orders}</b></span></div>
+        <div class="sh-btns">
+          <button class="pri" onclick="viewShop(${s.id})"><i class="fa-solid fa-eye"></i> ဝင်ကြည့်မည်</button>
+          <button onclick="copyLink(${s.id})"><i class="fa-solid fa-link"></i> Link ကူး</button>
+          <button onclick="openForm(${s.id})"><i class="fa-solid fa-pen"></i> ပြင်မည်</button>
+          ${main ? "" : `<button onclick="newKey(${s.id})"><i class="fa-solid fa-key"></i> Key အသစ်</button>
+          <button class="dng" onclick="toggle(${s.id})">${s.status === "active" ? "ခေတ္တပိတ်မည်" : "ပြန်ဖွင့်မည်"}</button>`}
+        </div></div>`;
+    }).join("");
+  }
+
+  function viewShop(id) { const s = SHOPS.find(x => x.id === id); setViewShop(id, s && s.name); location.href = "index.html"; }
+  function copyLink(id) { const s = SHOPS.find(x => x.id === id); const u = link(s); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => showToast("Link ကူးပြီး ✓"), () => prompt("Link:", u)); }
+  function closeSheet() { $("back").classList.remove("show"); }
+  function openSheet(html) { $("sheet").innerHTML = html; $("back").classList.add("show"); }
+
+  function openForm(id) {
+    const s = id ? SHOPS.find(x => x.id === id) : {};
+    openSheet(`<h3>${id ? "ဆိုင်အချက်အလက် ပြင်မည်" : "ဆိုင်အသစ် ထည့်မည်"}</h3>
+      <div class="fld"><label>ဆိုင်အမည် *</label><input id="f_name" value="${esc(s.name || "")}" maxlength="60"></div>
+      ${id ? "" : `<div class="fld"><label>Link အမည် (အင်္ဂလိပ်စာလုံး/ဂဏန်း) — မဖြည့်လည်းရ</label><input id="f_slug" placeholder="mama-cafe" maxlength="30" autocapitalize="none"><small>ဝယ်သူ link: ${SITE}/index.html?shop=<b>mama-cafe</b></small></div>`}
+      <div class="fld"><label>အမျိုးအစား</label><input id="f_category" value="${esc(s.category || "")}" maxlength="40" placeholder="ကော်ဖီ / ထမင်း / မုန့်"></div>
+      <div class="fld"><label>ပိုင်ရှင်အမည်</label><input id="f_owner_name" value="${esc(s.owner_name || "")}" maxlength="60"></div>
+      <div class="fld"><label>ဖုန်း</label><input id="f_phone" value="${esc(s.phone || "")}" maxlength="30" inputmode="tel"></div>
+      <div class="fld"><label>လိပ်စာ</label><input id="f_address" value="${esc(s.address || "")}" maxlength="120"></div>
+      <div class="fld"><label>ဆိုင်အကြောင်း အတိုချုပ်</label><textarea id="f_description" rows="2" maxlength="240">${esc(s.description || "")}</textarea></div>
+      <div class="fld"><label>Logo ပုံ — မထည့်လည်းရ</label><button class="btn ghost" type="button" onclick="pickLogo()" style="margin-bottom:8px">📷 ကိုယ်ကြိုက်တဲ့ ပုံရွေးမည်</button><input id="f_logo" value="${esc(s.logo || "")}" placeholder="သို့မဟုတ် ပုံ link https://..."></div>
+      <button class="btn" id="saveBtn" onclick="save(${id || 0})">${id ? "သိမ်းမည်" : "ဆိုင်ဖွင့်မည်"}</button>
+      <button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+  }
+
+  async function pickLogo(){try{const r=await YNSUpload.pickSquare({size:512});if(!r)return;document.getElementById("f_logo").value=r.url;showToast("ပုံတင်ပြီးပါပြီ — “သိမ်းမည်” ကို နှိပ်ပါ")}catch(e){showToast(e.message||"ပုံတင်၍ မရပါ")}}
+async function save(id) {
+    const g = k => ($("f_" + k) ? $("f_" + k).value.trim() : undefined);
+    const body = { name: g("name"), category: g("category"), owner_name: g("owner_name"), phone: g("phone"), address: g("address"), description: g("description"), logo: g("logo") };
+    if (!id) body.slug = g("slug");
+    if (!body.name) return showToast("ဆိုင်အမည် ဖြည့်ပါ");
+    const b = $("saveBtn"); b.disabled = true;
+    try {
+      const r = await apiFetch(id ? "/api/admin/shops/" + id : "/api/admin/shops", { method: id ? "PATCH" : "POST", body: JSON.stringify(body) });
+      await loadAll();
+      if (!id) showKey(r.shop, r.key, true); else { closeSheet(); showToast("သိမ်းပြီးပါပြီ ✓"); }
+    } catch (_) { b.disabled = false; }
+  }
+
+  function showKey(shop, key, isNew) {
+    const adminUrl = new URL("index.html", location.href).href;
+    const msg = `${shop.name} — ဆိုင်ပိုင်ရှင် အကောင့်\n\nAdmin စာမျက်နှာ: ${adminUrl}\nKey: ${key}\n\nဝယ်သူ Link: ${link(shop)}`;
+    openSheet(`<h3>${isNew ? "ဆိုင်ဖွင့်ပြီးပါပြီ 🎉" : "Key အသစ်"}</h3>
+      <div class="warn">ဤ Key ကို <b>ယခုတစ်ကြိမ်သာ</b> ပြပါမည်။ ပိုင်ရှင်ဆီ ပို့ပြီး သိမ်းထားခိုင်းပါ။ ပျောက်သွားလျှင် "Key အသစ်" ထုတ်ပေးရပါမည်။</div>
+      <div class="keybox">${esc(key)}</div>
+      <button class="btn" onclick="copyText(${JSON.stringify(msg).replace(/"/g, "&quot;")})"><i class="fa-regular fa-copy"></i> ပို့ရန် စာသား အားလုံးကူးမည်</button>
+      <button class="btn ghost" onclick="closeSheet()">ပိတ်မည်</button>`);
+  }
+  function copyText(t) { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => showToast("ကူးပြီး ✓"), () => prompt("ကူးယူပါ:", t)); }
+
+  async function newKey(id) {
+    const s = SHOPS.find(x => x.id === id);
+    if (!confirm(`"${s.name}" ၏ Key အဟောင်းကို ပယ်ဖျက်ပြီး Key အသစ် ထုတ်မလား?`)) return;
+    try { const r = await apiFetch("/api/admin/shops/" + id + "/key", { method: "POST" }); showKey(s, r.key, false); } catch (_) {}
+  }
+  async function toggle(id) {
+    const s = SHOPS.find(x => x.id === id);
+    const to = s.status === "active" ? "suspended" : "active";
+    if (to === "suspended" && !confirm(`"${s.name}" ကို ခေတ္တပိတ်မလား? ဝယ်သူစာရင်းမှာ မပေါ်တော့ဘဲ ပိုင်ရှင်လည်း ဝင်မရတော့ပါ။`)) return;
+    try { await apiFetch("/api/admin/shops/" + id, { method: "PATCH", body: JSON.stringify({ status: to }) }); await loadAll(); showToast(to === "active" ? "ပြန်ဖွင့်ပြီး ✓" : "ပိတ်ပြီး ✓"); } catch (_) {}
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof renderAdminLayout === "function") renderAdminLayout("shops");
+    loadAll();
+  });
+</script>
+</body>
+</html>

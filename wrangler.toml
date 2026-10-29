@@ -1,0 +1,21 @@
+name = "yns"
+main = "worker.js"
+compatibility_date = "2024-09-01"
+
+[assets]
+directory = "."
+binding = "ASSETS"
+# Share link (/?item=ID) မှာ ပစ္စည်းပုံ preview ပေါ်စေရန် — ပင်မစာမျက်နှာကို Worker က အရင်ဖြတ်ပေးရမည်
+run_worker_first = ["/", "/index.html"]
+
+[vars]
+CHAT_ID = "8116152317"
+# ⚠️ Deploy လုပ်ပြီးရင် ADMIN_KEY ကို "wrangler secret put ADMIN_KEY" နဲ့ လျှို့ဝှက်ကုဒ်တစ်ခုအနေနဲ့ ပြောင်းထားပါ
+# (ဒီမှာ vars အနေနဲ့ ချန်ထားတာက quick-start အတွက်ပဲ ဖြစ်ပြီး public repo ထဲမှာ မထားသင့်ပါ)
+
+# D1 Database binding — "wrangler d1 create yns-orders-db" ကို run ပြီး
+# ရလာတဲ့ database_id ကို အောက်မှာ အစားထိုးထည့်ပါ
+[[d1_databases]]
+binding = "DB"
+database_name = "yns_orders"
+database_id = "4f38c54d-92fe-49e7-aef3-d247f8b2bd96"

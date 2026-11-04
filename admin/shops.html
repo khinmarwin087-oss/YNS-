@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>ဆိုင်များ • Marketplace</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+  :root { --card-shadow: 0 1px 2px rgba(15,23,42,.04), 0 10px 24px -14px rgba(15,23,42,.18); }
+  html, body { overflow-x: hidden; }
+  body { line-height: 1.5; }
+  .main { padding: 0 14px 90px; min-width: 0; }
+  .p-wrap { max-width: 860px; margin: 0 auto; }
+  @media (min-width: 769px) { .main { padding: 0 28px 60px; } .menu-btn-o { display: none !important; } }
+  :root{--g1:#052E24;--g2:#0D5C49;--gold:#C9A24B;--gold2:#E8C877;--paper:#F5F3EC}
+  body{background:var(--paper)}
+  .hero{margin:0 -14px 0;padding:14px 16px 56px;background:radial-gradient(120% 140% at 85% -20%,#146B55 0,transparent 55%),linear-gradient(135deg,#041F18,#0A4A3A);color:#fff;border-radius:0 0 30px 30px;position:relative;overflow:hidden}
+  .hero:after{content:"";position:absolute;right:-30px;top:-40px;width:170px;height:170px;border-radius:50%;border:1px solid rgba(232,200,119,.35);box-shadow:0 0 0 28px rgba(232,200,119,.05)}
+  @media(min-width:769px){.hero{margin:0 -28px;padding:22px 28px 60px}}
+  .hero-in{max-width:860px;margin:0 auto;position:relative;z-index:1}
+  .hrow{display:flex;align-items:center;gap:10px}
+  .hico{width:42px;height:42px;border-radius:14px;background:linear-gradient(145deg,var(--gold2),var(--gold));color:#3a2a05;display:grid;place-items:center;font-size:18px;box-shadow:0 6px 16px -6px rgba(0,0,0,.5)}
+  .ht{flex:1;min-width:0}.ht h1{margin:0;font-size:19px;font-weight:800;line-height:1.3}.ht small{font-size:11px;color:#b9d6cb}
+  .ibtn{width:38px;height:38px;flex-shrink:0;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);display:grid;place-items:center;font-size:14px;color:#fff;cursor:pointer}
+  .ibtn.menu-btn-o{display:grid}
+  .sbar{display:flex;gap:8px;margin-top:14px}
+  .sbox{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:#fff;border-radius:15px;padding:0 13px;height:46px;box-shadow:0 8px 20px -10px rgba(0,0,0,.5)}
+  .sbox i{color:#8a968f;font-size:13px}.sbox input{flex:1;min-width:0;border:0;outline:0;font-size:13.5px;background:none;font-family:inherit;color:#1c2a24}
+  .addb{height:46px;padding:0 15px;border:0;border-radius:15px;background:linear-gradient(145deg,var(--gold2),var(--gold));color:#3a2a05;font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 8px 20px -10px rgba(0,0,0,.5);white-space:nowrap}
+  .p-wrap{max-width:860px;margin:-34px auto 0;position:relative;z-index:2}
+  .main{padding:0 14px 90px;min-width:0}@media(min-width:769px){.main{padding:0 28px 60px}}
+  html,body{overflow-x:hidden}
+  .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 12px}
+  .sum div{background:#fff;border:1px solid #ece7d8;border-radius:18px;padding:12px 8px;text-align:center;box-shadow:0 10px 24px -16px rgba(5,46,36,.45)}
+  .sum i{display:block;font-size:15px;color:var(--gold);margin-bottom:4px}
+  .sum b{display:block;font-size:16px;font-weight:800;color:var(--g2);overflow-wrap:anywhere}.sum small{font-size:10.5px;color:#7b867f;font-weight:600}
+  .how{background:linear-gradient(135deg,#fff,#FBF6E6);border:1px solid #efe3bd;color:#5b4710;border-radius:16px;padding:11px 13px;font-size:12px;line-height:1.75;margin-bottom:12px}
+  .how summary{cursor:pointer;font-weight:800;color:#7a5f12}
+  .shop{background:#fff;border:1px solid #ece7d8;border-radius:22px;padding:14px;box-shadow:0 14px 30px -20px rgba(5,46,36,.5);margin-bottom:12px;position:relative}
+  .shop.off .sh-logo{filter:grayscale(.8)}
+  .sh-top{display:flex;gap:12px;align-items:center}
+  .sh-logo{width:62px;height:62px;border-radius:18px;background:#E3F1EB center/cover no-repeat;display:grid;place-items:center;font-size:26px;flex-shrink:0;overflow:hidden;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--gold),0 8px 16px -8px rgba(0,0,0,.4)}
+  .sh-name{flex:1;min-width:0}.sh-name b{display:block;font-size:16px;font-weight:800;color:#13261f;overflow-wrap:anywhere}
+  .sh-name small{display:block;font-size:11.5px;color:#7b867f;overflow-wrap:anywhere;margin-top:1px}
+  .dots{width:34px;height:34px;border-radius:11px;border:0;background:#F5F3EC;color:#4a5a52;cursor:pointer;flex-shrink:0}
+  .tg{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;margin-top:5px}
+  .tg:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .tg.on{background:#E3F3EA;color:#14724D}.tg.sus{background:#FCE7E2;color:#B23B26}.tg.mn{background:#FFF1D8;color:#8A5A00}
+  .sh-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0 10px}
+  .sh-stats span{background:#FAF8F1;border-radius:13px;padding:8px 6px;text-align:center;font-size:10.5px;color:#7b867f;font-weight:600}
+  .sh-stats b{display:block;font-size:13.5px;color:#13261f;font-weight:800;margin-top:1px;overflow-wrap:anywhere}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chip{font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:99px;background:#F1EEE7;color:#6C7A72}
+  .chip.g{background:#E3F3EA;color:#14724D}.chip.o{background:#FFF1D8;color:#9A6209}.chip.r{background:#FCE7E2;color:#B23B26}.chip.p{background:linear-gradient(135deg,#F6E9BE,#EAD28B);color:#5b4410}
+  .sh-btns{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:6px}
+  .sh-btns button{border:1px solid #e6e0cc;background:#fff;border-radius:13px;padding:10px 6px;font-size:12px;font-weight:700;color:#23352d;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-family:inherit}
+  .sh-btns button.pri{background:linear-gradient(135deg,#0D5C49,#08382C);border-color:#08382C;color:#fff}
+  .sh-btns button.ok{grid-column:1/-1;background:#E3F3EA;border-color:#bfe3cf;color:#14724D}
+  .menu{position:absolute;right:12px;top:54px;background:#fff;border:1px solid #ece7d8;border-radius:16px;box-shadow:0 18px 40px -12px rgba(0,0,0,.35);padding:6px;z-index:20;min-width:200px;display:none}
+  .menu.show{display:block}
+  .menu button{display:flex;width:100%;align-items:center;gap:10px;border:0;background:none;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:700;color:#23352d;cursor:pointer;text-align:left;font-family:inherit}
+  .menu button:active,.menu button:hover{background:#F5F3EC}.menu button i{width:16px;color:var(--g2)}
+  .menu button.dng,.menu button.dng i{color:#B23B26}
+  .empty{text-align:center;color:#7b867f;padding:30px 10px;font-size:13px}
+
+  .back { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 2500; display: none; align-items: flex-end; justify-content: center; }
+  .back.show { display: flex; }
+  .sheet { background: #fff; width: 100%; max-width: 520px; border-radius: 22px 22px 0 0; padding: 18px 16px 24px; max-height: 92vh; overflow: auto; }
+  @media (min-width: 769px) { .back { align-items: center; } .sheet { border-radius: 22px; } }
+  .sheet h3 { margin: 0 0 12px; font-size: 17px; }
+  .fld { margin-bottom: 10px; }
+  .fld label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .fld input, .fld textarea { width: 100%; box-sizing: border-box; border: 1px solid var(--line); border-radius: 12px; padding: 11px; font-size: 14px; background: #f8fafc; outline: none; font-family: inherit; }
+  .fld small { font-size: 11px; color: var(--muted); }
+  .btn { width: 100%; border: 0; border-radius: 14px; padding: 13px; font-weight: 800; font-size: 15px; background: #0D5C49; color: #fff; cursor: pointer; margin-top: 4px; }
+  .btn.ghost { background: #f1f5f9; color: var(--ink); }
+  .keybox { background: #0f172a; color: #86efac; border-radius: 12px; padding: 12px; font-family: monospace; font-size: 13px; word-break: break-all; margin: 8px 0; user-select: all; }
+  .warn { background: #FFF3DF; color: #8A4B00; border-radius: 12px; padding: 10px 12px; font-size: 12px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+
+  <main class="main">
+    <div class="hero"><div class="hero-in">
+      <div class="hrow">
+        <button class="ibtn menu-btn-o" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="hico"><i class="fa-solid fa-store"></i></div>
+        <div class="ht"><h1>ဆိုင်များ</h1><small>Marketplace · ဆိုင်ပိုင်ရှင်များ စီမံရန်</small></div>
+        <button class="ibtn" onclick="payLog()" aria-label="Payments" type="button"><i class="fa-solid fa-receipt"></i></button>
+        <button class="ibtn" onclick="payInfoForm()" aria-label="Pay info" type="button"><i class="fa-solid fa-wallet"></i></button>
+      </div>
+      <div class="sbar">
+        <label class="sbox"><i class="fa-solid fa-magnifying-glass"></i><input id="q" placeholder="ဆိုင်ရှာရန်..." oninput="render()"></label>
+        <button class="addb" onclick="openForm()" type="button"><i class="fa-solid fa-plus"></i> ဆိုင်အသစ်</button>
+      </div>
+    </div></div>
+
+    <div class="p-wrap">
+      <div class="sum" id="sum"></div>
+      <details class="how"><summary>ဆိုင်အသစ် ထည့်နည်း</summary>
+        ၁။ "ဆိုင်အသစ်" နှိပ်ပြီး ဆိုင်အမည် ဖြည့်ပါ။<br>
+        ၂။ ရလာတဲ့ <b>ဆိုင်ပိုင်ရှင် Key</b> ကို ပိုင်ရှင်ဆီ ပို့ပေးပါ (တစ်ကြိမ်သာ ပြပါမယ်)။<br>
+        ၃။ ပိုင်ရှင်က Admin စာမျက်နှာမှာ ထို Key ဖြင့် ဝင်ပြီး ကိုယ့်ပစ္စည်း၊ ဈေးနှုန်း၊ အော်ဒါတွေကို ကိုယ်တိုင် စီမံမယ်။
+      </details>
+      <div id="list"></div>
+    </div>
+  </main>
+</div>
+
+<div class="back" id="back" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
+
+<script src="js/main.js"></script>
+<script>
+  const SITE = "https://myintharchickenbbq.shop";
+  const $ = id => document.getElementById(id);
+  const esc = v => String(v ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  let SHOPS = [];
+  const link = s => s.id === 1 ? SITE + "/" : SITE + "/index.html?shop=" + encodeURIComponent(s.slug);
+
+  async function loadAll() {
+    try {
+      const d = await apiFetch("/api/admin/shops");
+      SHOPS = d.shops || [];
+      render();
+    } catch (e) {
+      $("list").innerHTML = '<div class="how" style="background:#FDECEC;color:#B42318;border-color:#f5c2c2">ဤစာမျက်နှာသည် Owner Key ဖြင့်သာ ဝင်ရောက်နိုင်ပါသည်။</div>';
+    }
+  }
+
+  function render() {
+    const act = SHOPS.filter(s => s.status === "active").length;
+    const tot = SHOPS.reduce((a, s) => a + (s.today || 0), 0);
+    const wait = SHOPS.filter(s => s.approved === 0).length;
+    $("sum").innerHTML = `<div><i class="fa-solid fa-store"></i><b>${SHOPS.length}</b><small>ဆိုင်စုစုပေါင်း</small></div><div><i class="fa-solid fa-circle-check"></i><b>${act}</b><small>လုပ်ကိုင်နေသော</small></div><div><i class="fa-solid fa-coins"></i><b>${money(tot)}</b><small>ယနေ့ ရောင်းအား</small></div>`;
+    const q = ($("q") ? $("q").value : "").trim().toLowerCase();
+    const list = SHOPS.filter(s => !q || [s.name, s.slug, s.owner_name, s.category, s.phone].join(" ").toLowerCase().includes(q));
+    $("list").innerHTML = list.length ? list.map(s => {
+      const logo = s.logo ? `style="background-image:url('${esc(s.logo)}')"` : "";
+      const main = s.id === 1, on = s.status === "active";
+      return `<div class="shop ${on ? "" : "off"}">
+        <div class="sh-top">
+          <div class="sh-logo" ${logo}>${s.logo ? "" : "🏪"}</div>
+          <div class="sh-name"><b>${esc(s.name)}</b><small>${esc(s.category || "—")}${s.owner_name ? " · " + esc(s.owner_name) : ""}</small>
+            ${main ? '<span class="tg mn">မူလဆိုင်</span>' : `<span class="tg ${on ? "on" : "sus"}">${on ? "လုပ်ကိုင်နေ" : "ပိတ်ထား"}</span>`}</div>
+          <button class="dots" onclick="menu(event,${s.id})" aria-label="More" type="button"><i class="fa-solid fa-ellipsis"></i></button>
+        </div>
+        <div class="menu" id="m${s.id}">
+          <button onclick="payForm(${s.id})"><i class="fa-solid fa-money-bill-wave"></i> ကြေးလက်ခံမှတ် / သက်တမ်းတိုး</button>
+          ${main ? "" : `<button onclick="newKey(${s.id})"><i class="fa-solid fa-key"></i> Key အသစ်ထုတ်</button>
+          <button onclick="toggle(${s.id})"><i class="fa-solid fa-power-off"></i> ${on ? "ခေတ္တပိတ်မည်" : "ပြန်ဖွင့်မည်"}</button>
+          <button class="dng" onclick="delShop(${s.id})"><i class="fa-solid fa-trash"></i> ဆိုင်ဖျက်မည်</button>`}
+        </div>
+        <div class="sh-stats"><span>ယနေ့<b>${money(s.today)}</b></span><span>စုစုပေါင်း<b>${money(s.revenue)}</b></span><span>အော်ဒါ<b>${s.orders}</b></span></div>
+        ${main ? "" : subChips(s)}
+        <div class="sh-btns">
+          ${!main && s.approved === 0 ? `<button class="ok" onclick="approve(${s.id})"><i class="fa-solid fa-circle-check"></i> အတည်ပြု (ဈေးကွက်မှာ ပြမည်)</button>` : ""}
+          <button class="pri" onclick="viewShop(${s.id})"><i class="fa-solid fa-gear"></i> စီမံခန့်ခွဲ</button>
+          <button onclick="copyLink(${s.id})"><i class="fa-solid fa-link"></i> Link</button>
+          <button onclick="openForm(${s.id})"><i class="fa-solid fa-pen"></i> ပြင်</button>
+        </div></div>`;
+    }).join("") : '<div class="empty">ဆိုင် မတွေ့ပါ</div>';
+  }
+  function menu(ev, id) {
+    ev.stopPropagation();
+    const m = $("m" + id), was = m.classList.contains("show");
+    document.querySelectorAll(".menu.show").forEach(x => x.classList.remove("show"));
+    if (!was) m.classList.add("show");
+  }
+  document.addEventListener("click", () => document.querySelectorAll(".menu.show").forEach(x => x.classList.remove("show")));
+
+  function delShop(id) {
+    const s = SHOPS.find(x => x.id === id);
+    openSheet(`<h3 style="color:#B23B26"><i class="fa-solid fa-triangle-exclamation"></i> ဆိုင်ဖျက်မည်</h3>
+      <div class="warn" style="background:#FCE7E2;color:#8f2d1c"><b>${esc(s.name)}</b> ၏ ပစ္စည်း၊ အော်ဒါ၊ ဝယ်သူ၊ Staff အားလုံး <b>အပြီးအပိုင် ပျက်သွားမည်</b>။ ပြန်မရနိုင်ပါ။ (သက်တမ်းကြေး မှတ်တမ်းကိုသာ ကျန်ထားမည်)<br>ယာယီသာဆိုလျှင် "ခေတ္တပိတ်မည်" ကို သုံးပါ။</div>
+      <div class="fld" style="margin-top:12px"><label>အတည်ပြုရန် Owner Admin Key ကို ရိုက်ထည့်ပါ</label><input id="d_key" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+      <button class="btn" style="background:#B23B26" id="d_btn" onclick="doDel(${id})"><i class="fa-solid fa-trash"></i> အပြီးဖျက်မည်</button>
+      <button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+    setTimeout(() => $("d_key") && $("d_key").focus(), 50);
+  }
+  async function doDel(id) {
+    const key = $("d_key").value.trim();
+    if (!key) return showToast("Admin Key ရိုက်ပါ");
+    const b = $("d_btn"); b.disabled = true;
+    try { await apiFetch("/api/admin/shops/" + id, { method: "DELETE", body: JSON.stringify({ key }) }); closeSheet(); await loadAll(); showToast("ဆိုင်ဖျက်ပြီး ✓"); }
+    catch (_) { b.disabled = false; }
+  }
+
+  const PLAN_NAME = { starter: "Starter", standard: "Standard", pro: "Pro" };
+  function subChips(s) {
+    const x = s.sub || {}; const c = [];
+    c.push(`<span class="chip p">${PLAN_NAME[s.plan] || "Standard"}</span>`);
+    if (s.approved === 0) c.push('<span class="chip o">အတည်ပြုရန် စောင့်ဆဲ</span>');
+    if (x.state === "free") c.push('<span class="chip">သက်တမ်း မကုန်</span>');
+    else if (x.state === "expired") c.push('<span class="chip r">သက်တမ်းကုန်ပြီး</span>');
+    else if (x.state === "grace") c.push(`<span class="chip r">ကုန်ပြီး (ခွင့်ပေးကာလ)</span>`);
+    else c.push(`<span class="chip ${x.state === "due_soon" ? "o" : "g"}">${x.trial ? "စမ်းသုံး · " : ""}${x.days_left} ရက်ကျန်</span>`);
+    return `<div class="chips">${c.join("")}</div>`;
+  }
+  async function approve(id) { try { await apiFetch("/api/admin/shops/" + id + "/sub", { method: "POST", body: JSON.stringify({ approved: true }) }); await loadAll(); showToast("အတည်ပြုပြီး ✓"); } catch (_) {} }
+  function payForm(id) {
+    const s = SHOPS.find(x => x.id === id);
+    openSheet(`<h3>${esc(s.name)} — ကြေးလက်ခံမှတ်</h3>
+      <div class="fld"><label>အစီအစဉ်</label><select id="p_plan"><option value="starter">Starter — 15,000 Ks</option><option value="standard">Standard — 30,000 Ks</option><option value="pro">Pro — 60,000 Ks</option></select></div>
+      <div class="fld"><label>လ အရေအတွက်</label><input id="p_months" type="number" min="1" max="24" value="1" inputmode="numeric"></div>
+      <div class="fld"><label>လွှဲသည့်နည်း (KBZPay / Wave ...)</label><input id="p_method" maxlength="30"></div>
+      <div class="fld"><label>ရည်ညွှန်းနံပါတ် / မှတ်ချက်</label><input id="p_ref" maxlength="60"></div>
+      <button class="btn" onclick="savePay(${id})">သက်တမ်းတိုးမည်</button>
+      <button class="btn ghost" onclick="openDate(${id})">သက်တမ်းရက်စွဲ လက်ဖြင့်ပြင်မည်</button>
+      <button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+    $("p_plan").value = s.plan || "standard";
+  }
+  async function savePay(id) {
+    const body = { plan: $("p_plan").value, months: Number($("p_months").value) || 1, method: $("p_method").value.trim(), ref: $("p_ref").value.trim() };
+    try { const r = await apiFetch("/api/admin/shops/" + id + "/payment", { method: "POST", body: JSON.stringify(body) }); closeSheet(); await loadAll(); showToast("သက်တမ်းတိုးပြီး ✓ " + new Date(r.paid_until * 1000).toISOString().slice(0, 10) + " အထိ"); } catch (_) {}
+  }
+  function openDate(id) {
+    const s = SHOPS.find(x => x.id === id);
+    openSheet(`<h3>သက်တမ်းရက်စွဲ ပြင်မည်</h3><div class="fld"><label>ရက်စွဲ (YYYY-MM-DD) — ဗလာထားလျှင် သက်တမ်းမကုန်</label><input id="d_date" value="${s.paid_until ? new Date(s.paid_until * 1000).toISOString().slice(0, 10) : ""}" placeholder="2026-12-31"></div>
+      <button class="btn" onclick="saveDate(${id})">သိမ်းမည်</button><button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+  }
+  async function saveDate(id) { try { await apiFetch("/api/admin/shops/" + id + "/sub", { method: "POST", body: JSON.stringify({ paid_until: $("d_date").value.trim() || null }) }); closeSheet(); await loadAll(); showToast("သိမ်းပြီး ✓"); } catch (_) {} }
+  async function payInfoForm() {
+    let cur = ""; try { cur = (await apiFetch("/api/admin/subscription")).pay_info || ""; } catch (_) {}
+    openSheet(`<h3>ငွေပေးချေရန် အချက်အလက်</h3><div class="fld"><label>ဆိုင်ပိုင်ရှင်များ ကြေးလွှဲရမည့် နေရာ (KBZPay/Wave နံပါတ်၊ အမည်)</label><textarea id="pi_text" rows="4" maxlength="400">${esc(cur)}</textarea></div>
+      <button class="btn" onclick="savePayInfo()">သိမ်းမည်</button><button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+  }
+  async function savePayInfo() { try { await apiFetch("/api/admin/pay-info", { method: "POST", body: JSON.stringify({ text: $("pi_text").value.trim() }) }); closeSheet(); showToast("သိမ်းပြီး ✓"); } catch (_) {} }
+  async function payLog() {
+    try {
+      const d = await apiFetch("/api/admin/payments");
+      openSheet(`<h3>ကြေးလက်ခံမှတ်တမ်း</h3>${(d.items || []).map(x => `<div class="fld" style="padding:8px 0;border-bottom:1px solid #eee"><b style="font-size:13px">${esc(x.shop_name || "#" + x.shop_id)} · ${Number(x.amount).toLocaleString()} Ks</b><small>${esc(String(x.created_at).slice(0, 10))} · ${esc(x.plan)} × ${x.months} လ ${x.method ? "· " + esc(x.method) : ""} ${x.ref ? "· " + esc(x.ref) : ""}</small></div>`).join("") || "<p>မရှိသေးပါ</p>"}<button class="btn ghost" onclick="closeSheet()">ပိတ်မည်</button>`);
+    } catch (_) {}
+  }
+
+  function viewShop(id) { const s = SHOPS.find(x => x.id === id); setViewShop(id, s && s.name); location.href = "index.html"; }
+  function copyLink(id) { const s = SHOPS.find(x => x.id === id); const u = link(s); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(() => showToast("Link ကူးပြီး ✓"), () => prompt("Link:", u)); }
+  function closeSheet() { $("back").classList.remove("show"); }
+  function openSheet(html) { $("sheet").innerHTML = html; $("back").classList.add("show"); }
+
+  function openForm(id) {
+    const s = id ? SHOPS.find(x => x.id === id) : {};
+    openSheet(`<h3>${id ? "ဆိုင်အချက်အလက် ပြင်မည်" : "ဆိုင်အသစ် ထည့်မည်"}</h3>
+      <div class="fld"><label>ဆိုင်အမည် *</label><input id="f_name" value="${esc(s.name || "")}" maxlength="60"></div>
+      ${id ? "" : `<div class="fld"><label>Link အမည် (အင်္ဂလိပ်စာလုံး/ဂဏန်း) — မဖြည့်လည်းရ</label><input id="f_slug" placeholder="mama-cafe" maxlength="30" autocapitalize="none"><small>ဝယ်သူ link: ${SITE}/index.html?shop=<b>mama-cafe</b></small></div>`}
+      <div class="fld"><label>အမျိုးအစား</label><input id="f_category" value="${esc(s.category || "")}" maxlength="40" placeholder="ကော်ဖီ / ထမင်း / မုန့်"></div>
+      <div class="fld"><label>ပိုင်ရှင်အမည်</label><input id="f_owner_name" value="${esc(s.owner_name || "")}" maxlength="60"></div>
+      <div class="fld"><label>ဖုန်း</label><input id="f_phone" value="${esc(s.phone || "")}" maxlength="30" inputmode="tel"></div>
+      <div class="fld"><label>လိပ်စာ</label><input id="f_address" value="${esc(s.address || "")}" maxlength="120"></div>
+      <div class="fld"><label>ဆိုင်အကြောင်း အတိုချုပ်</label><textarea id="f_description" rows="2" maxlength="240">${esc(s.description || "")}</textarea></div>
+      <div class="fld"><label>Logo ပုံ link (https://...) — မဖြည့်လည်းရ</label><input id="f_logo" value="${esc(s.logo || "")}" placeholder="https://..."></div>
+      <button class="btn" id="saveBtn" onclick="save(${id || 0})">${id ? "သိမ်းမည်" : "ဆိုင်ဖွင့်မည်"}</button>
+      <button class="btn ghost" onclick="closeSheet()">မလုပ်တော့ပါ</button>`);
+  }
+
+  async function save(id) {
+    const g = k => ($("f_" + k) ? $("f_" + k).value.trim() : undefined);
+    const body = { name: g("name"), category: g("category"), owner_name: g("owner_name"), phone: g("phone"), address: g("address"), description: g("description"), logo: g("logo") };
+    if (!id) body.slug = g("slug");
+    if (!body.name) return showToast("ဆိုင်အမည် ဖြည့်ပါ");
+    const b = $("saveBtn"); b.disabled = true;
+    try {
+      const r = await apiFetch(id ? "/api/admin/shops/" + id : "/api/admin/shops", { method: id ? "PATCH" : "POST", body: JSON.stringify(body) });
+      await loadAll();
+      if (!id) showKey(r.shop, r.key, true); else { closeSheet(); showToast("သိမ်းပြီးပါပြီ ✓"); }
+    } catch (_) { b.disabled = false; }
+  }
+
+  function showKey(shop, key, isNew) {
+    const adminUrl = new URL("index.html", location.href).href;
+    const msg = `${shop.name} — ဆိုင်ပိုင်ရှင် အကောင့်\n\nAdmin စာမျက်နှာ: ${adminUrl}\nKey: ${key}\n\nဝယ်သူ Link: ${link(shop)}`;
+    openSheet(`<h3>${isNew ? "ဆိုင်ဖွင့်ပြီးပါပြီ 🎉" : "Key အသစ်"}</h3>
+      <div class="warn">ဤ Key ကို <b>ယခုတစ်ကြိမ်သာ</b> ပြပါမည်။ ပိုင်ရှင်ဆီ ပို့ပြီး သိမ်းထားခိုင်းပါ။ ပျောက်သွားလျှင် "Key အသစ်" ထုတ်ပေးရပါမည်။</div>
+      <div class="keybox">${esc(key)}</div>
+      <button class="btn" onclick="copyText(${JSON.stringify(msg).replace(/"/g, "&quot;")})"><i class="fa-regular fa-copy"></i> ပို့ရန် စာသား အားလုံးကူးမည်</button>
+      <button class="btn ghost" onclick="closeSheet()">ပိတ်မည်</button>`);
+  }
+  function copyText(t) { (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => showToast("ကူးပြီး ✓"), () => prompt("ကူးယူပါ:", t)); }
+
+  async function newKey(id) {
+    const s = SHOPS.find(x => x.id === id);
+    if (!confirm(`"${s.name}" ၏ Key အဟောင်းကို ပယ်ဖျက်ပြီး Key အသစ် ထုတ်မလား?`)) return;
+    try { const r = await apiFetch("/api/admin/shops/" + id + "/key", { method: "POST" }); showKey(s, r.key, false); } catch (_) {}
+  }
+  async function toggle(id) {
+    const s = SHOPS.find(x => x.id === id);
+    const to = s.status === "active" ? "suspended" : "active";
+    if (to === "suspended" && !confirm(`"${s.name}" ကို ခေတ္တပိတ်မလား? ဝယ်သူစာရင်းမှာ မပေါ်တော့ဘဲ ပိုင်ရှင်လည်း ဝင်မရတော့ပါ။`)) return;
+    try { await apiFetch("/api/admin/shops/" + id, { method: "PATCH", body: JSON.stringify({ status: to }) }); await loadAll(); showToast(to === "active" ? "ပြန်ဖွင့်ပြီး ✓" : "ပိတ်ပြီး ✓"); } catch (_) {}
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSheet(); });
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof renderAdminLayout === "function") renderAdminLayout("shops");
+    loadAll();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>AI Assistant • Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--g:#0B5A45;--gd:#06382C;--gs:#E4F3EC;--am:#F0A033;--ink:#18231F;--sub:#62706A;--ln:#E3E9E4;--bg:#F4F6F2}
+html,body{overflow-x:hidden}body{background:var(--bg)}
+.main{padding:0 0 100px!important;min-width:0}.in{max-width:900px;margin:0 auto;padding:0 16px}
+.hero{color:#fff;padding:calc(12px + env(safe-area-inset-top)) 0 54px;background:radial-gradient(90% 120% at 100% -10%,rgba(240,160,51,.2),transparent 55%),linear-gradient(165deg,#0C5F49,#052D23);border-radius:0 0 32px 32px}
+.hr{display:flex;align-items:center;gap:10px}.ht{flex:1;min-width:0}.ht h1{margin:0;font-size:21px;font-weight:800}.ht small{color:rgba(255,255,255,.75);font-size:12.5px}
+.circ{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;display:grid;place-items:center}
+@media(min-width:769px){.mbtn{display:none!important}}
+.spark{width:46px;height:46px;border-radius:15px;background:linear-gradient(145deg,#FFD58A,#F0A033);color:#3b2200;display:grid;place-items:center;font-size:21px}
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:-30px 0 14px;position:relative;z-index:3;padding:2px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;min-width:92px;background:#fff;border:1px solid var(--ln);border-radius:18px;padding:10px 8px;font:700 12px inherit;color:var(--sub);box-shadow:0 12px 22px -16px rgba(5,45,35,.6)}
+.tabs button i{display:block;font-size:17px;margin-bottom:4px;color:var(--g)}
+.tabs button.on{background:linear-gradient(135deg,#0B5A45,#06382C);color:#fff;border-color:#06382C}.tabs button.on i{color:#FFD58A}
+.card{background:#fff;border:1px solid #E6ECE7;border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 14px 26px -22px rgba(5,45,35,.5)}
+.card h3{margin:0 0 4px;font-size:15px}.card p.s{margin:0 0 12px;color:var(--sub);font-size:12px;line-height:1.7}
+.seg{display:flex;gap:6px;margin-bottom:12px}.seg button{flex:1;padding:9px;border-radius:12px;background:#fff;border:1px solid var(--ln);font:700 12.5px inherit;color:var(--sub)}.seg button.on{background:var(--g);border-color:var(--g);color:#fff}
+.btn{width:100%;padding:14px;border-radius:16px;background:linear-gradient(135deg,#0B5A45,#052D23);color:#fff;font:800 14.5px inherit;border:0;box-shadow:0 12px 20px -12px #052D23}.btn:disabled{opacity:.6}
+.ans{background:linear-gradient(135deg,#F3FBF7,#fff);border:1px solid #cfe5da;border-radius:16px;padding:14px;font-size:13.5px;line-height:1.9;white-space:pre-wrap;margin-top:12px}
+.ans.err{background:#FFF1E6;border-color:#f7d2b4}
+.note{font-size:11.5px;color:var(--sub);margin-top:8px;line-height:1.7}
+input,textarea,select{width:100%;box-sizing:border-box;border:1px solid var(--ln);border-radius:14px;padding:12px;font:inherit;font-size:14px;background:#FAFBF9;outline:0;margin-bottom:10px}
+input:focus,textarea:focus{border-color:var(--g)}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.kpis div{background:var(--gs);border-radius:16px;padding:10px 6px;text-align:center}.kpis b{display:block;font-size:16px;color:var(--gd);overflow-wrap:anywhere}.kpis small{font-size:10.5px;color:var(--sub);font-weight:600}
+.row{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid #EEF2EF}.row:first-child{border-top:0}
+.row .t{flex:1;min-width:0}.row .t b{display:block;font-size:13.5px;overflow-wrap:anywhere}.row .t small{color:var(--sub);font-size:11.5px}
+.pill{font:800 11px inherit;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.p-out{background:#FDE8E8;color:#B42F2F}.p-urgent{background:#FDE8E8;color:#B42F2F}.p-soon{background:#FFF1D6;color:#9A5B00}.p-ok{background:#DDF3E7;color:#0B6B47}.p-idle{background:#EEF2EF;color:var(--sub)}
+.seg-c{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;background:#FAFBF9;border:1px solid var(--ln);margin-bottom:8px;width:100%;text-align:left}
+.seg-c .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;flex-shrink:0}
+.seg-c .t{flex:1}.seg-c .t b{display:block;font-size:14px}.seg-c .t small{color:var(--sub);font-size:11.5px}.seg-c .n{font:800 20px inherit;color:var(--gd)}
+.lst{display:none;padding:4px 4px 8px}.lst.show{display:block}
+.chip{display:inline-block;margin:3px;padding:6px 12px;border-radius:99px;background:var(--gs);color:var(--gd);font-size:12px;font-weight:700}
+.empty{text-align:center;color:var(--sub);padding:26px 10px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main">
+    <header class="hero"><div class="in"><div class="hr">
+      <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="ht"><h1>AI Assistant</h1><small>ဂဏန်းကို စနစ်က တွက် · AI က ရှင်းပြ · ဆုံးဖြတ်တာ ကိုယ်တိုင်</small></div>
+      <div class="spark"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+    </div></div></header>
+    <div class="in">
+      <div class="tabs" id="tabs">
+        <button type="button" class="on" data-t="sum"><i class="fa-solid fa-newspaper"></i>အကျဉ်းချုပ်</button>
+        <button type="button" data-t="ask"><i class="fa-solid fa-comments"></i>မေးမည်</button>
+        <button type="button" data-t="re"><i class="fa-solid fa-boxes-stacked"></i>Stock</button>
+        <button type="button" data-t="seg"><i class="fa-solid fa-users-viewfinder"></i>ဝယ်သူ</button>
+        <button type="button" data-t="promo"><i class="fa-solid fa-bullhorn"></i>Promo</button>
+      </div>
+
+      <section id="v_sum">
+        <div class="seg" id="dsg"><button type="button" class="on" data-d="1">ဒီနေ့</button><button type="button" data-d="7">၇ ရက်</button><button type="button" data-d="30">၃၀ ရက်</button></div>
+        <div id="sumBox"><div class="empty">ဖတ်နေသည်...</div></div>
+      </section>
+
+      <section id="v_ask" style="display:none">
+        <div class="card"><h3>ဘာမဆို မေးပါ</h3><p class="s">ဥပမာ - "ဒီအပတ် အရောင်းဆုံး ၅ ခု"၊ "ဘယ်အချိန် လူများလဲ"၊ "ပယ်ဖျက်တာ များသလား"။ ဆိုင်ဒေတာကိုသာ ကိုးကားဖြေပါမည်။</p>
+          <textarea id="q" rows="2" maxlength="300" placeholder="မေးခွန်း ရိုက်ပါ..."></textarea>
+          <button class="btn" id="askB" type="button" onclick="ask()"><i class="fa-solid fa-paper-plane"></i> မေးမည်</button>
+          <div id="askOut"></div></div>
+      </section>
+
+      <section id="v_re" style="display:none"><div id="reBox"><div class="empty">ဖတ်နေသည်...</div></div></section>
+      <section id="v_seg" style="display:none"><div id="segBox"><div class="empty">ဖတ်နေသည်...</div></div></section>
+
+      <section id="v_promo" style="display:none">
+        <div class="card"><h3>Promotion အကြံ + ပို့စာ</h3><p class="s">ရည်ရွယ်ချက်ပြောပါ — AI က အကြံနဲ့ စာတို ရေးပေးမယ်။ ဆုံးဖြတ်တာ ကိုယ်တိုင်၊ အလိုအလျောက် မသက်ရောက်ပါ။</p>
+          <input id="pg" maxlength="200" placeholder="ဥပမာ - ညနေပိုင်း ရောင်းအားနည်း၊ stock ကုန်စေချင်">
+          <select id="pp"><option value="">ပစ္စည်းတစ်ခု ရွေးမည် (မရွေးလည်းရ)</option></select>
+          <button class="btn" id="promoB" type="button" onclick="promo()"><i class="fa-solid fa-wand-magic-sparkles"></i> ရေးပေးပါ</button>
+          <div id="promoOut"></div></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ks=n=>Math.round(Number(n)||0).toLocaleString()+" Ks";
+const loaded={};let days=1;
+function tab(t){
+  document.querySelectorAll("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
+  ["sum","ask","re","seg","promo"].forEach(x=>$("v_"+x).style.display=x===t?"block":"none");
+  if(t==="re"&&!loaded.re)loadRe();if(t==="seg"&&!loaded.seg)loadSeg();if(t==="promo"&&!loaded.promo)loadProds();
+}
+$("tabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)tab(b.dataset.t)});
+$("dsg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;days=+b.dataset.d;document.querySelectorAll("#dsg button").forEach(x=>x.classList.toggle("on",x===b));loadSum()});
+const planMsg=e=>/Standard|403/.test(String(e&&e.message))?"AI ကို Standard အစီအစဉ်မှစ၍ သုံးနိုင်သည်":"";
+
+async function loadSum(){
+  $("sumBox").innerHTML='<div class="empty"><i class="fa-solid fa-spinner fa-spin"></i> စစ်ဆေးနေသည်...</div>';
+  try{
+    const r=await apiFetch("/api/admin/ai/summary?days="+days),f=r.facts;
+    $("sumBox").innerHTML=`<div class="kpis"><div><b>${f.orders}</b><small>အော်ဒါ</small></div><div><b>${ks(f.revenue)}</b><small>ရောင်းရငွေ</small></div><div><b>${f.cancelled}</b><small>ပယ်ဖျက်</small></div></div>
+      <div class="card"><h3><i class="fa-solid fa-wand-magic-sparkles" style="color:#F0A033"></i> AI အကျဉ်းချုပ်</h3>
+      ${r.text?`<div class="ans">${esc(r.text)}</div>`:`<div class="ans err">${esc(r.ai_error||"အကျဉ်းချုပ် မရပါ")}</div>`}
+      <div class="note">AI သည် အကြံပြုရုံသာ — အောက်ပါ ဂဏန်းများကို စနစ်က တိုက်ရိုက်တွက်ထားသည်။</div></div>
+      ${f.top.length?`<div class="card"><h3>အရောင်းဆုံး</h3>${f.top.map((x,i)=>`<div class="row"><b style="width:22px">${i+1}</b><div class="t"><b>${esc(x.name)}</b><small>${x.qty} ခု</small></div><b>${ks(x.revenue)}</b></div>`).join("")}</div>`:""}
+      ${f.low_stock.length?`<div class="card"><h3>Stock နည်း / ကုန်လုနီး</h3>${f.low_stock.map(x=>`<div class="row"><div class="t"><b>${esc(x.name)}</b></div><span class="pill p-soon">${x.stock} / ${x.daily}</span></div>`).join("")}</div>`:""}`;
+  }catch(e){$("sumBox").innerHTML=`<div class="empty">${esc(planMsg(e)||"ဖတ်၍ မရပါ")}</div>`}
+}
+
+async function ask(){
+  const q=$("q").value.trim();if(!q)return showToast("မေးခွန်း ရိုက်ပါ");
+  const b=$("askB");b.disabled=true;$("askOut").innerHTML='<div class="ans"><i class="fa-solid fa-spinner fa-spin"></i> စဉ်းစားနေသည်...</div>';
+  try{const r=await apiFetch("/api/admin/ai/ask",{method:"POST",body:JSON.stringify({q})});$("askOut").innerHTML=`<div class="ans">${esc(r.text)}</div>`}
+  catch(e){$("askOut").innerHTML=`<div class="ans err">${esc(planMsg(e)||"ဖြေ၍ မရပါ — ထပ်စမ်းပါ")}</div>`}
+  b.disabled=false;
+}
+
+const LV={out:["ကုန်နေ","p-out"],urgent:["ယနေ့ကုန်မည်","p-urgent"],soon:["၃ ရက်ထဲ ကုန်မည်","p-soon"],ok:["ရပါသေး","p-ok"],idle:["မရောင်းရ","p-idle"]};
+async function loadRe(){
+  try{
+    const r=await apiFetch("/api/admin/ai/reorder");loaded.re=1;
+    if(!r.rows.length){$("reBox").innerHTML='<div class="empty">နေ့စဉ် stock စစ်ထားသော ပစ္စည်း မရှိသေးပါ<br>Inventory မှာ "နေ့စဉ် အရေအတွက် စစ်မည်" ဖွင့်ပါ</div>';return}
+    $("reBox").innerHTML=`<div class="card"><h3>Stock ဘယ်နှစ်ရက်ခံမလဲ</h3><p class="s">${esc(r.basis)} အပေါ်မူတည်သည်။ "ထပ်တိုးရန်" သည် နောက် ၇ ရက်စာအတွက် အကြံပြုချက်။</p>
+      ${r.rows.map(x=>{const l=LV[x.level];return `<div class="row"><div class="t"><b>${esc(x.name)}</b><small>ကျန် ${x.stock} · တစ်ရက် ${x.per_day} ခု${x.days_left!==null?` · ${x.days_left} ရက်ခံ`:""}${x.suggest_qty?` · <b style="color:#9A5B00">ထပ်တိုးရန် +${x.suggest_qty}</b>`:""}</small></div><span class="pill ${l[1]}">${l[0]}</span></div>`}).join("")}
+      <div class="note">ထပ်တိုးရန် → Inventory မှာ ထိုပစ္စည်း "＋ Stock ထပ်တိုး" ကိုနှိပ်ပါ။</div></div>`;
+  }catch(e){$("reBox").innerHTML=`<div class="empty">${esc(planMsg(e)||"ဖတ်၍ မရပါ")}</div>`}
+}
+
+const SEGS=[["loyal","အမြဲဝယ်သူ","၄ ကြိမ်+၊ ၃၀ ရက်အတွင်း ဝယ်","#1E8E5A","fa-crown"],["new","ဝယ်သူသစ်","၁ ကြိမ်၊ ၁၄ ရက်အတွင်း","#2F80ED","fa-seedling"],["risk","ပျောက်လုနီး","ဝယ်ဖူး၊ ၃၀-၉၀ ရက် မလာ — ပြန်ခေါ်သင့်","#F2994A","fa-bell"],["lost","ပျောက်နေသူ","၉၀ ရက်+ မလာ","#B42F2F","fa-user-slash"],["other","အခြား","","#62706A","fa-user"]];
+async function loadSeg(){
+  try{
+    const r=await apiFetch("/api/admin/ai/segments");loaded.seg=1;
+    if(!r.total){$("segBox").innerHTML='<div class="empty">ဖုန်းနံပါတ်ပါသော အော်ဒါ မရှိသေးပါ</div>';return}
+    $("segBox").innerHTML=`<div class="card"><h3>ဝယ်သူ ${r.total} ယောက်</h3><p class="s">ဖုန်းနံပါတ်အလိုက် ရေတွက်သည်။ နှိပ်လျှင် စာရင်းပေါ်မည်။</p>`+SEGS.map(([k,t,d,c,ic])=>{const s=r.segments[k];return `<button class="seg-c" type="button" onclick="this.nextElementSibling.classList.toggle('show')"><span class="ic" style="background:${c}"><i class="fa-solid ${ic}"></i></span><span class="t"><b>${t}</b><small>${d||"—"} · ${ks(s.spent)}</small></span><span class="n">${s.count}</span></button><div class="lst">${s.top.length?s.top.map(x=>`<span class="chip">${esc(x.name||"-")} · ${esc(x.phone)} · ${x.orders} ကြိမ်</span>`).join(""):'<div class="empty">မရှိ</div>'}</div>`}).join("")+`<div class="note">${esc(r.note)}</div></div>`;
+  }catch(e){$("segBox").innerHTML=`<div class="empty">${esc(planMsg(e)||"ဖတ်၍ မရပါ")}</div>`}
+}
+
+async function loadProds(){
+  try{const r=await apiFetch("/api/admin/products"),l=r.products||r||[];loaded.promo=1;
+    $("pp").innerHTML='<option value="">ပစ္စည်းတစ်ခု ရွေးမည် (မရွေးလည်းရ)</option>'+l.filter(p=>!(p.hidden==1)).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}catch(_){}
+}
+async function promo(){
+  const goal=$("pg").value.trim()||"ရောင်းအားတိုးရန်",b=$("promoB");b.disabled=true;
+  $("promoOut").innerHTML='<div class="ans"><i class="fa-solid fa-spinner fa-spin"></i> ရေးနေသည်...</div>';
+  try{const r=await apiFetch("/api/admin/ai/promo",{method:"POST",body:JSON.stringify({goal,pid:$("pp").value})});
+    $("promoOut").innerHTML=`<div class="ans">${esc(r.text)}</div><div class="note">ကူးယူပြီး Promos စာမျက်နှာမှာ ကိုယ်တိုင် ဖန်တီးပါ။</div>`}
+  catch(e){$("promoOut").innerHTML=`<div class="ans err">${esc(planMsg(e)||"ရေး၍ မရပါ — ထပ်စမ်းပါ")}</div>`}
+  b.disabled=false;
+}
+loadSum();
+</script>
+</body>
+</html>

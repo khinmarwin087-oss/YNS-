@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Visitors • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gs:#E3F1EB;--am:#F0A033;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18)}
+body{font-family:"Noto Sans Myanmar",system-ui,sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.hero{background:linear-gradient(120deg,#0E6B3A,#0B5A33 60%,#12834A);color:#fff;border-radius:0 0 26px 26px;padding:calc(14px + env(safe-area-inset-top)) 18px 18px;margin:0 -16px 16px}
+.hr{display:flex;align-items:center;gap:12px}.ht{flex:1}.ht h1{margin:0;font:800 20px "Bricolage Grotesque","Noto Sans Myanmar",sans-serif}.ht small{opacity:.8;font-size:12px}
+.circ{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:16px;display:grid;place-items:center}
+.per{display:flex;gap:6px;margin-top:14px}.per button{flex:1;border:0;border-radius:99px;padding:9px 0;background:rgba(255,255,255,.14);color:#fff;font:700 13px inherit;font-family:inherit}.per button.on{background:#fff;color:var(--g)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.k{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--sh)}.k span{display:block;font-size:12px;font-weight:700;color:var(--sub)}.k b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;margin-top:2px}.k small{font-size:11.5px;font-weight:700}
+.up{color:var(--ok)}.dn{color:var(--dg)}.fl{color:var(--sub)}
+h2{font-size:16px;font-weight:800;margin:18px 0 10px;padding-left:10px;border-left:4px solid var(--g);line-height:1.1}
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px}
+.row{margin-bottom:14px}.row:last-child{margin-bottom:0}.rh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px}.rh em{font-style:normal;color:var(--sub)}
+.bar{height:8px;border-radius:9px;background:#EEF2EF;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.sp{display:flex;align-items:flex-end;gap:8px;height:90px}.sp div{flex:1;text-align:center;font-size:10.5px;color:var(--sub)}.sp i{display:block;background:var(--g);border-radius:6px 6px 2px 2px;min-height:3px;margin-bottom:4px}.sp b{display:block;font-size:11px;color:var(--ink)}
+.rc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.rc:last-child{border:0}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--gs);color:var(--g);display:grid;place-items:center}
+.rc b{display:block;font-size:13.5px}.rc small{color:var(--sub);font-size:11.5px}.rc .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap}
+.tot{background:linear-gradient(120deg,#0B5A33,#12834A);color:#fff;border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh)}
+.tot span{font-size:13px;font-weight:700;opacity:.9}.tot b{display:block;font:800 44px/1.1 "Bricolage Grotesque",sans-serif}.tot small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.dc{border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--ln)}
+.dc i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:17px}.dc span{display:block;font-size:11.5px;font-weight:700;color:var(--sub)}.dc b{font:800 21px "Bricolage Grotesque",sans-serif}.dc small{font-size:11px;color:var(--sub)}
+.tag{margin-left:8px;font-size:11px;font-weight:700;background:var(--gs);color:var(--g);border-radius:99px;padding:3px 10px}
+.bi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.empty{text-align:center;color:var(--sub);padding:18px;font-size:13px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero">
+      <div class="hr">
+        <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="ht"><h1>Visitors</h1><small>ဝင်ရောက်ကြည့်ရှုသူများ</small></div>
+        <button class="circ" onclick="load()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+      <div class="per" id="per"><button class="on" data-d="1" type="button">ယနေ့</button><button data-d="7" type="button">၇ ရက်</button><button data-d="30" type="button">၃၀ ရက်</button></div>
+    </header>
+
+    <div class="tot"><span><i class="fa-solid fa-users"></i> စုစုပေါင်း ဝင်ရောက်သူများ</span><b id="vT">—</b><small>ယနေ့ <b id="vU" style="display:inline;font-size:inherit">—</b> <em id="tU" style="font-style:normal"></em> · မနေ့ <span id="vY">—</span> · စာမျက်နှာကြည့်မှု <span id="vV">—</span></small></div>
+    <div class="dg" id="dg"></div>
+
+    <h2>ဝင်ရောက်မှု ကိန်းဂဏန်းများ (၇ ရက်)</h2>
+    <div class="card"><div id="sp"></div></div>
+
+    <h2>ဘယ်ကနေ လာသလဲ</h2>
+    <div class="card" id="src"><div class="empty">ဖတ်နေသည်...</div></div>
+
+    <h2>Browser</h2>
+    <div class="card" id="dev"><div class="empty">ဖတ်နေသည်...</div></div>
+
+    <h2>မကြာသေးမီ ဝင်ရောက်မှုများ</h2>
+    <div class="card" id="rec"><div class="empty">ဖတ်နေသည်...</div></div>
+    <p class="empty" style="margin-top:14px">ဝင်ရောက်သူကို စက်တစ်လုံး (အမည်မသိ ID) ကို တစ်နေ့ တစ်ယောက်အဖြစ် ရေတွက်ပါတယ်။ IP နဲ့ ကိုယ်ရေးအချက်အလက် မသိမ်းပါ။</p>
+  </div></main>
+</div>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let days=1;
+const COL={Facebook:"#1877F2",Messenger:"#0084FF",Telegram:"#229ED9",Viber:"#7360F2",Direct:"#0D5C49",Google:"#EA4335",TikTok:"#111",Instagram:"#C13584",YouTube:"#FF0000",Other:"#9AA5A0"};
+const BC={"Facebook App":"#1877F2","Instagram App":"#C13584","Telegram App":"#229ED9","Viber App":"#7360F2","TikTok App":"#111","LINE App":"#06C755",Chrome:"#EA4335",Safari:"#0A84FF",Edge:"#0F7B6C",Firefox:"#FF7139",Opera:"#CC0F16","Samsung Browser":"#5B4FE0",Other:"#9AA5A0"};
+const DT=[["Mobile","fa-mobile-screen","မိုဘိုင်း","#E8F6EE"],["Desktop","fa-laptop","ကွန်ပျူတာ","#E6F0FB"],["Tablet","fa-tablet-screen-button","တက်ဘလက်","#FDF1E3"],["Other","fa-globe","အခြား","#F1EAFB"]];
+function dcards(list){const tot=list.reduce((a,x)=>a+x.c,0)||1,m={};list.forEach(x=>m[x.k]=(m[x.k]||0)+x.c);
+  $("dg").innerHTML=DT.map(([k,ic,nm,bg])=>{const c=m[k]||0;return `<div class="dc" style="background:${bg}"><i class="fa-solid ${ic}"></i><div><span>${nm}</span><b>${(c*100/tot).toFixed(1)}%</b> <small>(${c} ယောက်)</small></div></div>`}).join("")}
+function line(el,series){
+  if(!series.length){el.innerHTML='<div class="empty">မှတ်တမ်း မရှိသေးပါ</div>';return}
+  const W=320,H=120,P=22,mx=Math.max(1,...series.map(x=>x.u)),n=series.length,X=i=>n===1?W/2:P+i*(W-2*P)/(n-1),Y=v=>H-18-(v/mx)*(H-46);
+  const pts=series.map((x,i)=>X(i)+","+Y(x.u)).join(" "),area=X(0)+","+(H-18)+" "+pts+" "+X(n-1)+","+(H-18);
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto"><polygon points="${area}" fill="#0D5C49" opacity=".12"/><polyline points="${pts}" fill="none" stroke="#0D5C49" stroke-width="2.5" stroke-linejoin="round"/>`+series.map((x,i)=>`<circle cx="${X(i)}" cy="${Y(x.u)}" r="3.5" fill="#0D5C49"/><text x="${X(i)}" y="${Y(x.u)-8}" font-size="10" font-weight="700" text-anchor="middle" fill="#18231F">${x.u}</text><text x="${X(i)}" y="${H-4}" font-size="9" text-anchor="middle" fill="#62706A">${esc(x.day.slice(5))}</text>`).join("")+`</svg>`;
+}
+function bars(box,list,colors){
+  if(!list.length){box.innerHTML='<div class="empty">ဒီကာလမှာ ဝင်ရောက်မှု မရှိသေးပါ</div>';return}
+  const tot=list.reduce((a,x)=>a+x.c,0)||1;
+  box.innerHTML=list.map(x=>{const p=Math.round(x.c*100/tot);return `<div class="row"><div class="rh"><span>${esc(x.k)}</span><em>${x.c} ယောက် · ${p}%</em></div><div class="bar"><i style="width:${p}%;background:${(colors&&colors[x.k])||'var(--g)'}"></i></div></div>`}).join("");
+}
+function trend(el,t,y){
+  if(!t&&!y){el.textContent="";return}
+  if(!y){el.className="up";el.textContent="▲ အသစ်";return}
+  const p=Math.round((t-y)*100/y);
+  el.className=p>0?"up":p<0?"dn":"fl";el.textContent=p>0?"▲ "+p+"% မနေ့ကထက်":p<0?"▼ "+Math.abs(p)+"% မနေ့ကထက်":"မနေ့ကအတိုင်း";
+}
+function ago(m){if(m==null)return"";if(m<1)return"ယခုလေးတင်";if(m<60)return m+" မိနစ်က";if(m<1440)return Math.floor(m/60)+" နာရီက";return Math.floor(m/1440)+" ရက်က"}
+async function load(){
+  try{
+    const d=await apiFetch("/api/admin/visitors?days="+days);
+    $("vT").textContent=(d.total||0).toLocaleString();$("vU").textContent=d.today.unique;$("vY").textContent=d.yesterday.unique;$("vV").textContent=d.today.views;
+    trend($("tU"),d.today.unique,d.yesterday.unique);
+    dcards(d.devices);line($("sp"),d.series);
+    bars($("src"),d.sources,COL);bars($("dev"),d.browsers||[],BC);
+    $("rec").innerHTML=d.recent.length?d.recent.map(x=>{const br=x.browser||x.source,ty=x.dtype||(x.device==="PC/Other"?"Desktop":"Mobile");return `<div class="rc"><div class="bi" style="background:${BC[br]||"#0D5C49"}">${esc(br.charAt(0))}</div><div><b>${esc(br)}</b><small>${esc(x.os||x.device)} · ${esc(ty)}${x.city?" · 📍"+esc(x.city):""}</small></div><div class="t">${ago(x.ago)}<span class="tag">${esc(x.page)}</span></div></div>`}).join(""):'<div class="empty">မှတ်တမ်း မရှိသေးပါ</div>';
+  }catch(e){["src","dev","rec"].forEach(i=>$(i).innerHTML='<div class="empty">ဒေတာ ဆွဲယူ၍ မရပါ</div>')}
+}
+$("per").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;days=+b.dataset.d;[...$("per").children].forEach(x=>x.classList.toggle("on",x===b));load()});
+window.addEventListener("load",()=>{if(typeof renderAdminLayout==="function")renderAdminLayout("visitors");load()});
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Security • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gs:#E3F1EB;--am:#F0A033;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18)}
+body{font-family:"Noto Sans Myanmar",system-ui,sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.hero{background:linear-gradient(120deg,#0E6B3A,#0B5A33 60%,#12834A);color:#fff;border-radius:0 0 26px 26px;padding:calc(14px + env(safe-area-inset-top)) 18px 18px;margin:0 -16px 16px}
+.hr{display:flex;align-items:center;gap:12px}.ht{flex:1}.ht h1{margin:0;font:800 20px "Bricolage Grotesque","Noto Sans Myanmar",sans-serif}.ht small{opacity:.8;font-size:12px}
+.circ{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:16px;display:grid;place-items:center}
+.per{display:flex;gap:6px;margin-top:14px}.per button{flex:1;border:0;border-radius:99px;padding:9px 0;background:rgba(255,255,255,.14);color:#fff;font:700 13px inherit;font-family:inherit}.per button.on{background:#fff;color:var(--g)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.k{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--sh)}.k span{display:block;font-size:12px;font-weight:700;color:var(--sub)}.k b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;margin-top:2px}.k small{font-size:11.5px;font-weight:700}
+.up{color:var(--ok)}.dn{color:var(--dg)}.fl{color:var(--sub)}
+h2{font-size:16px;font-weight:800;margin:18px 0 10px;padding-left:10px;border-left:4px solid var(--g);line-height:1.1}
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px}
+.row{margin-bottom:14px}.row:last-child{margin-bottom:0}.rh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px}.rh em{font-style:normal;color:var(--sub)}
+.bar{height:8px;border-radius:9px;background:#EEF2EF;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.sp{display:flex;align-items:flex-end;gap:8px;height:90px}.sp div{flex:1;text-align:center;font-size:10.5px;color:var(--sub)}.sp i{display:block;background:var(--g);border-radius:6px 6px 2px 2px;min-height:3px;margin-bottom:4px}.sp b{display:block;font-size:11px;color:var(--ink)}
+.rc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.rc:last-child{border:0}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--gs);color:var(--g);display:grid;place-items:center}
+.rc b{display:block;font-size:13.5px}.rc small{color:var(--sub);font-size:11.5px}.rc .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap}
+.tot{background:linear-gradient(120deg,#0B5A33,#12834A);color:#fff;border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh)}
+.tot span{font-size:13px;font-weight:700;opacity:.9}.tot b{display:block;font:800 44px/1.1 "Bricolage Grotesque",sans-serif}.tot small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.dc{border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--ln)}
+.dc i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:17px}.dc span{display:block;font-size:11.5px;font-weight:700;color:var(--sub)}.dc b{font:800 21px "Bricolage Grotesque",sans-serif}.dc small{font-size:11px;color:var(--sub)}
+.tag{margin-left:8px;font-size:11px;font-weight:700;background:var(--gs);color:var(--g);border-radius:99px;padding:3px 10px}
+.bi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.empty{text-align:center;color:var(--sub);padding:18px;font-size:13px}
+.tg{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--ln)}.tg:last-child{border:0}
+.ty{font-size:11px;font-weight:800;border-radius:99px;padding:3px 10px;color:#fff;background:var(--dg);flex:none}.ty.AdminKey{background:#B7791F}.ty.Probe{background:#6B46C1}
+.tg b{font-size:13px;word-break:break-all}.tg small{display:block;color:var(--sub);font-size:11.5px;word-break:break-all}.tg .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap;text-align:right}
+.ub{border:0;background:var(--gs);color:var(--g);font:700 12px inherit;font-family:inherit;border-radius:99px;padding:6px 12px}
+.ban{display:flex;gap:8px;margin-top:12px}.ban input{flex:1;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;min-width:0}.ban button{border:0;background:var(--dg);color:#fff;font:700 13px inherit;font-family:inherit;border-radius:12px;padding:0 16px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero">
+      <div class="hr">
+        <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+        <div class="ht"><h1>Security</h1><small>ဟက်ကာ တိုက်ခိုက်မှု စောင့်ကြည့်ရေး</small></div>
+        <button class="circ" onclick="load()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button>
+      </div>
+    </header>
+    <div class="grid">
+      <div class="k"><span>၂၄ နာရီအတွင်း တိုက်ခိုက်မှု</span><b id="a1">—</b><small class="fl" id="a2"></small></div>
+      <div class="k"><span>လက်ရှိ ပိတ်ထားသော IP</span><b id="a3">—</b><small class="fl">၁ နာရီ အလိုအလျောက်</small></div>
+    </div>
+    <h2>ပိတ်ဆို့ထားသော IP များ</h2>
+    <div class="card"><div id="bl"><div class="empty">ဖတ်နေသည်...</div></div>
+      <div class="ban"><input id="nip" placeholder="IP ထည့်ပြီး ပိတ်ရန်" inputmode="text"><button type="button" onclick="banIp()">ပိတ်မည်</button></div></div>
+    <h2>တိုက်ခိုက်မှု မှတ်တမ်း</h2>
+    <div class="card" id="lg"><div class="empty">ဖတ်နေသည်...</div></div>
+    <p class="empty" style="margin-top:14px">URL ထဲက SQL injection / XSS / path traversal / ခိုးဝင်ရှာဖွေမှု (.env, wp-login…) ကို စစ်ပါတယ်။ ၁၀ မိနစ်အတွင်း ၅ ကြိမ်ဆိုရင် IP ကို ၁ နာရီ အလိုအလျောက် ပိတ်ပြီး Telegram ကို သတိပေးပါတယ်။ ဝယ်သူ ရိုက်တဲ့ စာသား (အမည်၊ လိပ်စာ) ကို မစစ်ပါ။</p>
+  </div></main>
+</div>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MM=ts=>new Date(ts*1000+23400000).toISOString().slice(5,16).replace("T"," ");
+async function load(){
+  try{
+    const d=await apiFetch("/api/admin/threats");
+    $("a1").textContent=d.last24h.attacks;$("a2").textContent=d.last24h.ips+" IP";$("a3").textContent=d.blocked.length;
+    $("bl").innerHTML=d.blocked.length?d.blocked.map(x=>`<div class="tg"><div><b>${esc(x.ip)}</b><small>${esc(x.reason)} · ${Math.max(1,Math.ceil((x.blocked_until-d.now)/60))} မိနစ် ကျန်</small></div><div class="t"><button class="ub" type="button" data-ip="${esc(x.ip)}" onclick="unb(this.dataset.ip)">ပြန်ဖွင့်</button></div></div>`).join(""):'<div class="empty">ပိတ်ထားသော IP မရှိပါ ✅</div>';
+    $("lg").innerHTML=d.logs.length?d.logs.map(x=>`<div class="tg"><span class="ty ${esc(x.type)}">${esc(x.type)}</span><div><b>${esc(x.ip)}</b><small>${esc(x.path)}${x.details?" · "+esc(x.details):""}</small></div><div class="t">${MM(x.created_at)}</div></div>`).join(""):'<div class="empty">တိုက်ခိုက်မှု မှတ်တမ်း မရှိသေးပါ ✅</div>';
+  }catch(e){$("lg").innerHTML='<div class="empty">ဒေတာ ဆွဲယူ၍ မရပါ (ပိုင်ရှင် Key လိုအပ်သည်)</div>'}
+}
+async function unb(ip){await apiFetch("/api/admin/threats/unblock",{method:"POST",body:JSON.stringify({ip})});load()}
+async function banIp(){const ip=$("nip").value.trim();if(!ip)return;try{await apiFetch("/api/admin/threats/block",{method:"POST",body:JSON.stringify({ip,hours:24})});$("nip").value="";load()}catch(e){alert("IP မမှန်ပါ")}}
+window.addEventListener("load",()=>{if(typeof renderAdminLayout==="function")renderAdminLayout("security");load()});
+</script>
+</body>
+</html>

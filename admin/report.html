@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>အစီရင်ခံစာ • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gs:#E3F1EB;--am:#F0A033;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18)}
+body{font-family:"Noto Sans Myanmar",system-ui,sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.hero{background:linear-gradient(120deg,#0E6B3A,#0B5A33 60%,#12834A);color:#fff;border-radius:0 0 26px 26px;padding:calc(14px + env(safe-area-inset-top)) 18px 18px;margin:0 -16px 16px}
+.hr{display:flex;align-items:center;gap:12px}.ht{flex:1}.ht h1{margin:0;font:800 20px "Bricolage Grotesque","Noto Sans Myanmar",sans-serif}.ht small{opacity:.8;font-size:12px}
+.circ{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:16px;display:grid;place-items:center}
+.per{display:flex;gap:6px;margin-top:14px}.per button{flex:1;border:0;border-radius:99px;padding:9px 0;background:rgba(255,255,255,.14);color:#fff;font:700 13px inherit;font-family:inherit}.per button.on{background:#fff;color:var(--g)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.k{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--sh)}.k span{display:block;font-size:12px;font-weight:700;color:var(--sub)}.k b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;margin-top:2px}.k small{font-size:11.5px;font-weight:700}
+.up{color:var(--ok)}.dn{color:var(--dg)}.fl{color:var(--sub)}
+h2{font-size:16px;font-weight:800;margin:18px 0 10px;padding-left:10px;border-left:4px solid var(--g);line-height:1.1}
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px}
+.row{margin-bottom:14px}.row:last-child{margin-bottom:0}.rh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px}.rh em{font-style:normal;color:var(--sub)}
+.bar{height:8px;border-radius:9px;background:#EEF2EF;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.sp{display:flex;align-items:flex-end;gap:8px;height:90px}.sp div{flex:1;text-align:center;font-size:10.5px;color:var(--sub)}.sp i{display:block;background:var(--g);border-radius:6px 6px 2px 2px;min-height:3px;margin-bottom:4px}.sp b{display:block;font-size:11px;color:var(--ink)}
+.rc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.rc:last-child{border:0}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--gs);color:var(--g);display:grid;place-items:center}
+.rc b{display:block;font-size:13.5px}.rc small{color:var(--sub);font-size:11.5px}.rc .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap}
+.tot{background:linear-gradient(120deg,#0B5A33,#12834A);color:#fff;border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh)}
+.tot span{font-size:13px;font-weight:700;opacity:.9}.tot b{display:block;font:800 44px/1.1 "Bricolage Grotesque",sans-serif}.tot small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.dc{border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--ln)}
+.dc i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:17px}.dc span{display:block;font-size:11.5px;font-weight:700;color:var(--sub)}.dc b{font:800 21px "Bricolage Grotesque",sans-serif}.dc small{font-size:11px;color:var(--sub)}
+.tag{margin-left:8px;font-size:11px;font-weight:700;background:var(--gs);color:var(--g);border-radius:99px;padding:3px 10px}
+.bi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.empty{text-align:center;color:var(--sub);padding:18px;font-size:13px}
+.tg{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--ln)}.tg:last-child{border:0}
+.ty{font-size:11px;font-weight:800;border-radius:99px;padding:3px 10px;color:#fff;background:var(--dg);flex:none}.ty.AdminKey{background:#B7791F}.ty.Probe{background:#6B46C1}
+.tg b{font-size:13px;word-break:break-all}.tg small{display:block;color:var(--sub);font-size:11.5px;word-break:break-all}.tg .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap;text-align:right}
+.ub{border:0;background:var(--gs);color:var(--g);font:700 12px inherit;font-family:inherit;border-radius:99px;padding:6px 12px}
+.ban{display:flex;gap:8px;margin-top:12px}.ban input{flex:1;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;min-width:0}.ban button{border:0;background:var(--dg);color:#fff;font:700 13px inherit;font-family:inherit;border-radius:12px;padding:0 16px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.row input[type=date]{flex:1;min-width:150px;border:1.5px solid var(--ln);border-radius:12px;padding:11px 12px;font:inherit;background:#fff}
+.btn{flex:1 1 100%;border:0;border-radius:14px;padding:13px;font:700 14.5px inherit;font-family:inherit;background:linear-gradient(145deg,#12705A,#0A4A3B);color:#fff}.btn.s{background:#fff;color:var(--g);border:1.5px solid var(--g)}.btn:disabled{opacity:.55}
+#pv img{width:100%;border-radius:10px;border:1px solid var(--ln);margin-bottom:10px;background:#fff}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero"><div class="hr">
+      <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="ht"><h1>အစီရင်ခံစာ</h1><small>နေ့စဉ် အရောင်း PDF → Telegram</small></div>
+      <span style="width:44px"></span></div></header>
+    <div class="card">
+      <div class="row"><input type="date" id="dt"><button class="btn s" style="flex:0 0 auto;padding:11px 18px" type="button" onclick="build()">ကြည့်မည်</button></div>
+      <div class="row">
+        <button class="btn" id="b1" type="button" onclick="sendPdf()">📄 PDF ကို Telegram သို့ ပို့မည်</button>
+        <button class="btn s" id="b2" type="button" onclick="sendText()">💬 စာတိုသာ Telegram သို့ ပို့မည်</button>
+        <button class="btn s" id="b3" type="button" onclick="dl()">⬇️ PDF ဒေါင်းလုဒ်</button>
+      </div>
+      <p class="empty" style="margin:6px 0 0" id="msg">ရက်ရွေးပြီး "ကြည့်မည်" နှိပ်ပါ။ ယနေ့ကို ရွေးရင် ယခုအချိန်အထိ ရသလောက် စာရင်းချုပ်ပေးသည်။ နေ့တိုင်း ည ၉ နာရီကျော်မှာ စာတို အကျဉ်းချုပ်ကို အလိုအလျောက် ပို့ပေးသည်။</p>
+    </div>
+    <div id="pv"></div>
+  </div></main>
+</div>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id), mmk=n=>Number(n||0).toLocaleString("en-US");
+let PDF=null, DAY="";
+const PW=1190,PH=1684,M=70, F='"Noto Sans Myanmar","Padauk",sans-serif';
+const today=()=>new Date(Date.now()+23400000).toISOString().slice(0,10);
+function say(t,bad){$("msg").textContent=t;$("msg").style.color=bad?"#B42F2F":""}
+function pdfFrom(jpegs){ // JPEG စာမျက်နှာများ → PDF
+  const enc=new TextEncoder(),parts=[],offs=[];let len=0;
+  const push=x=>{const b=typeof x==="string"?enc.encode(x):x;parts.push(b);len+=b.length};
+  const obj=(n,body)=>{offs[n]=len;push(n+" 0 obj\n");push(body);push("\nendobj\n")};
+  push("%PDF-1.4\n");
+  const N=jpegs.length,kids=jpegs.map((_,i)=>(3+i*3)+" 0 R").join(" ");
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");obj(2,"<< /Type /Pages /Kids ["+kids+"] /Count "+N+" >>");
+  jpegs.forEach((j,i)=>{const p=3+i*3;
+    obj(p,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /I"+i+" "+(p+1)+" 0 R >> >> /Contents "+(p+2)+" 0 R >>");
+    offs[p+1]=len;push((p+1)+" 0 obj\n<< /Type /XObject /Subtype /Image /Width "+PW+" /Height "+PH+" /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length "+j.length+" >>\nstream\n");push(j);push("\nendstream\nendobj\n");
+    const c="q 595 0 0 842 0 0 cm /I"+i+" Do Q";obj(p+2,"<< /Length "+c.length+" >>\nstream\n"+c+"\nendstream");});
+  const tot=3+N*3,xr=len;let x="xref\n0 "+tot+"\n0000000000 65535 f \n";
+  for(let i=1;i<tot;i++)x+=String(offs[i]).padStart(10,"0")+" 00000 n \n";
+  push(x+"trailer\n<< /Size "+tot+" /Root 1 0 R >>\nstartxref\n"+xr+"\n%%EOF");
+  const out=new Uint8Array(len);let o=0;for(const b of parts){out.set(b,o);o+=b.length}return out;
+}
+async function build(){
+  DAY=$("dt").value||today();say("ဖတ်နေသည်...");PDF=null;$("pv").innerHTML="";
+  let d;try{d=await apiFetch("/api/admin/report/data?date="+DAY)}catch(e){say("ဒေတာ ဆွဲယူ၍ မရပါ",1);return}
+  await document.fonts.load('700 30px "Noto Sans Myanmar"');await document.fonts.load('400 24px "Noto Sans Myanmar"');
+  const r=d.report,pages=[];let cv,cx,y;
+  const np=()=>{cv=document.createElement("canvas");cv.width=PW;cv.height=PH;cx=cv.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,PW,PH);cx.textBaseline="alphabetic";pages.push(cv);y=M};
+  const T=(t,x,yy,sz,w,col,al)=>{cx.font=(w||400)+" "+sz+"px "+F;cx.fillStyle=col||"#17231E";cx.textAlign=al||"left";cx.fillText(String(t),x,yy)};
+  const fit=(t,max,sz,w)=>{cx.font=(w||400)+" "+sz+"px "+F;t=String(t||"");while(t.length>1&&cx.measureText(t).width>max)t=t.slice(0,-1);return t};
+  const need=h=>{if(y+h>PH-M-30)np()};
+  np();
+  cx.fillStyle="#0B5A33";cx.fillRect(0,0,PW,170);
+  T(d.shop||"အစီရင်ခံစာ",M,78,44,800,"#fff");T("နေ့စဉ် အရောင်း အစီရင်ခံစာ  •  "+r.day,M,128,28,400,"#CDEBDD");y=210;
+  const box=(x,w,lab,val)=>{cx.fillStyle="#F1F6F3";cx.beginPath();cx.roundRect(x,y,w,120,18);cx.fill();T(lab,x+22,y+40,24,400,"#62706A");T(val,x+22,y+92,40,800,"#0B5A33")};
+  const bw=(PW-2*M-40)/3;box(M,bw,"အော်ဒါ အရေအတွက်",r.count+" ခု");box(M+bw+20,bw,"ရောင်းရငွေ",mmk(r.revenue)+" ကျပ်");box(M+2*(bw+20),bw,"ပယ်ဖျက်",r.cancelled+" ခု");y+=160;
+  const pays=Object.entries(r.byPay);
+  if(pays.length){y+=10;T("ငွေပေးချေမှု",M,y,32,700);y+=16;for(const[k,v]of pays){y+=42;T(k,M+10,y,26,400);T(mmk(v)+" ကျပ်",PW-M,y,26,700,"#17231E","right")}y+=40}
+  if(r.top.length){need(120);y+=10;T("အရောင်းရဆုံး ပစ္စည်းများ",M,y,32,700);y+=14;
+    r.top.forEach((x,i)=>{need(50);y+=44;T(i+1+".",M+10,y,26,400,"#62706A");T(fit(x.name,640,26),M+60,y,26,400);T("× "+x.qty,PW-M-230,y,26,700,"#17231E","right");T(mmk(x.rev),PW-M,y,26,400,"#62706A","right")});y+=40}
+  need(120);y+=10;T("အော်ဒါ စာရင်း ("+r.orders.length+")",M,y,32,700);y+=18;
+  cx.fillStyle="#E7EEEA";cx.fillRect(M,y,PW-2*M,46);T("အချိန်",M+12,y+32,22,700);T("ဝယ်သူ",M+120,y+32,22,700);T("အခြေအနေ",PW-M-270,y+32,22,700);T("ကျသင့်ငွေ",PW-M-10,y+32,22,700,"#17231E","right");y+=46;
+  if(!r.orders.length){y+=50;T("ဤရက်တွင် အော်ဒါ မရှိပါ",M+12,y,26,400,"#62706A")}
+  r.orders.forEach((o,i)=>{need(60);if(i%2){cx.fillStyle="#F8FAF9";cx.fillRect(M,y,PW-2*M,56)}y+=38;
+    T(o.t||"",M+12,y,24);T(fit(o.name||o.phone||"-",420,24),M+120,y,24);T(fit(o.status+(o.pay==="Paid"&&o.status!=="Cancelled"?" ✓":""),200,22),PW-M-270,y,22,400,o.status==="Cancelled"?"#B42F2F":"#0B5A33");T(mmk(o.total),PW-M-10,y,24,700,"#17231E","right");y+=18});
+  pages.forEach((c,i)=>{const g=c.getContext("2d");g.font="400 20px "+F;g.fillStyle="#9AA5A0";g.textAlign="center";g.fillText("စာမျက်နှာ "+(i+1)+" / "+pages.length,PW/2,PH-30)});
+  const jp=await Promise.all(pages.map(c=>new Promise(res=>c.toBlob(b=>b.arrayBuffer().then(a=>res(new Uint8Array(a))),"image/jpeg",0.82))));
+  PDF=pdfFrom(jp);$("pv").innerHTML="";pages.forEach(c=>{const im=new Image();im.src=c.toDataURL("image/jpeg",0.7);$("pv").appendChild(im)});
+  say("အစီရင်ခံစာ အဆင်သင့် ("+pages.length+" မျက်နှာ, "+Math.round(PDF.length/1024)+" KB)");
+}
+const b64=u=>{let s="";for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)};
+async function sendPdf(){if(!PDF)await build();if(!PDF)return;$("b1").disabled=true;say("Telegram သို့ ပို့နေသည်...");
+  try{await apiFetch("/api/admin/report/send",{method:"POST",body:JSON.stringify({date:DAY,pdf:b64(PDF)})});say("Telegram သို့ ပို့ပြီးပါပြီ ✅")}catch(e){say("ပို့၍ မရပါ — BOT_TOKEN / CHAT_ID စစ်ပါ",1)}$("b1").disabled=false}
+async function sendText(){DAY=$("dt").value||today();try{await apiFetch("/api/admin/report/text",{method:"POST",body:JSON.stringify({date:DAY})});say("စာတို ပို့ပြီးပါပြီ ✅")}catch(e){say("ပို့၍ မရပါ",1)}}
+async function dl(){if(!PDF)await build();if(!PDF)return;const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([PDF],{type:"application/pdf"}));a.download="report-"+DAY+".pdf";a.click()}
+window.addEventListener("load",()=>{$("dt").value=today();if(typeof renderAdminLayout==="function")renderAdminLayout("report");build()});
+</script>
+</body>
+</html>

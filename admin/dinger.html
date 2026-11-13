@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Dinger Test • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gs:#E3F1EB;--am:#F0A033;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18)}
+body{font-family:"Noto Sans Myanmar",system-ui,sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.hero{background:linear-gradient(120deg,#0E6B3A,#0B5A33 60%,#12834A);color:#fff;border-radius:0 0 26px 26px;padding:calc(14px + env(safe-area-inset-top)) 18px 18px;margin:0 -16px 16px}
+.hr{display:flex;align-items:center;gap:12px}.ht{flex:1}.ht h1{margin:0;font:800 20px "Bricolage Grotesque","Noto Sans Myanmar",sans-serif}.ht small{opacity:.8;font-size:12px}
+.circ{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:16px;display:grid;place-items:center}
+.per{display:flex;gap:6px;margin-top:14px}.per button{flex:1;border:0;border-radius:99px;padding:9px 0;background:rgba(255,255,255,.14);color:#fff;font:700 13px inherit;font-family:inherit}.per button.on{background:#fff;color:var(--g)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.k{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--sh)}.k span{display:block;font-size:12px;font-weight:700;color:var(--sub)}.k b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;margin-top:2px}.k small{font-size:11.5px;font-weight:700}
+.up{color:var(--ok)}.dn{color:var(--dg)}.fl{color:var(--sub)}
+h2{font-size:16px;font-weight:800;margin:18px 0 10px;padding-left:10px;border-left:4px solid var(--g);line-height:1.1}
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px}
+.row{margin-bottom:14px}.row:last-child{margin-bottom:0}.rh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px}.rh em{font-style:normal;color:var(--sub)}
+.bar{height:8px;border-radius:9px;background:#EEF2EF;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.sp{display:flex;align-items:flex-end;gap:8px;height:90px}.sp div{flex:1;text-align:center;font-size:10.5px;color:var(--sub)}.sp i{display:block;background:var(--g);border-radius:6px 6px 2px 2px;min-height:3px;margin-bottom:4px}.sp b{display:block;font-size:11px;color:var(--ink)}
+.rc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.rc:last-child{border:0}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--gs);color:var(--g);display:grid;place-items:center}
+.rc b{display:block;font-size:13.5px}.rc small{color:var(--sub);font-size:11.5px}.rc .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap}
+.tot{background:linear-gradient(120deg,#0B5A33,#12834A);color:#fff;border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh)}
+.tot span{font-size:13px;font-weight:700;opacity:.9}.tot b{display:block;font:800 44px/1.1 "Bricolage Grotesque",sans-serif}.tot small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.dc{border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--ln)}
+.dc i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:17px}.dc span{display:block;font-size:11.5px;font-weight:700;color:var(--sub)}.dc b{font:800 21px "Bricolage Grotesque",sans-serif}.dc small{font-size:11px;color:var(--sub)}
+.tag{margin-left:8px;font-size:11px;font-weight:700;background:var(--gs);color:var(--g);border-radius:99px;padding:3px 10px}
+.bi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.empty{text-align:center;color:var(--sub);padding:18px;font-size:13px}
+.tg{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--ln)}.tg:last-child{border:0}
+.ty{font-size:11px;font-weight:800;border-radius:99px;padding:3px 10px;color:#fff;background:var(--dg);flex:none}.ty.AdminKey{background:#B7791F}.ty.Probe{background:#6B46C1}
+.tg b{font-size:13px;word-break:break-all}.tg small{display:block;color:var(--sub);font-size:11.5px;word-break:break-all}.tg .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap;text-align:right}
+.ub{border:0;background:var(--gs);color:var(--g);font:700 12px inherit;font-family:inherit;border-radius:99px;padding:6px 12px}
+.ban{display:flex;gap:8px;margin-top:12px}.ban input{flex:1;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;min-width:0}.ban button{border:0;background:var(--dg);color:#fff;font:700 13px inherit;font-family:inherit;border-radius:12px;padding:0 16px}
+label{display:block;font-size:12.5px;font-weight:700;margin:10px 0 4px}.in{width:100%;border:1.5px solid var(--ln);border-radius:12px;padding:11px 12px;font:inherit;font-size:14.5px;background:#fff}
+.btn{width:100%;border:0;border-radius:14px;padding:13px;font:700 14.5px inherit;font-family:inherit;background:linear-gradient(145deg,#12705A,#0A4A3B);color:#fff;margin-top:14px}.btn:disabled{opacity:.55}
+pre{white-space:pre-wrap;word-break:break-all;background:#F4F7F5;border-radius:12px;padding:10px;font-size:11.5px;margin:10px 0 0;max-height:240px;overflow:auto}
+#qr{display:flex;justify-content:center;margin-top:12px}.ok{color:#0A7A4B}.bad{color:#B42F2F}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero"><div class="hr">
+      <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="ht"><h1>Dinger စမ်းသပ်ရန်</h1><small>Staging ငွေပေးချေမှု</small></div>
+      <button class="circ" onclick="loadLog()" aria-label="Refresh" type="button"><i class="fa-solid fa-rotate-right"></i></button></div></header>
+    <div class="card"><div id="cfg" class="empty">စစ်နေသည်...</div></div>
+    <h2>စမ်းသပ် ငွေပေးချေမှု</h2>
+    <div class="card">
+      <label>Provider</label><input class="in" id="pv" list="pvl" value="AYA Pay"><datalist id="pvl"><option value="AYA Pay"><option value="KBZ Pay"><option value="Wave Pay"><option value="CB Pay"></datalist>
+      <label>Method</label><input class="in" id="mt" list="mtl" value="QR"><datalist id="mtl"><option value="QR"><option value="PIN"><option value="OTP"></datalist>
+      <label>ပမာဏ (ကျပ်)</label><input class="in" id="am" type="number" value="1000" min="100">
+      <label>ဖုန်း</label><input class="in" id="ph" value="09790710683" inputmode="tel">
+      <label>အမည်</label><input class="in" id="nm" value="Test Customer">
+      <button class="btn" id="go" type="button" onclick="pay()">ငွေပေးချေမှု စတင်မည်</button>
+      <div id="qr"></div><pre id="out" style="display:none"></pre>
+    </div>
+    <h2>မှတ်တမ်း (Dinger → ကျွန်ုပ်တို့)</h2>
+    <div class="card" id="lg"><div class="empty">...</div></div>
+    <p class="empty" style="margin-top:14px">Callback URL (Dinger dashboard ထဲ ထည့်ရန်):<br><b id="cb"></b></p>
+  </div></main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function loadLog(){
+  try{const d=await apiFetch("/api/admin/dinger/log");
+    $("cfg").innerHTML=d.configured?'<b class="ok">✓ Key များ ထည့်ပြီး</b>':'<b class="bad">Cloudflare Variables/Secrets မပြည့်စုံ</b><br><small>DINGER_BASE, DINGER_API_KEY, DINGER_SECRET, DINGER_PUBLIC_KEY လိုသည်</small>';
+    $("lg").innerHTML=d.log.length?d.log.map(x=>`<div style="padding:8px 0;border-bottom:1px solid var(--ln);font-size:13px"><b class="${x.ok?"ok":"bad"}">${esc(x.kind)} ${x.ok?"✓":"✗"}</b> ${esc(x.order||"")} ${x.amount?esc(x.amount)+" ကျပ်":""} ${esc(x.status||x.message||x.error||"")}${x.marked?" <b class=ok>→ Paid</b>":""}<br><small style="color:var(--sub)">${esc(x.t.slice(5,16).replace("T"," "))}${x.sumOk===false?" · checksum မကိုက်":""}</small></div>`).join(""):'<div class="empty">မှတ်တမ်း မရှိသေးပါ</div>';
+  }catch(e){$("cfg").textContent="ဖတ်၍ မရပါ"}
+}
+async function pay(){
+  $("go").disabled=true;$("qr").innerHTML="";const o=$("out");o.style.display="block";o.textContent="ဆက်သွယ်နေသည်...";
+  try{const d=await apiFetch("/api/admin/dinger/pay",{method:"POST",body:JSON.stringify({providerName:$("pv").value,methodName:$("mt").value,totalAmount:+$("am").value,orderId:"T"+Date.now().toString(36).toUpperCase(),customerPhone:$("ph").value,customerName:$("nm").value})});
+    o.textContent=JSON.stringify(d.dinger,null,2);const q=d.dinger&&d.dinger.response&&d.dinger.response.qrCode;
+    if(q&&window.QRCode)new QRCode($("qr"),{text:q,width:220,height:220});
+  }catch(e){o.textContent="မအောင်မြင်ပါ: "+(e.message||e)}
+  $("go").disabled=false;loadLog();
+}
+window.addEventListener("load",()=>{$("cb").textContent=location.origin.replace(/\/admin.*/,"")+"/api/payment/dinger-callback";if(typeof renderAdminLayout==="function")renderAdminLayout("dinger");loadLog()});
+</script>
+</body>
+</html>

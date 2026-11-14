@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Live Sale</title>
+<meta name="theme-color" content="#0A1F18">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#12805F;--ink:#F4F7F5;--sub:#9DB0A7;--card:#14291F;--line:#22392E}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#0A1F18;color:var(--ink);font-family:'Noto Sans Myanmar',system-ui,sans-serif;line-height:1.55;padding-bottom:calc(30px + env(safe-area-inset-bottom))}
+a{color:inherit;text-decoration:none}
+.top{display:flex;align-items:center;gap:10px;padding:calc(12px + env(safe-area-inset-top)) 14px 10px;max-width:560px;margin:0 auto}
+.back{width:40px;height:40px;border-radius:50%;background:#1A3328;display:grid;place-items:center;font-size:20px}
+.live{display:inline-flex;align-items:center;gap:6px;background:#E53935;color:#fff;font-weight:800;font-size:12px;border-radius:99px;padding:4px 11px;letter-spacing:.5px}
+.live i{width:8px;height:8px;border-radius:50%;background:#fff;animation:bl 1.1s infinite}
+@keyframes bl{50%{opacity:.25}}
+.top h1{margin:0;font-size:16px;font-weight:700;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrap{max-width:560px;margin:0 auto;padding:0 14px}
+.vid{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:16px;overflow:hidden;margin-bottom:12px}
+.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vid.cam{aspect-ratio:auto;height:min(64vh,540px)}
+.vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.snd{position:absolute;right:10px;bottom:10px;z-index:2;border:0;border-radius:99px;background:rgba(0,0,0,.65);color:#fff;font:700 13px inherit;font-family:inherit;padding:8px 14px}
+.cst{position:absolute;left:0;right:0;top:46%;text-align:center;color:#cfe;font-size:13px;pointer-events:none}
+.vlink{display:flex;align-items:center;justify-content:center;gap:8px;background:#1A3328;border-radius:14px;padding:13px;font-weight:700;margin-bottom:12px}
+.pin{background:linear-gradient(160deg,#17382B,#10261D);border:1.5px solid #2E6B54;border-radius:22px;padding:14px;margin-bottom:16px;position:relative;overflow:hidden}
+.pin.pop{animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.88);opacity:0}100%{transform:none;opacity:1}}
+.tag{position:absolute;top:12px;left:12px;background:#FFB300;color:#1A1200;font-weight:800;font-size:11.5px;border-radius:99px;padding:3px 11px;z-index:1}
+.pin img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;background:#0E2118;display:block}
+.pin h2{margin:12px 0 2px;font-size:20px;font-weight:800}
+.price{display:flex;align-items:baseline;gap:10px;font-size:26px;font-weight:800;color:#6EE7B7}
+.price s{font-size:14px;font-weight:500;color:var(--sub)}
+.desc{font-size:13px;color:var(--sub);margin:4px 0 0}
+.buy{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;border-radius:16px;background:linear-gradient(145deg,#1FB57F,#0E8A5F);color:#fff;font-weight:800;font-size:17px;margin-top:12px;border:0}
+.buy.off{background:#2A3C34;color:#7E918A;pointer-events:none}
+.empty{text-align:center;color:var(--sub);padding:34px 10px}
+h3{font-size:14px;margin:6px 2px 10px;color:var(--sub);font-weight:700}
+.li{display:flex;gap:11px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:9px;margin-bottom:9px}
+.li img{width:60px;height:60px;border-radius:12px;object-fit:cover;background:#0E2118;flex:none}
+.li b{display:block;font-size:14px;font-weight:700}.li small{color:#6EE7B7;font-weight:700;font-size:13px}
+.li .go{margin-left:auto;flex:none;background:#1FB57F;color:#fff;font-weight:700;font-size:13px;border-radius:12px;padding:9px 14px}
+.li.sold{opacity:.5}.li.sold .go{background:#2A3C34;color:#7E918A}
+.li.cur{border-color:#2E6B54}
+</style>
+</head>
+<body>
+<div class="top"><a class="back" id="back" href="./">‹</a><span class="live" id="lv" style="display:none"><i></i>LIVE</span><h1 id="ttl">Live Sale</h1></div>
+<div class="wrap"><div class="vid cam" id="camv" style="display:none"><video id="cv" autoplay playsinline muted></video><button class="snd" id="snd" type="button" onclick="unmute()">🔊 အသံဖွင့်</button><div class="cst" id="cst">ချိတ်ဆက်နေသည်...</div></div></div>
+<div class="wrap" id="app"></div>
+<script>
+const API = /(^|\.)myintharchickenbbq\.shop$/.test(location.hostname) ? location.origin : 'https://yns.khinmarwin087.workers.dev';
+if (API === location.origin) (function () { const W = 'https://yns.khinmarwin087.workers.dev', of = window.fetch.bind(window);
+  window.fetch = function (u, o) { const s = typeof u === 'string' ? u : ''; if (s.indexOf(location.origin + '/api/') !== 0) return of(u, o);
+    const retry = () => of(W + s.slice(location.origin.length), o);
+    return of(u, o).then(r => /json/i.test(r.headers.get('content-type') || '') ? r : retry(), retry); }; })();
+const SHOP_Q = (new URLSearchParams(location.search).get('shop') || '').toLowerCase().replace(/[^a-z0-9-]/g, '').slice(0, 30);
+const SHOP_QS = SHOP_Q && SHOP_Q !== 'main' ? '?shop=' + SHOP_Q : '';
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const mmk = n => Number(n || 0).toLocaleString('en-US') + ' ကျပ်';
+$('back').href = './' + SHOP_QS;
+const PH = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%230E2118'/%3E%3Ctext x='50%25' y='56%25' font-size='70' text-anchor='middle'%3E🍗%3C/text%3E%3C/svg%3E";
+let PRODS = {}, L = null, lastV = -1, lastPin = 0, first = true;
+const buyUrl = id => './' + SHOP_QS + (SHOP_QS ? '&' : '?') + 'item=' + id;
+function embed(u) {
+  try {
+    const x = new URL(u), h = x.hostname.replace(/^www\.|^m\./, '');
+    if (h === 'facebook.com' || h === 'fb.watch') return 'https://www.facebook.com/plugins/video.php?href=' + encodeURIComponent(u) + '&show_text=false&autoplay=true';
+    if (h === 'youtube.com' || h === 'youtu.be') { const id = h === 'youtu.be' ? x.pathname.slice(1) : (x.searchParams.get('v') || (x.pathname.match(/\/(?:live|embed)\/([\w-]{6,})/) || [])[1]); if (id && /^[\w-]{6,}$/.test(id)) return 'https://www.youtube.com/embed/' + id + '?autoplay=1&playsinline=1'; }
+  } catch (_) {}
+  return '';
+}
+async function loadProds() {
+  try { const d = await (await fetch(API + '/api/products' + SHOP_QS)).json(); (d.products || []).forEach(p => PRODS[p.id] = p); } catch (_) {}
+}
+function card(id, sold) {
+  const p = PRODS[id]; if (!p) return '';
+  const off = sold || !p.available || (p.stock !== null && p.stock !== undefined && p.stock <= 0);
+  return { p, off };
+}
+function render() {
+  const app = $('app');
+  if (!L || !L.on) { stopWatch(); $('camv').style.display = 'none'; $('lv').style.display = 'none'; $('ttl').textContent = 'Live Sale'; app.innerHTML = '<div class="empty"><div style="font-size:46px">📴</div><p>ယခု Live မရှိသေးပါ<br>Live စတင်ချိန် ဤစာမျက်နှာမှာ ပြန်လာကြည့်ပါ</p><a class="buy" href="./' + SHOP_QS + '" style="max-width:260px;margin:14px auto 0">ဆိုင်သို့ သွားမည်</a></div>'; lastV = L ? L.v : -1; return; }
+  $('lv').style.display = 'inline-flex'; $('ttl').textContent = L.title || 'Live Sale';
+  const em = embed(L.url);
+  let h = '';
+  if (L.cam) { $('camv').style.display = 'block'; watch(); } else { $('camv').style.display = 'none'; stopWatch(); }
+  if (L.url && !L.cam) h += em ? '<div class="vid"><iframe src="' + esc(em) + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>' : '<a class="vlink" href="' + esc(L.url) + '" target="_blank" rel="noopener">▶ Live ကြည့်ရန် (အပြင်ဖွင့်မည်)</a>';
+  const sold = new Map(L.items.map(x => [x.id, x.sold]));
+  if (L.pinned && PRODS[L.pinned]) {
+    const p = PRODS[L.pinned], off = sold.get(p.id) || !p.available || (p.stock !== null && p.stock !== undefined && p.stock <= 0), isNew = L.pinned !== lastPin && !first;
+    h += '<div class="pin' + (isNew ? ' pop' : '') + '"><span class="tag">' + (off ? 'ကုန်သွားပြီ' : '🔥 ယခုရောင်းနေသည်') + '</span><img src="' + esc(p.image || PH) + '" alt="" onerror="this.onerror=null;this.src=PH"><h2>' + esc(p.name) + '</h2><div class="price">' + mmk(p.price) + (p.orig_price ? ' <s>' + mmk(p.orig_price) + '</s>' : '') + '</div>' + (p.description ? '<p class="desc">' + esc(String(p.description).slice(0, 120)) + '</p>' : '') + '<a class="buy' + (off ? ' off' : '') + '" href="' + buyUrl(p.id) + '">' + (off ? 'ကုန်သွားပါပြီ' : '🛒 ဝယ်မည်') + '</a></div>';
+    if (isNew && navigator.vibrate) try { navigator.vibrate(60); } catch (_) {}
+  } else h += '<div class="empty" style="padding:18px">ပစ္စည်းအသစ် မကြာမီ ပြပါမည် ✨</div>';
+  lastPin = L.pinned;
+  const rest = L.items.filter(x => PRODS[x.id]);
+  if (rest.length) h += '<h3>Live မှာ ပြထားသော ပစ္စည်းများ</h3>' + rest.map(x => { const p = PRODS[x.id], off = x.sold || !p.available || (p.stock !== null && p.stock !== undefined && p.stock <= 0); return '<div class="li' + (off ? ' sold' : '') + (x.id === L.pinned ? ' cur' : '') + '"><img src="' + esc(p.image || PH) + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=PH"><div><b>' + esc(p.name) + '</b><small>' + mmk(p.price) + '</small></div><a class="go" href="' + buyUrl(p.id) + '">' + (off ? 'ကုန်' : 'ဝယ်မည်') + '</a></div>'; }).join('');
+  app.innerHTML = h; first = false;
+}
+const STUN = { iceServers: [{ urls: 'stun:stun.cloudflare.com:3478' }], bundlePolicy: 'max-bundle' };
+let PCV = null, wtimer = 0;
+const postJ = async (p, b) => { const r = await fetch(API + p + SHOP_QS, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b || {}) }); const d = await r.json().catch(() => ({})); if (!r.ok || !d.ok) throw new Error(d.error || 'error'); return d; };
+function unmute() { const v = $('cv'); v.muted = false; v.play().catch(() => {}); $('snd').style.display = 'none'; }
+function stopWatch() { clearTimeout(wtimer); if (PCV) { try { PCV.close(); } catch (_) {} PCV = null; } const v = $('cv'); if (v) v.srcObject = null; }
+async function watch() {
+  if (PCV) return;
+  const pc = PCV = new RTCPeerConnection(STUN), ms = new MediaStream();
+  $('cst').style.display = 'block'; $('cst').textContent = 'ချိတ်ဆက်နေသည်...';
+  const retry = () => { if (PCV !== pc) return; stopWatch(); wtimer = setTimeout(() => { if (L && L.cam) watch(); }, 3000); };
+  pc.ontrack = e => { ms.addTrack(e.track); const v = $('cv'); if (v.srcObject !== ms) v.srcObject = ms; v.play().catch(() => {}); $('cst').style.display = 'none'; };
+  pc.onconnectionstatechange = () => { if (['failed', 'disconnected', 'closed'].includes(pc.connectionState)) retry(); };
+  try {
+    const d = await postJ('/api/live/rtc/pull');
+    await pc.setRemoteDescription(d.offer);
+    const a = await pc.createAnswer(); await pc.setLocalDescription(a);
+    await postJ('/api/live/rtc/answer', { sessionId: d.sessionId, sdp: a.sdp });
+  } catch (e) { $('cst').textContent = 'ပြန်ချိတ်နေသည်...'; retry(); }
+}
+async function poll() {
+  if (document.hidden) return;
+  try {
+    const d = await (await fetch(API + '/api/live' + SHOP_QS, { cache: 'no-store' })).json();
+    if (!d.ok) return;
+    if (d.v !== lastV || !L) { L = d; if (d.items.some(x => !PRODS[x.id])) await loadProds(); render(); lastV = d.v; }
+  } catch (_) {}
+}
+(async () => { await loadProds(); await poll(); setInterval(poll, 3000); document.addEventListener('visibilitychange', poll); })();
+</script>
+</body>
+</html>

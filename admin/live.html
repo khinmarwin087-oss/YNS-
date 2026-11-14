@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="my">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#083D31">
+<title>Live Sale • YNS Kitchen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Noto+Sans+Myanmar:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--g:#0D5C49;--gs:#E3F1EB;--am:#F0A033;--dg:#D64545;--ok:#1E8E5A;--ink:#18231F;--sub:#62706A;--ln:#E2E8E3;--sh:0 1px 2px rgba(24,35,31,.05),0 8px 24px -12px rgba(24,35,31,.18)}
+body{font-family:"Noto Sans Myanmar",system-ui,sans-serif;color:var(--ink)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 120px}
+.hero{background:linear-gradient(120deg,#0E6B3A,#0B5A33 60%,#12834A);color:#fff;border-radius:0 0 26px 26px;padding:calc(14px + env(safe-area-inset-top)) 18px 18px;margin:0 -16px 16px}
+.hr{display:flex;align-items:center;gap:12px}.ht{flex:1}.ht h1{margin:0;font:800 20px "Bricolage Grotesque","Noto Sans Myanmar",sans-serif}.ht small{opacity:.8;font-size:12px}
+.circ{width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:16px;display:grid;place-items:center}
+.per{display:flex;gap:6px;margin-top:14px}.per button{flex:1;border:0;border-radius:99px;padding:9px 0;background:rgba(255,255,255,.14);color:#fff;font:700 13px inherit;font-family:inherit}.per button.on{background:#fff;color:var(--g)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.k{background:#fff;border-radius:20px;padding:14px;box-shadow:var(--sh)}.k span{display:block;font-size:12px;font-weight:700;color:var(--sub)}.k b{display:block;font:800 28px "Bricolage Grotesque",sans-serif;margin-top:2px}.k small{font-size:11.5px;font-weight:700}
+.up{color:var(--ok)}.dn{color:var(--dg)}.fl{color:var(--sub)}
+h2{font-size:16px;font-weight:800;margin:18px 0 10px;padding-left:10px;border-left:4px solid var(--g);line-height:1.1}
+.card{background:#fff;border-radius:20px;box-shadow:var(--sh);padding:16px}
+.row{margin-bottom:14px}.row:last-child{margin-bottom:0}.rh{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:5px}.rh em{font-style:normal;color:var(--sub)}
+.bar{height:8px;border-radius:9px;background:#EEF2EF;overflow:hidden}.bar i{display:block;height:100%;border-radius:9px;background:var(--g)}
+.sp{display:flex;align-items:flex-end;gap:8px;height:90px}.sp div{flex:1;text-align:center;font-size:10.5px;color:var(--sub)}.sp i{display:block;background:var(--g);border-radius:6px 6px 2px 2px;min-height:3px;margin-bottom:4px}.sp b{display:block;font-size:11px;color:var(--ink)}
+.rc{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--ln)}.rc:last-child{border:0}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--gs);color:var(--g);display:grid;place-items:center}
+.rc b{display:block;font-size:13.5px}.rc small{color:var(--sub);font-size:11.5px}.rc .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap}
+.tot{background:linear-gradient(120deg,#0B5A33,#12834A);color:#fff;border-radius:22px;padding:16px 18px;margin-bottom:12px;box-shadow:var(--sh)}
+.tot span{font-size:13px;font-weight:700;opacity:.9}.tot b{display:block;font:800 44px/1.1 "Bricolage Grotesque",sans-serif}.tot small{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}.dc{border-radius:18px;padding:12px 14px;display:flex;align-items:center;gap:10px;border:1px solid var(--ln)}
+.dc i{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.7);font-size:17px}.dc span{display:block;font-size:11.5px;font-weight:700;color:var(--sub)}.dc b{font:800 21px "Bricolage Grotesque",sans-serif}.dc small{font-size:11px;color:var(--sub)}
+.tag{margin-left:8px;font-size:11px;font-weight:700;background:var(--gs);color:var(--g);border-radius:99px;padding:3px 10px}
+.bi{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.empty{text-align:center;color:var(--sub);padding:18px;font-size:13px}
+.tg{display:flex;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--ln)}.tg:last-child{border:0}
+.ty{font-size:11px;font-weight:800;border-radius:99px;padding:3px 10px;color:#fff;background:var(--dg);flex:none}.ty.AdminKey{background:#B7791F}.ty.Probe{background:#6B46C1}
+.tg b{font-size:13px;word-break:break-all}.tg small{display:block;color:var(--sub);font-size:11.5px;word-break:break-all}.tg .t{margin-left:auto;font-size:11px;color:var(--sub);white-space:nowrap;text-align:right}
+.ub{border:0;background:var(--gs);color:var(--g);font:700 12px inherit;font-family:inherit;border-radius:99px;padding:6px 12px}
+.ban{display:flex;gap:8px;margin-top:12px}.ban input{flex:1;border:1.5px solid var(--ln);border-radius:12px;padding:10px 12px;font:inherit;font-size:14px;min-width:0}.ban button{border:0;background:var(--dg);color:#fff;font:700 13px inherit;font-family:inherit;border-radius:12px;padding:0 16px}
+label{display:block;font-size:12.5px;font-weight:700;margin:10px 0 4px}.in{width:100%;border:1.5px solid var(--ln);border-radius:12px;padding:11px 12px;font:inherit;font-size:14.5px;background:#fff}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:10px}.sw b{font-size:16px}
+.tg2{width:58px;height:32px;border-radius:99px;background:#C9D3CE;border:0;position:relative;flex:none;transition:.2s}.tg2::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;transition:.2s}.tg2.on{background:#E53935}.tg2.on::after{left:29px}
+.cur{background:linear-gradient(140deg,#FDECEA,#fff);border:1.5px solid #E53935;border-radius:18px;padding:12px;margin-top:10px}
+.pr{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ln)}.pr:last-child{border:0}.pr img{width:48px;height:48px;border-radius:10px;object-fit:cover;background:#EEF2EF;flex:none}.pr .n{flex:1 1 130px;min-width:0}.pr .n b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pr .n small{color:var(--sub);font-size:12px}
+.bt{border:0;border-radius:11px;padding:8px 11px;font:700 12.5px inherit;font-family:inherit;background:var(--gs);color:var(--g);flex:none}.bt.r{background:#E53935;color:#fff}.bt.x{background:#F2F4F3;color:#6B7A73}.bt.on{background:#12805F;color:#fff}
+.sc{margin-top:10px}.sc .in{margin:0}.lst{max-height:300px;overflow:auto}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btn{border:0;border-radius:14px;padding:13px;font:700 14.5px inherit;font-family:inherit;background:linear-gradient(145deg,#E53935,#C62828);color:#fff;flex:1 1 100%}.btn:disabled{opacity:.55}
+.msg{font-size:12.5px;color:var(--sub);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-icon">🍗</div><div><b>YNS Kitchen</b><small>Admin Panel</small></div></div>
+    <div class="nav-title">MAIN MENU</div>
+    <nav class="nav" id="sidebarNav"></nav>
+  </aside>
+  <main class="main"><div class="wrap">
+    <header class="hero"><div class="hr">
+      <button class="circ mbtn" onclick="toggleSidebar()" aria-label="Menu" type="button"><i class="fa-solid fa-bars"></i></button>
+      <div class="ht"><h1>Live Sale</h1><small>Live လွင့်ရင်း ပစ္စည်းတင်ရောင်း</small></div>
+      <a class="circ" href="../live.html" target="_blank" aria-label="Open" style="text-decoration:none;display:grid;place-items:center"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></div></header>
+    <div class="card" id="camc">
+      <b>📹 ကင်မရာဖြင့် တိုက်ရိုက်လွှင့်မည်</b>
+      <video id="pvv" autoplay playsinline muted style="display:none;width:100%;border-radius:14px;margin-top:10px;background:#000;max-height:360px"></video>
+      <div class="row" id="cb1"><button class="btn" id="bgo" type="button" onclick="startCam()">▶ ကင်မရာဖွင့်ပြီး Live စမည်</button></div>
+      <div class="row" id="cb2" style="display:none"><button class="bt x" type="button" onclick="flipCam()">🔄 ကင်မရာလှည့်</button><button class="bt x" id="bmu" type="button" onclick="muteCam()">🎙 မိုက်ပိတ်</button><button class="bt r" type="button" onclick="stopCam()">⏹ Live ရပ်မည်</button></div>
+      <div class="msg" id="cmsg">ဖုန်း/ကွန်ပျူတာ ကင်မရာနဲ့ ဒီစာမျက်နှာကနေ တိုက်ရိုက်လွှင့်နိုင်ပါတယ်။ လွှင့်နေစဉ် ဒီစာမျက်နှာကို မပိတ်ပါနဲ့။</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="sw"><b id="st">LIVE ပိတ်ထား</b><button class="tg2" id="tg" type="button" onclick="setOn()"></button></div>
+      <label>ခေါင်းစဉ်</label><input class="in" id="ti" placeholder="ဥပမာ - ည ၈ နာရီ Live ရောင်းပွဲ" maxlength="80" onchange="saveInfo()">
+      <label>Live လင့်ခ် (Facebook / YouTube — မထည့်လည်းရ)</label><input class="in" id="ur" placeholder="https://www.facebook.com/..." onchange="saveInfo()">
+      <div class="msg">Facebook/YouTube လင့်ခ်ဆိုရင် ဝယ်သူစာမျက်နှာထဲမှာ တိုက်ရိုက် ပေါ်ပါမယ်။ TikTok Live ဆိုရင် "ကြည့်ရန်" ခလုတ်အဖြစ် ပေါ်ပါမယ်။</div>
+      <div class="msg"><b>ဝယ်သူ link:</b> <span id="lk"></span></div>
+    </div>
+    <h2>ယခု ပြနေသော ပစ္စည်း</h2>
+    <div class="card" id="cur"><div class="empty">မရှိသေးပါ — အောက်က ပစ္စည်းတစ်ခုကို "📌 ပြမည်" နှိပ်ပါ</div></div>
+    <h2>Live စာရင်း</h2>
+    <div class="card"><div class="lst" id="li"><div class="empty">ပစ္စည်း မထည့်ရသေးပါ</div></div></div>
+    <h2>ပစ္စည်း ထည့်ရန်</h2>
+    <div class="card"><input class="in" id="q" placeholder="ပစ္စည်းအမည် ရှာရန်..." oninput="drawAll()"><div class="lst sc" id="all"></div></div>
+  </div></main>
+</div>
+<script src="js/main.js"></script>
+<script>
+const $=id=>document.getElementById(id), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mmk=n=>Number(n||0).toLocaleString("en-US");
+let L={on:false,items:[],pinned:0,title:"",url:""}, P={};
+const img=p=>p.image||"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%23EEF2EF'/%3E%3C/svg%3E";
+async function save(patch){
+  try{const d=await apiFetch("/api/admin/live",{method:"POST",body:JSON.stringify(patch)});L=d.live;draw()}catch(e){alert("သိမ်း၍ မရပါ: "+(e.message||e))}
+}
+const setOn=()=>save({on:!L.on});
+const saveInfo=()=>save({title:$("ti").value,url:$("ur").value.trim()});
+const items=()=>L.items.map(x=>({id:x.id,sold:!!x.sold}));
+const pin=id=>save({pinned:id});
+const unpin=()=>save({pinned:0});
+const add=id=>save({items:[...items(),{id,sold:false}]});
+const rem=id=>save({items:items().filter(x=>x.id!==id)});
+const sold=id=>save({items:items().map(x=>x.id===id?{id,sold:!x.sold}:x)});
+const addPin=id=>save({items:L.items.some(x=>x.id===id)?items():[...items(),{id,sold:false}],pinned:id});
+function row(p,x){return `<div class="pr"><img src="${esc(img(p))}" alt=""><div class="n"><b>${esc(p.name)}</b><small>${mmk(p.price)} ကျပ်${x&&x.sold?" · ကုန်ပြီ":""}</small></div>`}
+function draw(){
+  $("tg").className="tg2"+(L.on?" on":"");$("st").innerHTML=L.on?'<span style="color:#E53935">● LIVE ဖွင့်ထား</span>':"LIVE ပိတ်ထား";
+  if(document.activeElement!==$("ti"))$("ti").value=L.title||"";if(document.activeElement!==$("ur"))$("ur").value=L.url||"";
+  $("lk").textContent=location.origin.replace(/\/admin.*/,"")+"/live.html";
+  const cp=P[L.pinned];
+  $("cur").innerHTML=cp?`<div class="cur"><div class="pr" style="border:0;padding:0"><img src="${esc(img(cp))}" alt=""><div class="n"><b>${esc(cp.name)}</b><small>${mmk(cp.price)} ကျပ်</small></div><button class="bt x" onclick="unpin()">ဖျောက်မည်</button></div></div>`:'<div class="empty">မရှိသေးပါ — အောက်က ပစ္စည်းတစ်ခုကို "📌 ပြမည်" နှိပ်ပါ</div>';
+  $("li").innerHTML=L.items.length?L.items.map(x=>{const p=P[x.id];if(!p)return"";return row(p,x)+(x.id===L.pinned?'<span class="bt on">ပြနေသည်</span>':`<button class="bt r" onclick="pin(${x.id})">📌 ပြမည်</button>`)+`<button class="bt x" onclick="sold(${x.id})">${x.sold?"ပြန်ရ":"ကုန်"}</button><button class="bt x" onclick="rem(${x.id})">✕</button></div>`}).join(""):'<div class="empty">ပစ္စည်း မထည့်ရသေးပါ</div>';
+  drawAll();
+}
+function drawAll(){
+  const q=$("q").value.trim().toLowerCase(),inL=new Set(L.items.map(x=>x.id));
+  const list=Object.values(P).filter(p=>!inL.has(p.id)&&(!q||String(p.name).toLowerCase().includes(q))).slice(0,40);
+  $("all").innerHTML=list.length?list.map(p=>row(p)+`<button class="bt" onclick="add(${p.id})">+ ထည့်</button><button class="bt r" onclick="addPin(${p.id})">📌 ပြမည်</button></div>`).join(""):'<div class="empty">ရှာမတွေ့ပါ</div>';
+}
+let PC=null,STREAM=null,HB=0,WL=null,FACING="user",RTCOK=true;
+const cm=t=>$("cmsg").textContent=t;
+async function getMedia(){return navigator.mediaDevices.getUserMedia({video:{facingMode:FACING,width:{ideal:1280},height:{ideal:720},frameRate:{ideal:30}},audio:{echoCancellation:true,noiseSuppression:true}})}
+async function startCam(){
+  if(!navigator.mediaDevices||!window.RTCPeerConnection)return cm("ဤ browser က ကင်မရာ Live မထောက်ပံ့ပါ (Chrome သုံးပါ)");
+  if(!RTCOK)return cm("Cloudflare Realtime မချိတ်ရသေးပါ — CF_RTC_APP_ID / CF_RTC_APP_SECRET လိုအပ်သည်");
+  $("bgo").disabled=true;cm("ကင်မရာ ခွင့်ပြုချက် တောင်းနေသည်...");
+  try{
+    STREAM=await getMedia();$("pvv").srcObject=STREAM;$("pvv").style.display="block";
+    PC=new RTCPeerConnection({iceServers:[{urls:"stun:stun.cloudflare.com:3478"}],bundlePolicy:"max-bundle"});
+    STREAM.getTracks().forEach(t=>PC.addTransceiver(t,{direction:"sendonly",streams:[STREAM]}));
+    const offer=await PC.createOffer();await PC.setLocalDescription(offer);
+    const tracks=PC.getTransceivers().map(t=>({mid:t.mid,trackName:t.sender.track&&t.sender.track.kind==="audio"?"audio":"video"}));
+    const d=await apiFetch("/api/admin/live/rtc/publish",{method:"POST",body:JSON.stringify({sdp:offer.sdp,tracks})});
+    await PC.setRemoteDescription(d.answer);
+    PC.getSenders().forEach(s=>{if(s.track&&s.track.kind==="video"){const p=s.getParameters();p.encodings=p.encodings&&p.encodings.length?p.encodings:[{}];p.encodings[0].maxBitrate=1500000;s.setParameters(p).catch(()=>{})}});
+    PC.onconnectionstatechange=()=>{const st=PC.connectionState;if(st==="connected")cm("🔴 LIVE လွှင့်နေသည် — ဝယ်သူတွေ ကြည့်နေပါပြီ");else if(st==="failed"||st==="disconnected")cm("ချိတ်ဆက်မှု ပြတ်နေသည် — Live ရပ်ပြီး ပြန်စပါ")};
+    clearInterval(HB);HB=setInterval(()=>apiFetch("/api/admin/live/rtc/hb",{method:"POST",body:"{}"}).catch(()=>{}),10000);
+    try{WL=await navigator.wakeLock.request("screen")}catch(_){}
+    $("cb1").style.display="none";$("cb2").style.display="flex";cm("ချိတ်ဆက်နေသည်...");
+    L.on=true;draw();
+  }catch(e){cm("စ၍ မရပါ: "+(e.message||e));cleanup();$("bgo").disabled=false}
+}
+function cleanup(){clearInterval(HB);if(STREAM)STREAM.getTracks().forEach(t=>t.stop());STREAM=null;if(PC){try{PC.close()}catch(_){}}PC=null;if(WL){try{WL.release()}catch(_){}}WL=null;$("pvv").srcObject=null;$("pvv").style.display="none";$("cb1").style.display="flex";$("cb2").style.display="none"}
+async function stopCam(){cleanup();$("bgo").disabled=false;try{await apiFetch("/api/admin/live/rtc/stop",{method:"POST",body:"{}"})}catch(e){}cm("Live ကင်မရာ ရပ်ပြီးပါပြီ")}
+async function flipCam(){if(!PC)return;FACING=FACING==="user"?"environment":"user";try{const n=await getMedia(),v=n.getVideoTracks()[0],s=PC.getSenders().find(x=>x.track&&x.track.kind==="video");await s.replaceTrack(v);STREAM.getVideoTracks().forEach(t=>t.stop());STREAM.removeTrack(STREAM.getVideoTracks()[0]);STREAM.addTrack(v);n.getAudioTracks().forEach(t=>t.stop());$("pvv").srcObject=STREAM}catch(e){cm("ကင်မရာ လှည့်၍ မရပါ")}}
+function muteCam(){if(!STREAM)return;const a=STREAM.getAudioTracks()[0];if(!a)return;a.enabled=!a.enabled;$("bmu").textContent=a.enabled?"🎙 မိုက်ပိတ်":"🎙 မိုက်ဖွင့်"}
+window.addEventListener("beforeunload",e=>{if(PC){e.preventDefault();e.returnValue=""}});
+async function init(){
+  try{const d=await apiFetch("/api/admin/products");(d.products||[]).filter(p=>!p.hidden).forEach(p=>P[p.id]=p)}catch(e){}
+  try{const d=await apiFetch("/api/admin/live");L=d.live;RTCOK=!!d.rtcConfigured;if(!RTCOK)cm("Cloudflare Realtime မချိတ်ရသေးပါ — Worker မှာ CF_RTC_APP_ID နှင့် CF_RTC_APP_SECRET ထည့်ပါ")}catch(e){}
+  draw();
+}
+window.addEventListener("load",()=>{if(typeof renderAdminLayout==="function")renderAdminLayout("live");init()});
+</script>
+</body>
+</html>
